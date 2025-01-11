@@ -205,7 +205,7 @@ function Navigation({
               <img
                 src="./images/yutube.png"
                 alt="logo"
-                className={`${style.sns}`}
+                className={`${style.sns} ${style.youtube_icon}`}
               />
             </Link>
           </li>
