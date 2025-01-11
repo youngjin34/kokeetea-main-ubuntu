@@ -1,0 +1,12 @@
+.Home {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.one_page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
+}

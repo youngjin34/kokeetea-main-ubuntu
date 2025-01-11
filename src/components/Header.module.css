@@ -1,0 +1,22 @@
+.Header {
+  width: 100%;
+  height: 100px;
+  margin: 0 auto;
+  position: fixed;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.Header.hovered {
+  background-color: white;
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+  padding-right: 20px;
+}
