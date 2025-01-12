@@ -18,8 +18,6 @@ const items = [
 
 function Home({ currentPage, setCurrentPage }) {
   const outerDivRef = useRef();
-  const footerRef = useRef(); // 푸터 참조 추가
-  const [footerHeight, setFooterHeight] = useState(0); // 푸터 높이 상태
 
   const scrollToSection = (pageIndex) => {
     const pageHeight = window.innerHeight;
@@ -34,13 +32,6 @@ function Home({ currentPage, setCurrentPage }) {
       setCurrentPage(pageIndex);
     }
   };
-
-  useEffect(() => {
-    // 푸터 높이를 상태로 저장
-    if (footerRef.current) {
-      setFooterHeight(footerRef.current.offsetHeight);
-    }
-  }, []);
 
   useEffect(() => {
     const wheelHandler = (e) => {

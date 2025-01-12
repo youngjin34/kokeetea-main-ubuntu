@@ -4,21 +4,62 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import style from './Navigation.module.css';
 
-function Navigation({
-  isLogined,
-  setIsLogined,
-  onMouseEnter,
-  onMouseLeave,
-  fontColor,
-  currentPage,
-}) {
+function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState(''); //아이디 입력란 처음공백
   const [pass, setPass] = useState(''); //이메일 입력란 처음공백
   const [headerLogined, setHeaderLogined] = useState(false);
 
-  // 드롭다운 메뉴 토글
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // 마우스 오버 상태 관리
+
+  const handleMouseEnter = () => {
+    setIsHovered(true); // 마우스 오버시 상태 true로 설정
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false); // 마우스 떠날 때 상태 false로 설정
+  };
+
+  // Facebook 아이콘 경로 결정
+  const getLogoIcon = () => {
+    if (isHovered || fontColor === 'black') {
+      return './images/logo_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    }
+    return currentPage % 2 === 0
+      ? './images/logo_white.png'
+      : './images/logo_black.png';
+  };
+
+  // Facebook 아이콘 경로 결정
+  const getFacebookIcon = () => {
+    if (isHovered || fontColor === 'black') {
+      return './images/facebook_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    }
+    return currentPage % 2 === 0
+      ? './images/facebook_white.png'
+      : './images/facebook_black.png';
+  };
+
+  // Insta 아이콘 경로 결정
+  const getInstaIcon = () => {
+    if (isHovered || fontColor === 'black') {
+      return './images/insta_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    }
+    return currentPage % 2 === 0
+      ? './images/insta_white.png'
+      : './images/insta_black.png';
+  };
+
+  // YouTube 아이콘 경로 결정
+  const getYoutubeIcon = () => {
+    if (isHovered || fontColor === 'black') {
+      return './images/yutube_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    }
+    return currentPage % 2 === 0
+      ? './images/yutube_white.png'
+      : './images/yutube_black.png';
+  };
+
   useEffect(() => {
     if (localStorage.getItem('realname')) {
       setHeaderLogined(true);
@@ -80,16 +121,6 @@ function Navigation({
     setModalOpen(!isModalOpen);
   };
 
-  // 드롭다운 메뉴 활성화
-  const handleMouseEnter = () => {
-    setIsDropdownVisible(true);
-  };
-
-  // 드롭다운 메뉴 비활성화
-  const handleMouseLeave = () => {
-    setIsDropdownVisible(false);
-  };
-
   // 모달 열기/닫기 상태
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -100,66 +131,59 @@ function Navigation({
   };
 
   return (
-    <div
-      className={`${style.Navigation}`}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <div
-        className={style.dropdown}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ color: fontColor, transition: '0.3s' }}
-      >
+    <div className={`${style.Navigation}`}>
+      <div className={style.dropdown} style={{ transition: '0.3s' }}>
         {/* KOKEE STORY 메뉴 */}
-        <div>
+        <div style={{ color: fontColor }}>
           KOKEE STORY
-          {isDropdownVisible && (
-            <div className={`${style.submenu}`}>
-              <Link to="/listpage">Brand</Link>
-            </div>
-          )}
+          <div>
+            <Link to="/listpage" style={{ color: fontColor }}>
+              Brand
+            </Link>
+          </div>
         </div>
 
         {/* MENU 메뉴 */}
-        <div>
+        <div style={{ color: fontColor }}>
           MENU
-          {isDropdownVisible && (
-            <div>
-              <Link to="./productlist">Drink</Link>
-            </div>
-          )}
+          <div>
+            <Link to="./productlist" style={{ color: fontColor }}>
+              Drink
+            </Link>
+          </div>
         </div>
 
         {/* STORE 메뉴 */}
-        <div>
+        <div style={{ color: fontColor }}>
           STORE
-          {isDropdownVisible && (
-            <div>
-              <Link to="./waytocome">The way to find</Link>
-            </div>
-          )}
+          <div>
+            <Link to="./waytocome" style={{ color: fontColor }}>
+              The way to find
+            </Link>
+          </div>
         </div>
 
         {/* AFFILIATED 메뉴 */}
-        <div>
+        <div style={{ color: fontColor }}>
           AFFILIATED
-          {isDropdownVisible && (
-            <div>
-              <Link to="/FranchiseInquiryPage">Inquire</Link>
-            </div>
-          )}
+          <div>
+            <Link to="/FranchiseInquiryPage" style={{ color: fontColor }}>
+              Inquire
+            </Link>
+          </div>
         </div>
 
         {/* SUPPORT 메뉴 */}
-        <div>
+        <div style={{ color: fontColor }}>
           SUPPORT
-          {isDropdownVisible && (
-            <div>
-              <Link to="./faq">FAQ</Link>
-              <Link to="./VoiceOfCustomer">1:1 Inquire</Link>
-            </div>
-          )}
+          <div>
+            <Link to="./faq" style={{ color: fontColor }}>
+              FAQ
+            </Link>
+            <Link to="./VoiceOfCustomer" style={{ color: fontColor }}>
+              1:1 Inquire
+            </Link>
+          </div>
         </div>
       </div>
       <div className="inner">
@@ -192,54 +216,42 @@ function Navigation({
             </li>
           )}
           <li>
-            <Link>
-              {currentPage % 2 === 0 ? (
-                <img
-                  src="./images/facebook_white.png"
-                  alt="logo"
-                  className={`${style.sns}`}
-                />
-              ) : (
-                <img
-                  src="./images/facebook_black.png"
-                  alt="logo"
-                  className={`${style.sns}`}
-                />
-              )}
+            <Link
+              to="https://ko-kr.facebook.com/luvkokeetea/"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img
+                src={getFacebookIcon()}
+                alt="Facebook logo"
+                className={style.sns}
+              />
             </Link>
           </li>
           <li>
-            <Link>
-              {currentPage % 2 === 0 ? (
-                <img
-                  src="./images/insta_white.png"
-                  alt="logo"
-                  className={`${style.sns}`}
-                />
-              ) : (
-                <img
-                  src="./images/insta_black.png"
-                  alt="logo"
-                  className={`${style.sns}`}
-                />
-              )}
+            <Link
+              to="https://www.instagram.com/kokeetea/"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img
+                src={getInstaIcon()}
+                alt="Facebook logo"
+                className={style.sns}
+              />
             </Link>
           </li>
           <li>
-            <Link>
-              {currentPage % 2 === 0 ? (
-                <img
-                  src="./images/yutube_white.png"
-                  alt="logo"
-                  className={`${style.youtube_icon}`}
-                />
-              ) : (
-                <img
-                  src="./images/yutube_black.png"
-                  alt="logo"
-                  className={`${style.youtube_icon}`}
-                />
-              )}
+            <Link
+              to="https://www.youtube.com/@kokeetea2886"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img
+                src={getYoutubeIcon()}
+                alt="YouTube logo"
+                className={style.youtube_icon}
+              />
             </Link>
           </li>
         </ul>
