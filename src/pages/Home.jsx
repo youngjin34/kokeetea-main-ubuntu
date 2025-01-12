@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Banner from '../components/Banner';
+import Welcome from '../components/Welcome';
 import style from './Home.module.css';
 import HomeListButton from '../components/HomeListButton';
 import PopularMenu from '../components/PopularMenu';
@@ -16,9 +16,10 @@ const items = [
   '/images/Signature/Rose From San Francisco.png',
 ];
 
-function Home() {
+function Home({ currentPage, setCurrentPage }) {
   const outerDivRef = useRef();
-  const [currentPage, setCurrentPage] = useState(1);
+  const footerRef = useRef(); // 푸터 참조 추가
+  const [footerHeight, setFooterHeight] = useState(0); // 푸터 높이 상태
 
   const scrollToSection = (pageIndex) => {
     const pageHeight = window.innerHeight;
@@ -30,9 +31,16 @@ function Home() {
         left: 0,
         behavior: 'smooth',
       });
-      setCurrentPage(pageIndex + 1);
+      setCurrentPage(pageIndex);
     }
   };
+
+  useEffect(() => {
+    // 푸터 높이를 상태로 저장
+    if (footerRef.current) {
+      setFooterHeight(footerRef.current.offsetHeight);
+    }
+  }, []);
 
   useEffect(() => {
     const wheelHandler = (e) => {
@@ -45,19 +53,25 @@ function Home() {
         // 스크롤 내릴 때
         if (scrollTop >= 0 && scrollTop < pageHeight) {
           scrollToSection(1);
+          setCurrentPage(1);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
           scrollToSection(2);
+          setCurrentPage(2);
         } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
           scrollToSection(3);
+          setCurrentPage(3);
         }
       } else {
         // 스크롤 올릴 때
         if (scrollTop >= pageHeight * 3) {
           scrollToSection(2);
+          setCurrentPage(2);
         } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
           scrollToSection(1);
+          setCurrentPage(1);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
           scrollToSection(0);
+          setCurrentPage(0);
         }
       }
     };
@@ -76,7 +90,7 @@ function Home() {
         scrollToSection={scrollToSection}
       />
       <div id="section-0" className={`${style.one_page}`}>
-        <Banner />
+        <Welcome />
       </div>
       <div id="section-1" className={`${style.one_page}`}>
         <PopularMenu items={items} />

@@ -1,6 +1,6 @@
 .Home {
   height: 100vh;
-  overflow-y: auto;
+  overflow: hidden; /* 외부 div에서는 스크롤을 숨깁니다 */
 }
 
 .one_page {
@@ -9,4 +9,5 @@
   justify-content: center;
   align-items: center;
   font-size: 100px;
+  overflow-y: auto; /* 각 섹션에서 스크롤이 가능하도록 합니다 */
 }

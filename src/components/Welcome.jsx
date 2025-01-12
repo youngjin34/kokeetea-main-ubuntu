@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import style from './Banner.module.css';
+import style from './Welcome.module.css';
 
-const Banner = () => {
+const Welcome = () => {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className={`${style.Banner}`}>
+    <div className={`${style.Welcome}`}>
       <video ref={videoRef} autoPlay muted loop className={`${style.video}`}>
         <source src="/video/backgroud-video.mp4" type="video/mp4" />
         브라우저가 비디오 태그를 지원하지 않습니다.
@@ -22,4 +22,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default Welcome;

@@ -6,11 +6,8 @@ const PageButton = ({ text, currentPage, pageIndex, onClick }) => {
         cursor: 'pointer',
         padding: '5px 10px',
         margin: '5px 0',
-        color: currentPage === pageIndex + 1 ? 'white' : 'black',
-        backgroundColor:
-          currentPage === pageIndex + 1 ? 'black' : 'transparent',
-        border: '1px solid black',
-        borderRadius: 5,
+        color: currentPage === pageIndex + 1 ? '#ba274a' : 'gray',
+        fontSize: currentPage === pageIndex + 1 ? '24px' : '18px',
         transition: 'all 0.3s',
         textAlign: 'center',
       }}
@@ -26,10 +23,10 @@ const HomeListButton = ({ currentPage, scrollToSection }) => {
     <div
       style={{
         position: 'fixed',
-        top: '80%',
+        top: '70%',
         left: 100,
         transform: 'translateY(-50%)',
-        zIndex: 99999,
+        zIndex: 999,
       }}
     >
       <div
@@ -45,7 +42,7 @@ const HomeListButton = ({ currentPage, scrollToSection }) => {
             key={index}
             text={label}
             pageIndex={index}
-            currentPage={currentPage}
+            currentPage={currentPage + 1}
             onClick={scrollToSection}
           />
         ))}

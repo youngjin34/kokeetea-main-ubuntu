@@ -11,18 +11,6 @@
   align-items: center;
   gap: 50px;
   transition: background-color 0.3s ease, color 0.3s ease;
-  background-color: transparent; /* 기본 배경색 */
-  color: white; /* 기본 글씨 색상 */
-}
-
-.Header.scrolled {
-  background-color: white; /* 스크롤 시 배경색 */
-  color: black; /* 스크롤 시 글씨 색상 */
-}
-
-.Header.hovered {
-  background-color: #f9f9f9;
-  color: black;
 }
 
 .logo {

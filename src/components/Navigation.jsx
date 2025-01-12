@@ -9,7 +9,8 @@ function Navigation({
   setIsLogined,
   onMouseEnter,
   onMouseLeave,
-  isHovered,
+  fontColor,
+  currentPage,
 }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState(''); //아이디 입력란 처음공백
@@ -100,15 +101,15 @@ function Navigation({
 
   return (
     <div
-      className={`${style.Navigation} ${isHovered ? style.hovered : ''}`}
+      className={`${style.Navigation}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {' '}
       <div
         className={style.dropdown}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        style={{ color: fontColor, transition: '0.3s' }}
       >
         {/* KOKEE STORY 메뉴 */}
         <div>
@@ -165,48 +166,80 @@ function Navigation({
         <ul className={`${style.header_top}`}>
           {headerLogined ? (
             <li onClick={logoutFunction}>
-              <Link to="#">{localStorage.getItem('realname')}님 LOGOUT |</Link>
+              <Link to="#" style={{ color: fontColor }}>
+                {localStorage.getItem('realname')}님 LOGOUT |
+              </Link>
             </li>
           ) : (
             <li>
-              <Link onClick={toggleModal}>LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|</Link>
+              <Link onClick={toggleModal} style={{ color: fontColor }}>
+                LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
+              </Link>
             </li>
           )}
           {!headerLogined && (
             <li>
-              <Link to="/form">JOIN</Link>
+              <Link to="/form" style={{ color: fontColor }}>
+                JOIN
+              </Link>
             </li>
           )}
           {headerLogined && (
             <li>
-              <Link to="/mypage">MY PAGE</Link>
+              <Link to="/mypage" style={{ color: fontColor }}>
+                MY PAGE
+              </Link>
             </li>
           )}
           <li>
             <Link>
-              <img
-                src="./images/facebook.png"
-                alt="logo"
-                className={`${style.sns}`}
-              />
+              {currentPage % 2 === 0 ? (
+                <img
+                  src="./images/facebook_white.png"
+                  alt="logo"
+                  className={`${style.sns}`}
+                />
+              ) : (
+                <img
+                  src="./images/facebook_black.png"
+                  alt="logo"
+                  className={`${style.sns}`}
+                />
+              )}
             </Link>
           </li>
           <li>
             <Link>
-              <img
-                src="./images/insta.png"
-                alt="logo"
-                className={`${style.sns}`}
-              />
+              {currentPage % 2 === 0 ? (
+                <img
+                  src="./images/insta_white.png"
+                  alt="logo"
+                  className={`${style.sns}`}
+                />
+              ) : (
+                <img
+                  src="./images/insta_black.png"
+                  alt="logo"
+                  className={`${style.sns}`}
+                />
+              )}
             </Link>
           </li>
           <li>
             <Link>
-              <img
-                src="./images/yutube.png"
-                alt="logo"
-                className={`${style.sns} ${style.youtube_icon}`}
-              />
+              {currentPage % 2 === 0 ? (
+                <img
+                  src="./images/yutube_white.png"
+                  alt="logo"
+                  className={`${style.youtube_icon}`}
+                />
+              ) : (
+                <img
+                  src="./images/yutube_black.png"
+                  alt="logo"
+                  className={`${style.youtube_icon}`}
+                />
+              )}
             </Link>
           </li>
         </ul>
