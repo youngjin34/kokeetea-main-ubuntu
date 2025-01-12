@@ -6,8 +6,9 @@ const PageButton = ({ text, currentPage, pageIndex, onClick }) => {
         cursor: 'pointer',
         padding: '5px 10px',
         margin: '5px 0',
-        color: currentPage === pageIndex ? 'white' : 'black',
-        backgroundColor: currentPage === pageIndex ? 'black' : 'transparent',
+        color: currentPage === pageIndex + 1 ? 'white' : 'black',
+        backgroundColor:
+          currentPage === pageIndex + 1 ? 'black' : 'transparent',
         border: '1px solid black',
         borderRadius: 5,
         transition: 'all 0.3s',
@@ -18,33 +19,17 @@ const PageButton = ({ text, currentPage, pageIndex, onClick }) => {
     </div>
   );
 };
-
-const HomeListButton = ({ currentPage }) => {
+const HomeListButton = ({ currentPage, scrollToSection }) => {
   const buttonLabels = ['Welcome', 'Menu', 'About Us', 'Franchise'];
-
-  const handleAnchorClick = (pageIndex) => {
-    const targetSection = document.getElementById(`section-${pageIndex}`);
-    const DIVIDER_HEIGHT = 5;
-
-    if (targetSection) {
-      const yOffset = pageIndex * DIVIDER_HEIGHT;
-      const yPosition = targetSection.offsetTop + yOffset;
-
-      window.scrollTo({
-        top: yPosition,
-        left: 0,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   return (
     <div
       style={{
         position: 'fixed',
-        top: '50%',
-        right: 100,
+        top: '80%',
+        left: 100,
         transform: 'translateY(-50%)',
+        zIndex: 99999,
       }}
     >
       <div
@@ -61,7 +46,7 @@ const HomeListButton = ({ currentPage }) => {
             text={label}
             pageIndex={index}
             currentPage={currentPage}
-            onClick={handleAnchorClick}
+            onClick={scrollToSection}
           />
         ))}
       </div>

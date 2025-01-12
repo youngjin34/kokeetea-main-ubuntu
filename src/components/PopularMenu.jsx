@@ -22,7 +22,9 @@ function PopularMenu({ items }) {
           <br />
         </p>
       </div>
-      <Carousel items={items} className={style.Carousel} />
+      <div className={`${style.carousel}`}>
+        <Carousel items={items} className={style.Carousel} />
+      </div>
     </div>
   );
 }

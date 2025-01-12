@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Banner from '../components/Banner';
-
 import style from './Home.module.css';
 import HomeListButton from '../components/HomeListButton';
 import PopularMenu from '../components/PopularMenu';
@@ -18,9 +17,22 @@ const items = [
 ];
 
 function Home() {
-  const DIVIDER_HEIGHT = 5;
   const outerDivRef = useRef();
   const [currentPage, setCurrentPage] = useState(1);
+
+  const scrollToSection = (pageIndex) => {
+    const pageHeight = window.innerHeight;
+    const yOffset = pageIndex * pageHeight;
+
+    if (outerDivRef.current) {
+      outerDivRef.current.scrollTo({
+        top: yOffset,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setCurrentPage(pageIndex + 1);
+    }
+  };
 
   useEffect(() => {
     const wheelHandler = (e) => {
@@ -32,66 +44,20 @@ function Home() {
       if (deltaY > 0) {
         // 스크롤 내릴 때
         if (scrollTop >= 0 && scrollTop < pageHeight) {
-          outerDivRef.current.scrollTo({
-            top: pageHeight + DIVIDER_HEIGHT,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(2);
+          scrollToSection(1);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
-          outerDivRef.current.scrollTo({
-            top: pageHeight * 2 + DIVIDER_HEIGHT * 2,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(3);
+          scrollToSection(2);
         } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
-          outerDivRef.current.scrollTo({
-            top: pageHeight * 3 + DIVIDER_HEIGHT * 3,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(4);
-        } else {
-          outerDivRef.current.scrollTo({
-            top: pageHeight * 3 + DIVIDER_HEIGHT * 3,
-            left: 0,
-            behavior: 'smooth',
-          });
+          scrollToSection(3);
         }
       } else {
         // 스크롤 올릴 때
-        if (scrollTop >= 0 && scrollTop < pageHeight) {
-          console.log('현재 1페이지, up');
-          outerDivRef.current.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth',
-          });
-        } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
-          console.log('현재 2페이지, up');
-          outerDivRef.current.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(1);
+        if (scrollTop >= pageHeight * 3) {
+          scrollToSection(2);
         } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
-          console.log('현재 3페이지, up');
-          outerDivRef.current.scrollTo({
-            top: pageHeight + DIVIDER_HEIGHT,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(2);
-        } else {
-          console.log('현재 4페이지, up');
-          outerDivRef.current.scrollTo({
-            top: pageHeight * 2 + DIVIDER_HEIGHT * 2,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setCurrentPage(3);
+          scrollToSection(1);
+        } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
+          scrollToSection(0);
         }
       }
     };
@@ -105,7 +71,10 @@ function Home() {
 
   return (
     <div ref={outerDivRef} className={`${style.Home}`}>
-      <HomeListButton currentPage={currentPage} />
+      <HomeListButton
+        currentPage={currentPage}
+        scrollToSection={scrollToSection}
+      />
       <div id="section-0" className={`${style.one_page}`}>
         <Banner />
       </div>
