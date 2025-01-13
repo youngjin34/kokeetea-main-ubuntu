@@ -1,8 +1,36 @@
-import Carousel from './Carousel';
+import { useState } from "react";
+import Carousel from "./Carousel";
+import style from "./PopularMenu.module.css";
 
-import style from './PopularMenu.module.css';
+const items = [
+  { name: "블랙 리치", image: "/images/Signature/Black Lychee.png" },
+  { name: "드래곤 앤 로즈", image: "/images/Signature/Dragon and Rose.png" },
+  {
+    name: "버터플라이의 꿈",
+    image: "/images/Signature/Dream Of Butterfly.png",
+  },
+  {
+    name: "마음 속 조지아",
+    image: "/images/Signature/Georgia On My Mind.png",
+  },
+  {
+    name: "망고 패션프루트",
+    image: "/images/Signature/Mango Passionfruit.png",
+  },
+  { name: "퍼플 러브", image: "/images/Signature/Purple Love.png" },
+  {
+    name: "샌프란시스코의 장미",
+    image: "/images/Signature/Rose From San Francisco.png",
+  },
+];
 
-function PopularMenu({ items }) {
+function PopularMenu() {
+  const [activeItem, setActiveItem] = useState(null);
+
+  const handleItemChange = (item) => {
+    setActiveItem(item);
+  };
+
   return (
     <div className={style.PopularMenu}>
       <div className={style.menu_introduce}>
@@ -23,7 +51,7 @@ function PopularMenu({ items }) {
         </p>
       </div>
       <div className={`${style.carousel}`}>
-        <Carousel items={items} className={style.Carousel} />
+        <Carousel items={items} onItemChange={handleItemChange} />
       </div>
     </div>
   );

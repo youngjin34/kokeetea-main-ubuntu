@@ -50,13 +50,78 @@ a {
   border-bottom: 3px solid #ba274a; /* 서브 메뉴에도 동일한 스타일 적용 */
 }
 
-/* 서브 메뉴 항목 스타일 */
-.dropdown div > div a {
+/* ---------------- 로그인 모달 창 --------------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두운 부분 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-/* ---------------- 로그인 모달 창 --------------- */
-.sec_modal {
-  display: none;
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 370px;
+  height: 350px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+input {
+  width: 94%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login_btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.login_btn:hover {
+  background-color: #9e2441;
+}
+
+.checkboxWrap {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxWrap input {
+  margin-right: 5px;
+}
+
+.join {
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.join:hover {
+  text-decoration: underline;
+}
+
+.modalClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
 /* ----------------- 로그인, 회원가입, 마이페이지 버튼 ------------ */

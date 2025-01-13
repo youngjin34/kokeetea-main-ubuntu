@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import style from './Navigation.module.css';
+import style from "./Navigation.module.css";
 
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(''); //아이디 입력란 처음공백
-  const [pass, setPass] = useState(''); //이메일 입력란 처음공백
+  const [userName, setUserName] = useState(""); //아이디 입력란 처음공백
+  const [pass, setPass] = useState(""); //이메일 입력란 처음공백
   const [headerLogined, setHeaderLogined] = useState(false);
 
   const [isHovered, setIsHovered] = useState(false); // 마우스 오버 상태 관리
@@ -21,47 +21,37 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   };
 
   // Facebook 아이콘 경로 결정
-  const getLogoIcon = () => {
-    if (isHovered || fontColor === 'black') {
-      return './images/logo_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
-    }
-    return currentPage % 2 === 0
-      ? './images/logo_white.png'
-      : './images/logo_black.png';
-  };
-
-  // Facebook 아이콘 경로 결정
   const getFacebookIcon = () => {
-    if (isHovered || fontColor === 'black') {
-      return './images/facebook_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === "black") {
+      return "./images/facebook_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? './images/facebook_white.png'
-      : './images/facebook_black.png';
+      ? "./images/facebook_white.png"
+      : "./images/facebook_black.png";
   };
 
   // Insta 아이콘 경로 결정
   const getInstaIcon = () => {
-    if (isHovered || fontColor === 'black') {
-      return './images/insta_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === "black") {
+      return "./images/insta_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? './images/insta_white.png'
-      : './images/insta_black.png';
+      ? "./images/insta_white.png"
+      : "./images/insta_black.png";
   };
 
   // YouTube 아이콘 경로 결정
   const getYoutubeIcon = () => {
-    if (isHovered || fontColor === 'black') {
-      return './images/yutube_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === "black") {
+      return "./images/yutube_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? './images/yutube_white.png'
-      : './images/yutube_black.png';
+      ? "./images/yutube_white.png"
+      : "./images/yutube_black.png";
   };
 
   useEffect(() => {
-    if (localStorage.getItem('realname')) {
+    if (localStorage.getItem("realname")) {
       setHeaderLogined(true);
     }
   }, []);
@@ -70,20 +60,20 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     const regExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
 
     if (!userName.trim()) {
-      alert('아이디가 공백입니다.');
+      alert("아이디가 공백입니다.");
       return;
     }
     if (!pass.trim()) {
-      alert('비밀번호가 공백입니다.');
+      alert("비밀번호가 공백입니다.");
       return;
     }
     if (regExp.test(userName)) {
-      alert('아이디에 한글을 입력하실 수 없습니다.');
+      alert("아이디에 한글을 입력하실 수 없습니다.");
       return;
     }
 
     try {
-      const result = await axios.post('http://localhost:8080/kokee/login', {
+      const result = await axios.post("http://localhost:8080/kokee/login", {
         userName: userName,
         password: pass,
       });
@@ -92,47 +82,66 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
       if (result.status === 200) {
         setIsLogined(!isLogined);
         setHeaderLogined(!headerLogined);
-        document.querySelector('.sec_modal').classList.remove('active');
-        localStorage.setItem('userName', userName);
-        localStorage.setItem('realname', result.data.name);
-        localStorage.setItem('email', result.data.email);
-        alert(`${localStorage.getItem('realname')}님 환영합니다!`);
-        navigate('/');
-        console.log('userName:', localStorage.getItem('userName'));
-        console.log('realname:', localStorage.getItem('realname'));
-        console.log('email:', localStorage.getItem('email'));
+        document.querySelector(".sec_modal").classList.remove("active");
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("realname", result.data.name);
+        localStorage.setItem("email", result.data.email);
+        alert(`${localStorage.getItem("realname")}님 환영합니다!`);
+        navigate("/");
+        console.log("userName:", localStorage.getItem("userName"));
+        console.log("realname:", localStorage.getItem("realname"));
+        console.log("email:", localStorage.getItem("email"));
       }
     } catch (error) {
-      alert('아이디과 비밀번호를 확인해보세요');
+      alert("아이디과 비밀번호를 확인해보세요");
     }
   }
 
   function logoutFunction() {
     alert(
-      `로그아웃 합니다. ${localStorage.getItem('realname')}님 안녕히 가세요.`
+      `로그아웃 합니다. ${localStorage.getItem("realname")}님 안녕히 가세요.`
     );
     localStorage.clear();
     setIsLogined(!isLogined);
-    navigate('/');
+    navigate("/");
     window.location.reload();
   }
+
+  // 모달 열기/닫기 상태
+  const [isModalOpen, setModalOpen] = useState(false);
+  const modalRef = useRef(null);
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
   };
 
-  // 모달 열기/닫기 상태
-  const [isModalOpen, setModalOpen] = useState(false);
+  // 바깥쪽 클릭 시 모달 닫기
+  const handleOutsideClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      setModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // 모달이 열릴 때 스크롤 막기
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden"; // 스크롤 막기
+      document.addEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 추가
+    } else {
+      document.body.style.overflow = "auto"; // 스크롤 다시 허용
+      document.removeEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 제거
+    }
+  }, [isModalOpen]);
 
   // 회원가입 이동
   const toForm = () => {
     setModalOpen(false);
-    navigate('/form');
+    navigate("/form");
   };
 
   return (
     <div className={`${style.Navigation}`}>
-      <div className={style.dropdown} style={{ transition: '0.3s' }}>
+      <div className={style.dropdown} style={{ transition: "0.3s" }}>
         {/* KOKEE STORY 메뉴 */}
         <div style={{ color: fontColor }}>
           KOKEE STORY
@@ -191,7 +200,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           {headerLogined ? (
             <li onClick={logoutFunction}>
               <Link to="#" style={{ color: fontColor }}>
-                {localStorage.getItem('realname')}님 LOGOUT |
+                {localStorage.getItem("realname")}님 LOGOUT |
               </Link>
             </li>
           ) : (
@@ -257,8 +266,8 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         </ul>
       </div>
       {isModalOpen && (
-        <div className={style.sec_modal}>
-          <div className="modal_login">
+        <div className={style.modal}>
+          <div className={style.modalContent}>
             <h2>로그인</h2>
             <input
               type="text"
@@ -271,20 +280,24 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               placeholder="비밀번호"
               value={pass}
               onChange={(e) => setPass(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && fn_login()}
+              onKeyDown={(e) => e.key === "Enter" && fn_login()}
             />
-            <label className="checkbox_wrap">
+            <label className={style.checkboxWrap}>
               <input type="checkbox" />
               <p>로그인 상태 유지</p>
             </label>
-            <button type="button" onClick={fn_login}>
+            <button
+              type="button"
+              className={`${style.login_btn}`}
+              onClick={fn_login}
+            >
               로그인
             </button>
-            <div className="join" onClick={toForm}>
+            <div className={style.join} onClick={toForm}>
               회원가입
             </div>
-            <div className="modal_close" onClick={toggleModal}>
-              <i className="fa-regular fa-x" />
+            <div className={style.modalClose} onClick={toggleModal}>
+              <img src="/public/images/close.png" />
             </div>
           </div>
         </div>

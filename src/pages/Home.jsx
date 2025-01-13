@@ -1,20 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import Welcome from '../components/Welcome';
-import style from './Home.module.css';
-import HomeListButton from '../components/HomeListButton';
-import PopularMenu from '../components/PopularMenu';
-import AboutUs from '../components/AboutUs';
-import Franchise from '../components/Franchise';
-
-const items = [
-  '/images/Signature/Black Lychee.png',
-  '/images/Signature/Dragon and Rose.png',
-  '/images/Signature/Dream Of Butterfly.png',
-  '/images/Signature/Georgia On My Mind.png',
-  '/images/Signature/Mango Passionfruit.png',
-  '/images/Signature/Purple Love.png',
-  '/images/Signature/Rose From San Francisco.png',
-];
+import { useEffect, useRef } from "react";
+import Welcome from "../components/Welcome";
+import style from "./Home.module.css";
+import HomeListButton from "../components/HomeListButton";
+import PopularMenu from "../components/PopularMenu";
+import AboutUs from "../components/AboutUs";
+import Franchise from "../components/Franchise";
 
 function Home({ currentPage, setCurrentPage }) {
   const outerDivRef = useRef();
@@ -27,7 +17,7 @@ function Home({ currentPage, setCurrentPage }) {
       outerDivRef.current.scrollTo({
         top: yOffset,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setCurrentPage(pageIndex);
     }
@@ -40,37 +30,29 @@ function Home({ currentPage, setCurrentPage }) {
       const { scrollTop } = outerDivRef.current;
       const pageHeight = window.innerHeight;
 
+      const totalSections = 4; // 4개의 섹션 + 푸터
+
       if (deltaY > 0) {
         // 스크롤 내릴 때
-        if (scrollTop >= 0 && scrollTop < pageHeight) {
-          scrollToSection(1);
-          setCurrentPage(1);
-        } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
-          scrollToSection(2);
-          setCurrentPage(2);
-        } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
-          scrollToSection(3);
-          setCurrentPage(3);
+        const nextSectionIndex = Math.ceil(scrollTop / pageHeight);
+        if (nextSectionIndex < totalSections - 1) {
+          scrollToSection(nextSectionIndex + 1);
+          setCurrentPage(nextSectionIndex + 1);
         }
       } else {
         // 스크롤 올릴 때
-        if (scrollTop >= pageHeight * 3) {
-          scrollToSection(2);
-          setCurrentPage(2);
-        } else if (scrollTop >= pageHeight * 2 && scrollTop < pageHeight * 3) {
-          scrollToSection(1);
-          setCurrentPage(1);
-        } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
-          scrollToSection(0);
-          setCurrentPage(0);
+        const prevSectionIndex = Math.floor(scrollTop / pageHeight);
+        if (prevSectionIndex > 0) {
+          scrollToSection(prevSectionIndex - 1);
+          setCurrentPage(prevSectionIndex - 1);
         }
       }
     };
 
     const outerDivRefCurrent = outerDivRef.current;
-    outerDivRefCurrent.addEventListener('wheel', wheelHandler);
+    outerDivRefCurrent.addEventListener("wheel", wheelHandler);
     return () => {
-      outerDivRefCurrent.removeEventListener('wheel', wheelHandler);
+      outerDivRefCurrent.removeEventListener("wheel", wheelHandler);
     };
   }, []);
 
@@ -84,7 +66,7 @@ function Home({ currentPage, setCurrentPage }) {
         <Welcome />
       </div>
       <div id="section-1" className={`${style.one_page}`}>
-        <PopularMenu items={items} />
+        <PopularMenu />
       </div>
       <div id="section-2" className={`${style.one_page}`}>
         <AboutUs />

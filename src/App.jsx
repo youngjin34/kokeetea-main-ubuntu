@@ -1,16 +1,21 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useState } from 'react';
-import Home from './pages/Home';
-import style from './App.module.css';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import Home from "./pages/Home";
+import style from "./App.module.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+  const [isLogined, setIsLogined] = useState(false);
 
   return (
     <BrowserRouter>
-      <Header currentPage={currentPage} />
+      <Header
+        currentPage={currentPage}
+        isLogined={isLogined}
+        setIsLogined={setIsLogined}
+      />
       <div className={`${style.App}`}>
         <Routes>
           <Route
@@ -21,6 +26,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Footer />
     </BrowserRouter>
   );
 }

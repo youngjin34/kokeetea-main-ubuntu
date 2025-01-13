@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
-import style from './Welcome.module.css';
+import { useEffect, useRef } from "react";
+import style from "./Welcome.module.css";
+import Notice from "./notice";
 
 const Welcome = () => {
   const videoRef = useRef(null);
@@ -7,7 +8,7 @@ const Welcome = () => {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch((error) => {
-        console.error('비디오 재생 실패:', error);
+        console.error("비디오 재생 실패:", error);
       });
     }
   }, []);
@@ -18,6 +19,7 @@ const Welcome = () => {
         <source src="/video/backgroud-video.mp4" type="video/mp4" />
         브라우저가 비디오 태그를 지원하지 않습니다.
       </video>
+      <Notice />
     </div>
   );
 };
