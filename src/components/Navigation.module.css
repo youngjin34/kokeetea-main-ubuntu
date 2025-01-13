@@ -1,0 +1,83 @@
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.Navigation {
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+/* ------------ 메뉴 드롭 다운 ----------------- */
+/* Dropdown 스타일 */
+.dropdown {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* 전체 메뉴가 100% 너비를 차지하도록 설정 */
+}
+
+.dropdown div {
+  cursor: pointer;
+  padding: 10px 30px;
+  font-size: 16px;
+  flex-grow: 1; /* 모든 항목이 동일한 너비를 가지도록 설정 */
+  text-align: center;
+
+  position: relative; /* 서브 메뉴가 이 항목 아래에 나타나도록 설정 */
+}
+
+.dropdown div > div {
+  display: none; /* 기본적으로 서브 메뉴는 숨겨둡니다 */
+}
+
+.dropdown:hover div > div {
+  display: block; /* 부모 메뉴에 마우스를 올리면 모든 서브 메뉴가 보이도록 설정 */
+  position: absolute;
+  top: 100%; /* 메뉴 항목 바로 아래에 위치하도록 설정 */
+  left: 0;
+  z-index: 1; /* 서브 메뉴가 다른 요소 위에 표시되도록 설정 */
+}
+
+.dropdown a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dropdown div > div a:hover {
+  border-bottom: 3px solid #ba274a; /* 서브 메뉴에도 동일한 스타일 적용 */
+}
+
+/* 서브 메뉴 항목 스타일 */
+.dropdown div > div a {
+}
+
+/* ---------------- 로그인 모달 창 --------------- */
+.sec_modal {
+  display: none;
+}
+
+/* ----------------- 로그인, 회원가입, 마이페이지 버튼 ------------ */
+ul {
+  list-style: none;
+}
+
+.header_top {
+  margin-left: 100px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/*  ---------------------- sns 버튼 ----------------------- */
+.sns {
+  width: 25px;
+  height: 25px;
+}
+
+.youtube_icon {
+  width: 20px;
+  height: 20px;
+}
