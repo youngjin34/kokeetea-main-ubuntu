@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import Welcome from "../components/Welcome";
 import style from "./Home.module.css";
 import HomeListButton from "../components/HomeListButton";
-import PopularMenu from "../components/PopularMenu";
+import MenuSlide from "../components/MenuSlide";
 import AboutUs from "../components/AboutUs";
 import Franchise from "../components/Franchise";
 
@@ -58,15 +58,17 @@ function Home({ currentPage, setCurrentPage }) {
 
   return (
     <div ref={outerDivRef} className={`${style.Home}`}>
-      <HomeListButton
-        currentPage={currentPage}
-        scrollToSection={scrollToSection}
-      />
+      {currentPage !== 1 && (
+        <HomeListButton
+          currentPage={currentPage}
+          scrollToSection={scrollToSection}
+        />
+      )}
       <div id="section-0" className={`${style.one_page}`}>
         <Welcome />
       </div>
       <div id="section-1" className={`${style.one_page}`}>
-        <PopularMenu />
+        <MenuSlide />
       </div>
       <div id="section-2" className={`${style.one_page}`}>
         <AboutUs />

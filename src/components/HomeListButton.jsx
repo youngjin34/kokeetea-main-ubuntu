@@ -3,13 +3,13 @@ const PageButton = ({ text, currentPage, pageIndex, onClick }) => {
     <div
       onClick={() => onClick(pageIndex)}
       style={{
-        cursor: 'pointer',
-        padding: '5px 10px',
-        margin: '5px 0',
-        color: currentPage === pageIndex + 1 ? '#ba274a' : 'gray',
-        fontSize: currentPage === pageIndex + 1 ? '24px' : '18px',
-        transition: 'all 0.3s',
-        textAlign: 'center',
+        cursor: "pointer",
+        padding: "5px 10px",
+        margin: "5px 0",
+        color: currentPage === pageIndex + 1 ? "#ba274a" : "gray",
+        fontSize: currentPage === pageIndex + 1 ? "24px" : "18px",
+        transition: "all 0.3s",
+        textAlign: "center",
       }}
     >
       {text}
@@ -17,24 +17,24 @@ const PageButton = ({ text, currentPage, pageIndex, onClick }) => {
   );
 };
 const HomeListButton = ({ currentPage, scrollToSection }) => {
-  const buttonLabels = ['Welcome', 'Menu', 'About Us', 'Franchise'];
+  const buttonLabels = ["Welcome", "Menu", "About Us", "Franchise"];
 
   return (
     <div
       style={{
-        position: 'fixed',
-        top: '70%',
+        position: "fixed",
+        top: "70%",
         left: 100,
-        transform: 'translateY(-50%)',
+        transform: "translateY(-50%)",
         zIndex: 999,
       }}
     >
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {buttonLabels.map((label, index) => (
