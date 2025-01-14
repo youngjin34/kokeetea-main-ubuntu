@@ -1,16 +1,16 @@
 /* ------------- 폰트 ---------------- */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 .AboutUs {
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 
-  background-image: url('/public/images/aboutUs.png'); /* 배경 이미지 경로 */
+  background-image: url("/public/images/aboutUs.png"); /* 배경 이미지 경로 */
   background-size: cover; /* 이미지가 요소 크기에 맞게 조정됨 */
   background-position: center; /* 이미지가 가운데 정렬 */
   height: 100vh;
@@ -25,7 +25,7 @@
 }
 
 .AboutUs::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -58,7 +58,7 @@
 }
 
 .underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0; /* 텍스트 하단에 배경 배치 */

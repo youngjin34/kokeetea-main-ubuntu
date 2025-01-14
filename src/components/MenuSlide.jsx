@@ -308,7 +308,7 @@ function MenuSlide() {
 
   return (
     <div className={style.MenuSlide}>
-      <div className={style.container}> </div>
+      <div className={style.padding}></div>
       <div className={style.MENU}>MENU</div>
       <div className={style.MenuTabs}>
         <span
