@@ -47,8 +47,8 @@ const Notice = () => {
       )}
 
       <div className={`${style.notice_btn}`}>
-        <img src="/public/images/left.png" onClick={() => prevNotice()} />
-        <img src="/public/images/right.png" onClick={() => nextNotice()} />
+        <img src="/public/img/left.png" onClick={() => prevNotice()} />
+        <img src="/public/img/right.png" onClick={() => nextNotice()} />
       </div>
     </div>
   );

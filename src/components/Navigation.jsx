@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
 
+
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState(""); //아이디 입력란 처음공백
@@ -23,31 +24,31 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   // Facebook 아이콘 경로 결정
   const getFacebookIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./images/facebook_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "./img/facebook_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./images/facebook_white.png"
-      : "./images/facebook_black.png";
+      ? "./img/facebook_white.png"
+      : "./img/facebook_black.png";
   };
 
   // Insta 아이콘 경로 결정
   const getInstaIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./images/insta_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "./img/insta_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./images/insta_white.png"
-      : "./images/insta_black.png";
+      ? "./img/insta_white.png"
+      : "./img/insta_black.png";
   };
 
   // YouTube 아이콘 경로 결정
   const getYoutubeIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./images/yutube_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "./img/yutube_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./images/yutube_white.png"
-      : "./images/yutube_black.png";
+      ? "./img/yutube_white.png"
+      : "./img/yutube_black.png";
   };
 
   useEffect(() => {
@@ -146,7 +147,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         <div style={{ color: fontColor }}>
           KOKEE STORY
           <div>
-            <Link to="/listpage" style={{ color: fontColor }}>
+            <Link to="/kokeestory" style={{ color: fontColor }}>
               Brand
             </Link>
           </div>
@@ -297,7 +298,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               회원가입
             </div>
             <div className={style.modalClose} onClick={toggleModal}>
-              <img src="/public/images/close.png" />
+              <img src="/public/img/close.png" />
             </div>
           </div>
         </div>

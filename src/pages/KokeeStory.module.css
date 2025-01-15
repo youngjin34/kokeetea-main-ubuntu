@@ -1,0 +1,74 @@
+.Container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 80px 0;
+  background: #fff;
+}
+
+.MainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.Title {
+  font-size: 48px;
+  color: #ba274a;
+  margin-bottom: 20px;
+}
+
+.SubTitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 60px;
+  line-height: 1.6;
+}
+
+.FeaturesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.FeatureBox {
+  padding: 30px;
+  background: #f8f8f8;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.FeatureTitle {
+  font-size: 24px;
+  color: #ba274a;
+  margin-bottom: 15px;
+}
+
+.FeatureText {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.ImageGallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.GalleryImage {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}

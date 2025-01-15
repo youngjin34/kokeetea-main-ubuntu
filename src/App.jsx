@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import style from "./App.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import KokeeStory from "./pages/KokeeStory";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -22,6 +23,12 @@ function App() {
             path="/"
             element={
               <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            }
+          />
+          <Route
+            path="/kokeestory"
+            element={
+              <KokeeStory />
             }
           />
         </Routes>

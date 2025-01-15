@@ -7,7 +7,7 @@ function AboutUs() {
         <h1 className={`${style.title} ${style.underline}`}>ABOUT US</h1>
         <br />
         <img
-          src="/public/images/aboutUsIcon.png"
+          src="/public/img/aboutUsIcon.png"
           className={`${style.about_us_icon}`}
         />
         <p className={`${style.content}`}>
