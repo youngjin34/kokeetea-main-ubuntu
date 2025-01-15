@@ -24,7 +24,7 @@
 .menu_title {
   font-size: 64px;
   font-weight: bold;
-  letter-spacing: 5px; /* 글자 간격을 5px로 설정 */
+  letter-spacing: 5px; 
 }
 
 .underline {
@@ -37,11 +37,11 @@
   content: "";
   position: absolute;
   left: -3px;
-  bottom: 0; /* 텍스트 하단에 배경 배치 */
+  bottom: 0; 
   width: 100%;
-  height: 40%; /* 높이를 텍스트의 절반으로 설정 */
+  height: 40%; 
   background-color: #ba274a;
-  z-index: -1; /* 배경이 텍스트 뒤로 가도록 설정 */
+  z-index: -1; 
 }
 
 .menu_content {
@@ -66,15 +66,20 @@
 }
 
 .FormTitle {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: left;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  display: flex;  
+  align-items: center;
+  gap: 12px;  
 }
 
-.FormTabs {
-  margin-bottom: 0;
-  display: flex;
-  justify-content: flex-start;
+.FormTitle::before {
+  content: '';
+  width: 6px;  
+  height: 32px;  
+  background: #ba274a;  
+  border-radius: 8px;  
 }
 
 .TabButton {
@@ -98,15 +103,27 @@
 }
 
 .FormGroup label {
-  min-width: 80px; 
+  min-width: 80px;
   line-height: 36px;
 }
 
-.FormGroup input,
-.FormGroup textarea {
-  flex: 1;     
-  border: 1px solid #F5EDF0;
+.FormGroup input {
+  flex: 1;
+  height: 36px;
+  box-sizing: border-box;
   margin: 0;
+  border: 1px solid #F5EDF0;
+  border-radius: 8px;
+}
+
+.FormGroup textarea {
+  height: auto;
+  border: 1px solid #F5EDF0;
+  border-radius: 8px;
+  flex: 1;
+  padding: 8px;
+  margin: 0;
+  height: 100px;
 }
 
 .FormGroup:has(textarea) {
@@ -128,7 +145,7 @@
 .SubmitButton {
   width: 100%;
   padding: 15px;
-  background-color: #BA274A;
+  background-color: #ba274a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -137,7 +154,7 @@
 }
 
 .SubmitButton:hover {
-  background-color: #a01224;
+  background-color: #BA274A;
 }
 
 .RadioGroup {
@@ -150,6 +167,7 @@
   cursor: pointer;
   accent-color: #BA274A; 
   width: 20px;
+  height: 15px;
 }
 
 .RadioItem {

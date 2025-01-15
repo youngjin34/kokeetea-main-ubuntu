@@ -25,7 +25,6 @@ const Affiliated = () => {
                     type="radio"
                     name="consultationType"
                     value="가맹상담"
-                    defaultChecked
                   />
                   가맹상담
                 </label>
