@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import style from "./App.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import MenuPage from "./pages/MenuPage";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -36,6 +37,7 @@ function App() {
               <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
             }
           />
+          <Route path="/menupage" element={<MenuPage />} />
         </Routes>
         <AppContent />
       </div>
