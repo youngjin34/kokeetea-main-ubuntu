@@ -9,8 +9,8 @@ const Affiliated = () => {
           <span className={style.underline}>AFFILIATED</span>
         </div>
         <p className={style.menu_content}>
-          코키티가 함께 만들어가는 가치 창출로 성장하는 모델입니다. <br />
-          가맹 점주님의 성공 시작점이라는 목표 서비스에 자부심을 가집니다.
+          코키티 가맹 문의는 '1:1 맞춤' 상담으로 진행됩니다. <br />
+          가맹 상담부터 오픈, 사후관리까지 토탈 서비스를 지원합니다.
         </p>
 
         <div className={style.FormContainer}>
