@@ -176,7 +176,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         <div style={{ color: fontColor }}>
           AFFILIATED
           <div>
-            <Link to="/FranchiseInquiryPage" style={{ color: fontColor }}>
+            <Link to="/affiliated" style={{ color: fontColor }}>
               Inquire
             </Link>
           </div>

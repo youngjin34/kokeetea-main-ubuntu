@@ -1,0 +1,164 @@
+.Container {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.MainContent {
+  padding: 20px;
+  padding-top: 180px;
+  padding-bottom: 170px;
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.menu_introduce {
+  font-family: "Pretendard-Regular";
+
+  width: 40%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.menu_title {
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 5px; /* 글자 간격을 5px로 설정 */
+}
+
+.underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  bottom: 0; /* 텍스트 하단에 배경 배치 */
+  width: 100%;
+  height: 40%; /* 높이를 텍스트의 절반으로 설정 */
+  background-color: #ba274a;
+  z-index: -1; /* 배경이 텍스트 뒤로 가도록 설정 */
+}
+
+.menu_content {
+  font-size: 14px;
+  padding-bottom: 30px;
+}
+
+.FormContainer {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Form {
+  text-align: left;
+  border: 1px solid #F5EDF0;
+  border-radius: 8px;
+  padding: 30px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.FormTitle {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.FormTabs {
+  margin-bottom: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.TabButton {
+  padding: 10px 20px;
+  border: 1px solid #F5EDF0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.TabButton.active {
+  background-color: #000;
+  color: white;
+}
+
+.FormGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.FormGroup label {
+  min-width: 100px; 
+  flex-shrink: 0;  
+}
+
+.FormGroup input,
+.FormGroup textarea {
+  flex: 1;          
+  border: 1px solid #F5EDF0;
+}
+
+.FormGroup:has(textarea) {
+  align-items: flex-start;
+}
+
+.FormFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.ButtonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.SubmitButton {
+  width: 100%;
+  padding: 15px;
+  background-color: #BA274A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.SubmitButton:hover {
+  background-color: #a01224;
+}
+
+.RadioGroup {
+  display: flex;
+  gap: 20px;
+}
+
+.RadioItem input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: #BA274A; 
+  width: 20px;
+}
+
+.RadioItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #000; 
+}
+
+.RadioItem label {
+  cursor: pointer;
+}
