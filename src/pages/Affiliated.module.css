@@ -154,26 +154,26 @@
 }
 
 .SubmitButton:hover {
-  background-color: #BA274A;
+  background-color: #9e1f3e;
 }
 
 .RadioGroup {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 .RadioItem input[type="radio"] {
   margin: 0;
   cursor: pointer;
   accent-color: #BA274A; 
-  width: 20px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 }
 
 .RadioItem {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   cursor: pointer;
   color: #000; 
 }

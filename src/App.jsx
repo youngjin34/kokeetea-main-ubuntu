@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
+import Inquiry from "./pages/Inquiry";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -36,6 +37,12 @@ function App() {
             path="/affiliated"
             element={
               <Affiliated />
+            }
+          />
+          <Route
+            path="/inquiry"
+            element={
+              <Inquiry />
             }
           />
         </Routes>

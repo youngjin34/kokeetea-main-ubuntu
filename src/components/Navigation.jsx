@@ -189,7 +189,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <Link to="./faq" style={{ color: fontColor }}>
               FAQ
             </Link>
-            <Link to="./VoiceOfCustomer" style={{ color: fontColor }}>
+            <Link to="/inquiry" style={{ color: fontColor }}>
               1:1 Inquire
             </Link>
           </div>
