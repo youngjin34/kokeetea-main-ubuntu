@@ -68,7 +68,6 @@
 .FormTitle {
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 40px;
   display: flex;  
   align-items: center;
   gap: 12px;  
@@ -102,9 +101,10 @@
   margin-bottom: 1rem;
 }
 
-.FormGroup label {
+.FormGroup > label {
   min-width: 80px;
   line-height: 36px;
+  font-weight: bold;
 }
 
 .FormGroup input {
@@ -176,6 +176,7 @@
   gap: 2px;
   cursor: pointer;
   color: #000; 
+  font-weight: normal;
 }
 
 .RadioItem label {

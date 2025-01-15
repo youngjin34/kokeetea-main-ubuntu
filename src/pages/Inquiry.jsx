@@ -6,7 +6,7 @@ const Inquiry = () => {
     <div className={style.Container}>
       <div className={style.MainContent}>
         <div className={style.menu_title}>
-          <span className={style.underline}>1:1 문의</span>
+          <span className={style.underline}>1:1 문의하기</span>
         </div>
         <p className={style.menu_content}>
           코키티는 접수해 주신 의견에 대해<br />
