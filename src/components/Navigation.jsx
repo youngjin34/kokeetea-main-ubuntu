@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
 
-
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState(""); //아이디 입력란 처음공백
@@ -157,7 +156,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         <div style={{ color: fontColor }}>
           MENU
           <div>
-            <Link to="./productlist" style={{ color: fontColor }}>
+            <Link to="/menupage" style={{ color: fontColor }}>
               Drink
             </Link>
           </div>

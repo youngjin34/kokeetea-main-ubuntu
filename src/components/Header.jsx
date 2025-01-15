@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import style from "./Header.module.css";
 
@@ -7,9 +7,17 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
   const [isHovered, setIsHovered] = useState(false); // 헤더 배경색을 하얗게 할지 여부
   const [isNavHovered, setIsNavHovered] = useState(false); // Navigation에 마우스가 올렸는지 여부
 
+  const location = useLocation();
+
+  // Home 페이지 여부 확인
+  const isHomePage = location.pathname === "/";
+
   const getHeaderColor = () => {
     if (isHovered || isNavHovered) {
       return "white"; // 마우스를 올렸을 때 헤더 배경색을 하얗게
+    }
+    if (!isHomePage) {
+      return "white"; // Home 페이지가 아닐 경우 배경은 검은색
     }
     switch (currentPage) {
       case 0:
@@ -28,6 +36,9 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
   const getFontColor = () => {
     if (isHovered) {
       return "black"; // 배경이 하얗게 될 때 네비게이션 글씨 색을 검정색으로 변경
+    }
+    if (!isHomePage) {
+      return "black"; // Home이 아닐 때 글씨 색은 흰색
     }
     switch (currentPage) {
       case 0:
@@ -48,6 +59,9 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
     if (isHovered) {
       return "./img/logo_black.png"; // 마우스를 올렸을 때 검은색 로고로 변경
     }
+    if (!isHomePage) {
+      return "./img/logo_black.png"; // Home이 아닐 경우 흰색 로고
+    }
     return currentPage % 2 === 0
       ? "./img/logo_white.png"
       : "./img/logo_black.png";
@@ -58,7 +72,6 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
       className={`${style.Header}`}
       style={{
         background: getHeaderColor(),
-        paddingBottom: isNavHovered ? "100px" : "0", // Navigation에 마우스를 올렸을 때 padding-bottom을 100px로 변경
         transition: "0.7s",
       }}
       onMouseEnter={() => {
