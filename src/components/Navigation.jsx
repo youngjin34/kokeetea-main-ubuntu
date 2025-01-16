@@ -11,9 +11,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const [pass, setPass] = useState("");
   const [headerLogined, setHeaderLogined] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
   const [isModalOpen, setModalOpen] = useState(false);
   const menuRef = useRef(null);
   const modalRef = useRef(null);
+
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
   const handleMouseEnter = () => {
@@ -22,16 +24,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-  };
-
-  // 로고 아이콘 경로 결정
-  const getLogoIcon = () => {
-    if (isHovered || fontColor === "black") {
-      return "./img/logo_black.png";
-    }
-    return currentPage % 2 === 0
-      ? "./img/logo_white.png"
-      : "./img/logo_black.png";
   };
 
   // 햄버거 아이콘 경로 결정
@@ -146,8 +138,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
-    setLoginModalOpen(false);
-
     setActiveSubMenu(null); // 모달 열 때 하위 메뉴 초기화
   };
 
@@ -168,21 +158,24 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     <div className={`${style.Navigation}`}>
       <div className={style.nav_container}>
         {/* 이미지 햄버거 버튼 */}
-        <div className={style.ham_menu_button} onClick={toggleModal}>
+        <div className={style.ham_menu_button}>
           <img
+            onClick={toggleModal}
             src={getHamburgerIcon()}
             alt="Hamburger Menu"
             className={`${style.ham_menu_icon}`}
           />
-        </div>
 
-        <Link
-          to="/"
-          className={style.logo_text}
-          style={{ marginRight: "30vw", marginLeft: "30vw" }}
-        >
-          KOKEE TEA
-        </Link>
+          <Link
+            to="/"
+            className={style.logo_text}
+            style={{
+              color: fontColor,
+            }}
+          >
+            KOKEE TEA
+          </Link>
+        </div>
 
         {/* 모달 창 */}
         <div
@@ -197,8 +190,9 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           >
             {/* 모달 닫기 버튼 */}
             <button className={style.modal_close_button} onClick={toggleModal}>
-              ❌
+              x
             </button>
+
             {/* KOKEE STORY 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -216,6 +210,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
+
             {/* MENU 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -233,6 +228,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
+
             {/* STORE 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -250,6 +246,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
+
             {/* AFFILIATED 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -262,7 +259,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "AFFILIATED" ? style.active : ""
                 }`}
               >
-                <Link to="/FranchiseInquiryPage" onClick={toggleModal}>
+                <Link to="/affiliated" onClick={toggleModal}>
                   Inquire
                 </Link>
               </div>
@@ -290,79 +287,79 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             </div>
           </div>
         </div>
-      </div>
-      <div className="inner">
-        <ul className={`${style.header_top}`}>
-          {headerLogined ? (
-            <li onClick={logoutFunction}>
-              <Link to="#" style={{ color: fontColor }}>
-                {localStorage.getItem("realname")}님 LOGOUT |
-              </Link>
-            </li>
-          ) : (
+        <div className="inner">
+          <ul className={`${style.header_top}`}>
+            {headerLogined ? (
+              <li onClick={logoutFunction}>
+                <Link to="#" style={{ color: fontColor }}>
+                  {localStorage.getItem("realname")}님 LOGOUT |
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link onClick={toggleLoginModal} style={{ color: fontColor }}>
+                  LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
+                </Link>
+              </li>
+            )}
+            {!headerLogined && (
+              <li>
+                <Link to="/form" style={{ color: fontColor }}>
+                  JOIN
+                </Link>
+              </li>
+            )}
+            {headerLogined && (
+              <li>
+                <Link to="/mypage" style={{ color: fontColor }}>
+                  MY PAGE
+                </Link>
+              </li>
+            )}
             <li>
-              <Link onClick={toggleLoginModal} style={{ color: fontColor }}>
-                LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
+              <Link
+                to="https://ko-kr.facebook.com/luvkokeetea/"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getFacebookIcon()}
+                  alt="Facebook logo"
+                  className={style.sns}
+                />
               </Link>
             </li>
-          )}
-          {!headerLogined && (
             <li>
-              <Link to="/form" style={{ color: fontColor }}>
-                JOIN
+              <Link
+                to="https://www.instagram.com/kokeetea/"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getInstaIcon()}
+                  alt="Facebook logo"
+                  className={style.sns}
+                />
               </Link>
             </li>
-          )}
-          {headerLogined && (
             <li>
-              <Link to="/mypage" style={{ color: fontColor }}>
-                MY PAGE
+              <Link
+                to="https://www.youtube.com/@kokeetea2886"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getYoutubeIcon()}
+                  alt="YouTube logo"
+                  className={style.youtube_icon}
+                />
               </Link>
             </li>
-          )}
-          <li>
-            <Link
-              to="https://ko-kr.facebook.com/luvkokeetea/"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getFacebookIcon()}
-                alt="Facebook logo"
-                className={style.sns}
-              />
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="https://www.instagram.com/kokeetea/"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getInstaIcon()}
-                alt="Facebook logo"
-                className={style.sns}
-              />
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="https://www.youtube.com/@kokeetea2886"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getYoutubeIcon()}
-                alt="YouTube logo"
-                className={style.youtube_icon}
-              />
-            </Link>
-          </li>
-        </ul>
+          </ul>
+        </div>
       </div>
 
-      {isModalOpen && (
+      {isLoginModalOpen && (
         <div className={style.modal}>
           <div className={style.modalContent}>
             <h2>로그인</h2>
@@ -393,7 +390,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <div className={style.join} onClick={toForm}>
               회원가입
             </div>
-            <div className={style.modalClose} onClick={toggleModal}>
+            <div className={style.modalClose} onClick={toggleLoginModal}>
               <img src="/public/img/close.png" />
             </div>
           </div>

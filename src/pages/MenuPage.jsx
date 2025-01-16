@@ -150,6 +150,7 @@ function MenuPage() {
         <div className={style.modal}>
           <div className={style.modalContent}>
             <div className={style.modal_first}>
+              <div className={style.option_title}>옵션 선택</div>
               <img
                 src={selectedProduct.image}
                 alt={selectedProduct.pdName}
