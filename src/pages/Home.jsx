@@ -32,6 +32,7 @@ function Home({ currentPage, setCurrentPage }) {
       setTimeout(() => {
         setIsScrolling(false);
       }, 800); // 스크롤 동작 완료 후 약간의 딜레이 추가
+
     }
   };
 
@@ -95,11 +96,13 @@ function Home({ currentPage, setCurrentPage }) {
           scrollToSection={scrollToSection}
         />
       )}
+
       <div id="section-0" className={`${style.one_page}`}>
         <Welcome />
       </div>
       <div id="section-1" className={`${style.one_page}`}>
         <MenuSlide />
+
       </div>
       <div id="section-2" className={`${style.one_page}`}>
         <AboutUs />

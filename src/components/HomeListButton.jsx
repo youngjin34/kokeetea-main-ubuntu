@@ -26,7 +26,7 @@ const HomeListButton = ({ currentPage, scrollToSection }) => {
         top: "70%",
         left: 100,
         transform: "translateY(-50%)",
-        zIndex: 999,
+        zIndex: 9,
       }}
     >
       <div

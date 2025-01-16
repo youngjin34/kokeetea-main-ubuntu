@@ -31,6 +31,7 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
+
       <div className={`${style.App}`}>
         <Routes>
           <Route
@@ -45,6 +46,7 @@ function App() {
         </Routes>
         <AppContent />
       </div>
+
     </BrowserRouter>
   );
 }

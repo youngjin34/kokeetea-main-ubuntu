@@ -9,45 +9,17 @@ a {
   transition: background-color 0.3s ease;
 }
 
-/* ------------ 메뉴 드롭 다운 ----------------- */
-/* Dropdown 스타일 */
-.dropdown {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  width: 100%; /* 전체 메뉴가 100% 너비를 차지하도록 설정 */
-}
-
-.dropdown div {
-  cursor: pointer;
-  padding: 10px 30px;
-  font-size: 16px;
-  flex-grow: 1; /* 모든 항목이 동일한 너비를 가지도록 설정 */
-  text-align: center;
-
-  position: relative; /* 서브 메뉴가 이 항목 아래에 나타나도록 설정 */
-}
-
-.dropdown div > div {
-  display: none; /* 기본적으로 서브 메뉴는 숨겨둡니다 */
-}
-
-.dropdown:hover div > div {
-  display: block; /* 부모 메뉴에 마우스를 올리면 모든 서브 메뉴가 보이도록 설정 */
-  position: absolute;
-  top: 100%; /* 메뉴 항목 바로 아래에 위치하도록 설정 */
-  left: 0;
-  z-index: 1; /* 서브 메뉴가 다른 요소 위에 표시되도록 설정 */
-}
-
-.dropdown a {
+.ham_menu_button {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  cursor: pointer;
+  justify-content: space-between;
+  z-index: 3;
 }
 
-.dropdown div > div a:hover {
-  border-bottom: 3px solid #ba274a; /* 서브 메뉴에도 동일한 스타일 적용 */
+.ham_menu_icon {
+  width: 100%;
+  transition: transform 0.3s ease;
 }
 
 /* ---------------- 로그인 모달 창 --------------- */
@@ -137,6 +109,57 @@ ul {
 }
 
 /*  ---------------------- sns 버튼 ----------------------- */
+
+.nav_container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.rotate {
+  transform: rotate(-45deg);
+}
+
+.ham_menu_button {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.ham_menu_icon {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.logo_text {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.header_top {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.header_top li {
+  margin-left: 1rem;
+}
+
 .sns {
   width: 25px;
   height: 25px;
@@ -145,4 +168,208 @@ ul {
 .youtube_icon {
   width: 20px;
   height: 20px;
+}
+
+.sec_modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_login {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 400px;
+}
+
+.modal_login h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.modal_login input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.checkbox_wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.modal_login button {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.join {
+  text-align: center;
+  color: blue;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* --------------------------- 모달 오버레이 ------------------------ */
+.modal_overlay {
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal_overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 모달 내용 */
+.modal_menu {
+  background-color: rgba(0, 0, 0, 0.897);
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 50px;
+}
+
+.modal_menu.active {
+  transform: translateX(0);
+}
+
+.modal_menu > button.modal_close_button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* 모달 내 메뉴 스타일 */
+.modal_menu_item {
+  margin-bottom: 15px;
+  width: 20%;
+  height: 50px;
+  font-size: 50px;
+  font-weight: bold; /* 폰트 굵게 적용 */
+  position: relative;
+  left: 25%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.modal_menu_item:hover {
+  transform: translateX(40px);
+  transition: 0.5s;
+}
+
+/* 나머지 메뉴 항목은 흐리게 처리 */
+.modal_menu_item:not(:hover):not(.active) {
+  opacity: 0.5; /* 비활성화된 항목은 흐리게 처리 */
+}
+
+.modal_menu_item:hover::after {
+  content: ""; /* 가상 요소에 내용 추가 */
+  position: absolute; /* 부모 요소를 기준으로 위치 설정 */
+  top: 0; /* 부모 요소의 세로 가운데에 위치 */
+  left: -30px; /* 오른쪽에 10px만큼 띄운 후 점을 위치시킴 */
+  width: 15px; /* 점의 너비 */
+  height: 15px; /* 점의 높이 */
+  background-color: #ba274a; /* 빨간색 점 */
+  transform: translateY(-50%); /* 세로 방향 가운데 정렬 */
+}
+
+/* 서브 메뉴 스타일 */
+.submenu {
+  position: absolute;
+  left: 100%; /* 부모 요소의 오른쪽으로 배치 */
+  top: 0;
+  border-radius: 8px;
+  padding: 10px;
+  padding-left: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  width: 260px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 1.5rem;
+}
+
+.modal_menu_item:hover .submenu {
+  display: flex; /* 호버 시 보이도록 수정 */
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.submenu.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.submenu > a {
+  font-size: 32px;
+  padding: 5px;
+  display: block;
+  text-decoration: none;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.submenu > a:hover {
+  scale: 1.1;
+  transition: 0.3s;
+  color: gray;
 }
