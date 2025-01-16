@@ -17,6 +17,8 @@ function AppContent() {
     </>
   );
 }
+import KokeeStory from "./pages/KokeeStory";
+import Affiliated from "./pages/Affiliated";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -38,6 +40,8 @@ function App() {
             }
           />
           <Route path="/menupage" element={<MenuPage />} />
+          <Route path="/kokeestory" element={<KokeeStory />} />
+          <Route path="/affiliated" element={<Affiliated />} />
         </Routes>
         <AppContent />
       </div>

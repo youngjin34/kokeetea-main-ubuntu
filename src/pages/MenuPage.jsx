@@ -12,6 +12,14 @@ function MenuPage() {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열기/닫기 상태
   const modalRef = useRef(null);
 
+  // 각 옵션에 대한 상태 관리
+  const [temp, setTemp] = useState("HOT");
+  const [whipping, setWhipping] = useState("기본");
+  const [pearl, setPearl] = useState("추가 안함");
+  const [shots, setShots] = useState("기본");
+
+  const [quantity, setQuantity] = useState(0);
+
   // 카테고리별 제품을 필터링하는 함수
   const filterByCategory = (category) => {
     const filtered = products.filter(
@@ -157,24 +165,50 @@ function MenuPage() {
             <div className={style.option_container}>
               <div className={style.temp_option}>
                 <label className={style.radio_style}>
-                  <input type="radio" checked name="temp" />
+                  <input
+                    type="radio"
+                    name="temp"
+                    value="HOT"
+                    checked={temp === "HOT"}
+                    onChange={() => setTemp("HOT")}
+                  />
                   <span>HOT</span>
                 </label>
                 <label className={style.radio_style}>
-                  <input type="radio" name="temp" />
+                  <input
+                    type="radio"
+                    name="temp"
+                    value="ICE"
+                    checked={temp === "ICE"}
+                    onChange={() => setTemp("ICE")}
+                  />
                   <span>ICE</span>
                 </label>
               </div>
+
               <div className={style.rest_option}>
+                {/* 휘핑 옵션 */}
                 <div className={style.option}>
                   <h3>휘핑 추가</h3>
                   <div className={style.whipping_option}>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" checked name="whipping" />
+                      <input
+                        type="radio"
+                        name="whipping"
+                        value="기본"
+                        checked={whipping === "기본"}
+                        onChange={() => setWhipping("기본")}
+                      />
                       <span>기본</span>
                     </label>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="whipping" />
+                      <input
+                        type="radio"
+                        name="whipping"
+                        value="휘핑추가"
+                        checked={whipping === "휘핑추가"}
+                        onChange={() => setWhipping("휘핑추가")}
+                      />
                       <span>
                         휘핑추가
                         <br />
@@ -183,15 +217,29 @@ function MenuPage() {
                     </label>
                   </div>
                 </div>
+
+                {/* 펄 추가 옵션 */}
                 <div className={style.option}>
                   <h3>펄 추가</h3>
                   <div className={style.pearl_option}>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="pearl" />
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="추가 안함"
+                        checked={pearl === "추가 안함"}
+                        onChange={() => setPearl("추가 안함")}
+                      />
                       <span>추가 안함</span>
                     </label>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="pearl" />
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="블랙 펄"
+                        checked={pearl === "블랙 펄"}
+                        onChange={() => setPearl("블랙 펄")}
+                      />
                       <span>
                         블랙 펄
                         <br />
@@ -199,7 +247,13 @@ function MenuPage() {
                       </span>
                     </label>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="pearl" />
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="화이트 펄"
+                        checked={pearl === "화이트 펄"}
+                        onChange={() => setPearl("화이트 펄")}
+                      />
                       <span>
                         화이트 펄
                         <br />
@@ -208,19 +262,39 @@ function MenuPage() {
                     </label>
                   </div>
                 </div>
+
+                {/* 샷 양 옵션 */}
                 <div className={style.option}>
                   <h3>샷 양</h3>
                   <div className={style.shots_option}>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="shots" />
+                      <input
+                        type="radio"
+                        name="shots"
+                        value="기본"
+                        checked={shots === "기본"}
+                        onChange={() => setShots("기본")}
+                      />
                       <span>기본</span>
                     </label>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="shots" />
+                      <input
+                        type="radio"
+                        name="shots"
+                        value="연하게"
+                        checked={shots === "연하게"}
+                        onChange={() => setShots("연하게")}
+                      />
                       <span>연하게</span>
                     </label>
                     <label className={style.sub_radio_style}>
-                      <input type="radio" name="shots" />
+                      <input
+                        type="radio"
+                        name="shots"
+                        value="샷 추가"
+                        checked={shots === "샷 추가"}
+                        onChange={() => setShots("샷 추가")}
+                      />
                       <span>
                         샷 추가
                         <br />
@@ -233,6 +307,35 @@ function MenuPage() {
 
               <div className={style.modalClose} onClick={toggleModal}>
                 <img src="/public/img/close.png" />
+              </div>
+            </div>
+
+            <div className={`${style.order_btn_container}`}>
+              <hr />
+              <div className={style.quantity}>
+                <h3>수량</h3>
+                <div className={style.quantity_btn}>
+                  <button
+                    // 0 로 안 떨어지게 하기
+                    onClick={() =>
+                      setQuantity((prevQuantity) =>
+                        Math.max(prevQuantity - 1, 0)
+                      )
+                    }
+                  >
+                    -
+                  </button>
+                  <span>{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                </div>
+              </div>
+              <div className={style.order_btn}>
+                <button className={`${style.btn} ${style.now_btn}`}>
+                  바로 주문하기
+                </button>
+                <button className={`${style.btn} ${style.cart_btn}`}>
+                  담기
+                </button>
               </div>
             </div>
           </div>
