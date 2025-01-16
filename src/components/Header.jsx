@@ -46,11 +46,11 @@ const Header = ({ currentPage }) => {
   // 로고 이미지 경로 결정
   const getLogoSrc = () => {
     if (isHovered) {
-      return './images/logo_black.png'; // 마우스를 올렸을 때 검은색 로고로 변경
+      return './img/logo_black.png'; // 마우스를 올렸을 때 검은색 로고로 변경
     }
     return currentPage % 2 === 0
-      ? './images/logo_white.png'
-      : './images/logo_black.png';
+      ? './img/logo_white.png'
+      : './img/logo_black.png';
   };
 
   return (
@@ -68,9 +68,7 @@ const Header = ({ currentPage }) => {
         setIsHovered(false);
       }}
     >
-      <Link to="/">
-        <img src={getLogoSrc()} alt="logo" className={style.logo} />
-      </Link>
+      
       <div
         onMouseEnter={() => {
           setIsNavHovered(true);

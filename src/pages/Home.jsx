@@ -7,13 +7,13 @@ import AboutUs from '../components/AboutUs';
 import Franchise from '../components/Franchise';
 
 const items = [
-  '/images/Signature/Black Lychee.png',
-  '/images/Signature/Dragon and Rose.png',
-  '/images/Signature/Dream Of Butterfly.png',
-  '/images/Signature/Georgia On My Mind.png',
-  '/images/Signature/Mango Passionfruit.png',
-  '/images/Signature/Purple Love.png',
-  '/images/Signature/Rose From San Francisco.png',
+  '/img/Signature/Black Lychee.png',
+  '/img/Signature/Dragon and Rose.png',
+  '/img/Signature/Dream Of Butterfly.png',
+  '/img/Signature/Georgia On My Mind.png',
+  '/img/Signature/Mango Passionfruit.png',
+  '/img/Signature/Purple Love.png',
+  '/img/Signature/Rose From San Francisco.png',
 ];
 
 function Home({ currentPage, setCurrentPage }) {
