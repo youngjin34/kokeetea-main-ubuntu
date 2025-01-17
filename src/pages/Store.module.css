@@ -1,0 +1,50 @@
+.Container {
+  margin-top: 5%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.MainContent{
+  width: 500px;
+}
+
+.StoreList {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+
+.StoreItem {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.StoreItem:last-child {
+  border-bottom: none;
+}
+
+.StoreName {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.StoreAddress {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+.StorePhone {
+  font-size: 0.9em;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.StorePhone i {
+  margin-right: 5px;
+}

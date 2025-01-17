@@ -21,6 +21,7 @@ import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
 import Faq from "./pages/Faq";
 import Oneonone from "./pages/Oneonone";
+import Store from "./pages/Store";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -45,6 +46,7 @@ function App() {
           <Route path="/menupage" element={<MenuPage />} />
           <Route path="/kokeestory" element={<KokeeStory />} />
           <Route path="/affiliated" element={<Affiliated />} />
+          <Route path="/store" element={<Store />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/oneonone" element={<Oneonone />} />
         </Routes>
