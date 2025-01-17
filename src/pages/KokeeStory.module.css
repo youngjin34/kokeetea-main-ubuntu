@@ -1,30 +1,33 @@
 .Container {
   width: 100%;
   min-height: 100vh;
-  background: #fff;
+  background: #ffffff;
+  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
-  padding: 20px;
-  padding-top: 180px;
-  padding-bottom: 170px;
-  width: 70%;
-  margin: 0 auto;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
 .menu_introduce {
   font-family: "Pretendard-Regular";
-
   width: 40%;
   text-align: center;
   margin: 0 auto;
 }
 
 .menu_title {
-  font-size: 64px;
+  font-size: 100px;
   font-weight: bold;
-  letter-spacing: 5px; /* 글자 간격을 5px로 설정 */
+  letter-spacing: 5px;
+  margin-bottom: 30px;
+  color: #000000;
 }
 
 .underline {
@@ -37,16 +40,18 @@
   content: "";
   position: absolute;
   left: -3px;
-  bottom: 0; /* 텍스트 하단에 배경 배치 */
+  bottom: 0;
   width: 100%;
-  height: 40%; /* 높이를 텍스트의 절반으로 설정 */
+  height: 40%;
   background-color: #ba274a;
-  z-index: -1; /* 배경이 텍스트 뒤로 가도록 설정 */
+  z-index: -1;
 }
 
 .menu_content {
-  font-size: 14px;
+  font-size: 10px;
   padding-bottom: 30px;
+  line-height: 1.6;
+  color: #000000;
 }
 
 .FeaturesGrid {
@@ -115,13 +120,13 @@
 
 .FeatureText {
   font-size: 16px;
-  color: #666;
+  color: #ffffff;
   line-height: 1.6;
   transition: color 0.3s ease;
 }
 
 .FeatureBox:hover .FeatureText {
-  color: #333;
+  color: #ffffff;
 }
 
 .ImageGallery {
@@ -178,4 +183,56 @@
 .FeatureTextBold {
   font-size: 20px;
   font-weight: bold;
+}
+
+.ParallaxSection {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.ParallaxBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+.ParallaxContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 1;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.ParallaxContent h2 {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+}
+
+.ParallaxContent p {
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+
+.ParallaxBackground::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
 }
