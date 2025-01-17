@@ -15,8 +15,7 @@
   
   .menu_introduce {
     font-family: "Pretendard-Regular";
-  
-    width: 40%;
+    max-width: 800px;
     text-align: center;
     margin: 0 auto;
   }
@@ -50,9 +49,9 @@
   }
   
   .FormContainer {
+    width: 100%;
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
   }
   
   .Form {
@@ -63,6 +62,8 @@
     margin-top: 20px;
     background-color: #ffffff;
     width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
   
   .FormGroup {
@@ -90,7 +91,8 @@
   }
   
   .FormGroup textarea {
-    height: 100px;
+    height: 200px;
+    font-family: "Pretendard-thin";
   }
   
   .FormGroup:has(textarea) {
@@ -100,6 +102,7 @@
   .RadioGroup {
     display: flex;
     gap: 10px;
+    align-items: center;
   }
   
   .RadioItem input[type="radio"] {
@@ -108,6 +111,8 @@
     accent-color: #BA274A; 
     width: 16px;
     height: 16px;
+    position: relative;
+    top: 0;
   }
   
   .RadioItem {
@@ -115,10 +120,17 @@
     align-items: center;
     cursor: pointer;
     color: #000;
+    gap: 8px;
+    align-items: center;
+    height: 36px;
   }
   
   .RadioItem label {
     cursor: pointer;
+    margin-left: 0;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
   }
   
   .SubmitButton {
@@ -131,8 +143,46 @@
     cursor: pointer;
     font-size: 1.1rem;
     margin-top: 20px;
+    max-width: 800px;
   }
   
   .SubmitButton:hover {
     background-color: #9e1f3e;
+  }
+  
+  .EmailGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .EmailGroup input {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .EmailAt {
+    color: #4d4d4d;
+  }
+  
+  .EmailSelect {
+    width: 140px;
+    height: 36px;
+    border: 1px solid #F5EDF0;
+    border-radius: 8px;
+    padding: 0 8px;
+    background-color: white;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+    cursor: pointer;
+  }
+  
+  .EmailSelect::-ms-expand {
+    display: none;
   }

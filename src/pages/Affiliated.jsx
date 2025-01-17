@@ -65,7 +65,6 @@ const Affiliated = () => {
             <div className={style.FormGroup}>
               <label>문의 내용</label>
               <textarea
-                placeholder="문의 내용을 입력해주세요."
                 rows="6"
               ></textarea>
             </div>
