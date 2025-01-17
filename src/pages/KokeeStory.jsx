@@ -39,7 +39,7 @@ const KokeeStory = () => {
         <div 
           className={style.ParallaxBackground}
           style={{
-            backgroundImage: `url("/images/succulent-8909520.jpg")`,
+            backgroundImage: `url("https://pixabay.com/get/g520d8c08110832d4a3c28d989094bb6fdc755adbd1c3dec7f10c1226d4ab0d62ae0768cd1874e91a80ada33f7009d57e.jpg")`,
             transform: `translateY(${(scrollPosition - window.innerHeight) * 0.5}px)`
           }}
         >
@@ -55,7 +55,7 @@ const KokeeStory = () => {
         <div 
           className={style.ParallaxBackground}
           style={{
-            backgroundImage: `url("/images/tulips-5104497.jpg")`,
+            backgroundImage: `url("https://pixabay.com/get/geb29643233298c8d856749b4f4041f9ff7b04bf2d2269e4957b26485ca151c63cc1fc4d1f338e81c48856ef1a48f6e68.jpg")`,
             transform: `translateY(${(scrollPosition - window.innerHeight * 2) * 0.5}px)`
           }}
         >
@@ -66,12 +66,12 @@ const KokeeStory = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={style.ParallaxSection}>
         <div 
           className={style.ParallaxBackground}
           style={{
-            backgroundImage: `url("/images/milky-way-6337038.jpg")`,
+            backgroundImage: `url("https://pixabay.com/get/g5f37bb8e9fa691876a8a800101b34842657ae4e672030ff433d30b2ee6f902d1f89dfb001b2cf13df530e14a50a4d3f7.jpg")`,
             transform: `translateY(${(scrollPosition - window.innerHeight * 3) * 0.5}px)`
           }}
         >
@@ -79,6 +79,22 @@ const KokeeStory = () => {
             <h2>Our Vision</h2>
             <p>더 나은 미래를 향한<br/>
                코키티의 비전</p>
+          </div>
+        </div>
+      </div>
+
+      <div className={style.ParallaxSection}>
+        <div 
+          className={style.ParallaxBackground}
+          style={{
+            backgroundImage: `url("https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=2067&auto=format&fit=crop")`,
+            transform: `translateY(${(scrollPosition - window.innerHeight * 4) * 0.5}px)`
+          }}
+        >
+          <div className={style.ParallaxContent}>
+            <h2>Brand Value</h2>
+            <p>건강한 라이프스타일을 추구하는<br/>
+               당신의 일상 속 특별한 순간</p>
           </div>
         </div>
       </div>
