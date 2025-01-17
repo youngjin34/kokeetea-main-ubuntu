@@ -1,0 +1,45 @@
+/* ------------- 폰트 ---------------- */
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+.padding {
+  padding: 30px;
+}
+
+.MunuSlide {
+  width: 100%;
+  height: 100vh;
+}
+
+.MENU {
+  font-size: 38px;
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.MenuTabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom: 80px;
+}
+
+.menu {
+  cursor: pointer;
+
+  font-size: 28px;
+  font-family: "Pretendard-Regular";
+  font-weight: bold;
+}
+
+.active {
+  color: #ba274a;
+  border-bottom: 5px solid #ba274a;
+}

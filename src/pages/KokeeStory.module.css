@@ -1,0 +1,181 @@
+.Container {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.MainContent {
+  padding: 20px;
+  padding-top: 180px;
+  padding-bottom: 170px;
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.menu_introduce {
+  font-family: "Pretendard-Regular";
+
+  width: 40%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.menu_title {
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 5px; /* 글자 간격을 5px로 설정 */
+}
+
+.underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  bottom: 0; /* 텍스트 하단에 배경 배치 */
+  width: 100%;
+  height: 40%; /* 높이를 텍스트의 절반으로 설정 */
+  background-color: #ba274a;
+  z-index: -1; /* 배경이 텍스트 뒤로 가도록 설정 */
+}
+
+.menu_content {
+  font-size: 14px;
+  padding-bottom: 30px;
+}
+
+.FeaturesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  margin-bottom: 80px;
+  padding: 0 20px;
+}
+
+.FeatureBox {
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(186, 39, 74, 0.1);
+  box-shadow: 0 10px 30px #f5edf0;
+  overflow: hidden;
+}
+
+.FeatureBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #ba274a;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.FeatureBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(186, 39, 74, 0.1);
+}
+
+.FeatureBox:hover::before {
+  transform: scaleY(1);
+}
+
+.FeatureTitle {
+  font-size: 26px;
+  color: #ba274a;
+  margin-bottom: 20px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.FeatureTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #ba274a;
+  transition: width 0.3s ease;
+}
+
+.FeatureBox:hover .FeatureTitle::after {
+  width: 60px;
+}
+
+.FeatureText {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+.FeatureBox:hover .FeatureText {
+  color: #333;
+}
+
+.ImageGallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.GalleryImageContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.GalleryImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.ImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ImageText {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+}
+
+.GalleryImageContainer:active .ImageOverlay {
+  opacity: 1;
+}
+
+.GalleryImageContainer:hover .ImageOverlay {
+  opacity: 1;
+}
+
+.FeatureTextBold {
+  font-size: 20px;
+  font-weight: bold;
+}
