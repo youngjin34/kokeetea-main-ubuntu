@@ -1,0 +1,100 @@
+/* ------------- 폰트 ---------------- */
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.Franchise {
+  font-family: 'Pretendard-Regular';
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.img_container {
+  position: relative;
+  display: flex;
+  justify-content: flex-start; /* 이미지를 왼쪽에 붙이기 */
+  align-items: center;
+  height: 100vh;
+  width: 65%;
+  margin: 0;
+  padding: 0;
+}
+
+.franchise_img {
+  height: 100vh;
+  width: 100%;
+  max-width: 100%; /* 화면 너비 초과 방지 */
+}
+
+.franchise_content {
+  width: 35%;
+  padding: 0 70px;
+  display: flex;
+  flex-direction: column;
+}
+
+.franchise_title {
+  text-align: center;
+  font-size: 100px;
+  font-weight: bolder;
+}
+
+.franchise_sub_title {
+  text-align: center;
+
+  font-size: 22px;
+  font-weight: bold;
+  padding: 30px 0;
+}
+
+.content {
+  font-size: 16px;
+  text-align: right;
+  padding: 0 45px;
+}
+
+.franchise_btn {
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.franchise_btn button {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ba274a;
+  width: 150px;
+  height: 60px;
+  background: none;
+  border: none;
+  border: 3px solid #ba274a;
+}
+
+/* 기본 버튼 스타일 */
+.btn {
+  margin: 1rem;
+}
+
+/* ghost 스타일 */
+.btn_ghost {
+  background: transparent;
+  border: 2px solid var(--btn-bg);
+  color: var(--btn-bg);
+  transition: 0.5s;
+}
+
+.btn_ghost:hover {
+  background: #ba274a;
+  color: white;
+}

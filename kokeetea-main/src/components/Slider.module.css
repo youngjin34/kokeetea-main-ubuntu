@@ -1,0 +1,65 @@
+/* ------------- 폰트 ---------------- */
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+.SliderContainer {
+  position: relative;
+  width: 100%;
+}
+
+.SliderWrapper {
+  display: flex;
+  flex-wrap: nowrap; /* 가로로 나열 */
+  transform: translateX(0); /* 초기 위치 */
+  transition: transform 0.1s linear; /* 부드럽게 이동 */
+}
+
+.SlideItem {
+  min-width: 400px; /* 각 이미지의 고정 너비 */
+  height: 550px;
+  margin-right: 20px; /* 이미지 간격 */
+  text-align: center;
+  position: relative;
+  overflow: hidden; /* 이미지가 박스 밖으로 나오지 않도록 설정 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 부드러운 이동 및 그림자 효과 */
+}
+
+/* 마우스를 올렸을 때의 효과 */
+.SlideItem:hover {
+  transform: translateY(-80px); /* 위로 15px 이동 */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* 그림자 강화 */
+}
+
+/* 이미지 효과 */
+.SlideItem img {
+  width: 250px;
+  height: auto;
+  object-fit: cover; /* 이미지 비율 유지 */
+  transition: transform 0.3s ease; /* 부드러운 확대 효과 */
+}
+
+/* 마우스를 올렸을 때 이미지 확대 */
+.SlideItem:hover img {
+  transform: scale(1.1); /* 이미지 10% 확대 */
+  transform: translateY(-50px); /* 위로 15px 이동 */
+}
+
+.Empty {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  padding: 20px;
+}
+
+.menu_name {
+  font-family: "Pretendard-Regular";
+  font-weight: bolder;
+  padding: 10px 50px;
+  font-size: 38px;
+  height: 150px;
+}
