@@ -73,6 +73,7 @@ const Inquiry = () => {
   };
 
   return (
+    
     <div className={style.Container}>
       <div className={style.MainContent}>
         <div className={style.menu_title}>
@@ -85,6 +86,9 @@ const Inquiry = () => {
         </p>
 
         <div className={style.FormContainer}>
+          <p className={style.FormContainer_content}>
+            ※ 정상업무시간 09:00 ~ 18:00(주말, 공휴일, 국경일 휴무)
+          </p>
           <form className={style.Form} onSubmit={handleSubmit}>
             <div className={style.FormGroup}>
               <label>접수 구분</label>

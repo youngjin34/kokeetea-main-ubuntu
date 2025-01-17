@@ -2,6 +2,7 @@
     width: 100%;
     min-height: 100vh;
     background: #fff;
+    font-family: "Pretendard-Regular";
   }
   
   .MainContent {
@@ -88,11 +89,12 @@
     border: 1px solid #F5EDF0;
     border-radius: 8px;
     padding: 8px;
+    font-family: "Pretendard-Regular";
   }
   
   .FormGroup textarea {
     height: 200px;
-    font-family: "Pretendard-thin";
+    font-family: "Pretendard-Regular";
   }
   
   .FormGroup:has(textarea) {
@@ -123,6 +125,7 @@
     gap: 8px;
     align-items: center;
     height: 36px;
+    margin-right: 20px;
   }
   
   .RadioItem label {
@@ -185,4 +188,11 @@
   
   .EmailSelect::-ms-expand {
     display: none;
+  }
+
+  .FormContainer_content {
+    font-size: 12px;
+    color: #4d4d4d;
+    font-family: "Pretendard-Regular";
+    text-align: left;
   }

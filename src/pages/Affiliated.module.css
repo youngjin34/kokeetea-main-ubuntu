@@ -2,6 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background: #fff;
+  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
@@ -116,6 +117,7 @@
   margin: 0;
   border: 1px solid #F5EDF0;
   border-radius: 8px;
+  font-family: "Pretendard-Regular";
 }
 
 .FormGroup textarea {
@@ -126,6 +128,7 @@
   padding: 8px;
   margin: 0;
   height: 100px;
+  font-family: "Pretendard-Regular";
 }
 
 .FormGroup:has(textarea) {
@@ -183,6 +186,7 @@
   color: #000; 
   font-weight: normal;
   height: 36px;
+  margin-right: 20px;
 }
 
 .RadioItem label {
