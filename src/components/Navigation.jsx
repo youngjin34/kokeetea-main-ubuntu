@@ -179,7 +179,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         <Link
           to="/"
           className={style.logo_text}
-          style={{ marginRight: "30vw", marginLeft: "30vw", color:fontColor}}
+          style={{ marginRight: "30vw", marginLeft: "30vw", color: fontColor }}
         >
           KOKEE TEA
         </Link>
@@ -291,6 +291,12 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           </div>
         </div>
       </div>
+
+      
+      <button>
+        <Link to="./cart">Cart</Link>
+      </button>
+
       <div className="inner">
         <ul className={`${style.header_top}`}>
           {headerLogined ? (

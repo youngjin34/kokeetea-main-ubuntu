@@ -22,6 +22,7 @@ import Affiliated from "./pages/Affiliated";
 import Faq from "./pages/Faq";
 import Oneonone from "./pages/Oneonone";
 import Store from "./pages/Store";
+import Cart from "./pages/cart";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -49,6 +50,7 @@ function App() {
           <Route path="/store" element={<Store />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/oneonone" element={<Oneonone />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
         <AppContent />
       </div>
