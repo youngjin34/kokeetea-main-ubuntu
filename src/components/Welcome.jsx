@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import style from "./Welcome.module.css";
 import Notice from "./Notice";
 
+
 const Welcome = () => {
   const videoRef = useRef(null);
 

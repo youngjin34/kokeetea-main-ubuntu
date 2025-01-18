@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import style from "./Inquiry.module.css";
 
 const Inquiry = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [formData, setFormData] = useState(() => {
     const savedData = localStorage.getItem("inquiryFormData");
     return savedData
@@ -124,14 +128,32 @@ const Inquiry = () => {
                   onChange={handleChange}
                   placeholder={`${
                     field === "name"
-                      ? "이름"
+                      ? "이름을"
                       : field === "phone"
-                      ? "연락처"
-                      : "제목"
-                  }을 입력해주세요.`}
+                      ? "연락처를"
+                      : "제목을"
+                  } 입력해주세요.`}
                 />
               </div>
             ))}
+
+            <div className={style.FormGroup}>
+              <label>연락처</label>
+              <div className={style.PhoneInputGroup}>
+                <select className={style.PhonePrefix}>
+                  <option value="010">010</option>
+                  <option value="011">011</option>
+                  <option value="016">016</option>
+                  <option value="017">017</option>
+                  <option value="018">018</option>
+                  <option value="019">019</option>
+                </select>
+                <span className={style.PhoneSeparator}>-</span>
+                <input type="text" maxLength="4" className={style.PhoneInput} />
+                <span className={style.PhoneSeparator}>-</span>
+                <input type="text" maxLength="4" className={style.PhoneInput} />
+              </div>
+            </div>
 
             <div className={style.FormGroup}>
               <label>이메일</label>
@@ -171,6 +193,7 @@ const Inquiry = () => {
                 value={formData.content}
                 onChange={handleChange}
                 rows="6"
+                placeholder="문의 내용을 입력해주세요."
               />
             </div>
 

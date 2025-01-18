@@ -41,7 +41,7 @@ const fruitTea = [
   },
   {
     name: "스트로베리 버진 모히또",
-    image: "/img/Fruit Tea/Strawberry Virgin mojito.png",
+    image: "/img/Fruit Tea/Strawberry Virgin Mojito.png",
   },
 ];
 
@@ -141,145 +141,6 @@ const signature = [
   },
 ];
 
-// const coldCloud = [
-//   {
-//     name: "Brown Sugar Cold Brew",
-//     image: "/img/Cold Cloud/Brown Sugar Cold Brew.png",
-//   },
-//   {
-//     name: "Brown Sugar Dalgonatte",
-//     image: "/img/Cold Cloud/Brown Sugar Dalgonatte.png",
-//   },
-//   {
-//     name: "Oreo Brown Sugar",
-//     image: "/img/Cold Cloud/Oreo Brown Sugar.png",
-//   },
-//   {
-//     name: "Oreo C&C Brown Sugar",
-//     image: "/img/Cold Cloud/Oreo C&C Brown Sugar.png",
-//   },
-//   {
-//     name: "Sweet Cloud Cold Brew",
-//     image: "/img/Cold Cloud/Sweet Cloud Cold Brew.png",
-//   },
-//   {
-//     name: "Sweet Cloud Green Brew",
-//     image: "/img/Cold Cloud/Sweet Cloud Green Brew.png",
-//   },
-// ];
-
-// const fruitTea = [
-//   { name: "Green Grape Tea", image: "/img/Fruit Tea/Green Grape Tea.png" },
-//   {
-//     name: "Honey Grapefruit Black Tea",
-//     image: "/img/Fruit Tea/Honey Grapefruit Black Tea.png",
-//   },
-//   {
-//     name: "Orange Sangria",
-//     image: "/img/Fruit Tea/Orange Sangria.png",
-//   },
-//   {
-//     name: "Strawberry Virgin mojito",
-//     image: "/img/Fruit Tea/Strawberry Virgin mojito.png",
-//   },
-// ];
-
-// const iceBlended = [
-//   { name: "Dragonfruit", image: "/img/Ice Blended/Dragonfruit.png" },
-//   {
-//     name: "Ice Mango Passionfruit",
-//     image: "/img/Ice Blended/Ice Mango Passionfruit.png",
-//   },
-//   {
-//     name: "Lychee",
-//     image: "/img/Ice Blended/Lychee.png",
-//   },
-//   {
-//     name: "Mango  Passionfruit",
-//     image: "/img/Ice Blended/Mango  Passionfruit.png",
-//   },
-//   {
-//     name: "Mango",
-//     image: "/img/Ice Blended/Mango.png",
-//   },
-//   { name: "Matcha", image: "/img/Ice Blended/Matcha.png" },
-//   {
-//     name: "Oreo",
-//     image: "/img/Ice Blended/Oreo.png",
-//   },
-//   {
-//     name: "Pina Colada",
-//     image: "/img/Ice Blended/Pina Colada.png",
-//   },
-//   {
-//     name: "Strawberry",
-//     image: "/img/Ice Blended/Strawberry.png",
-//   },
-//   {
-//     name: "Taro",
-//     image: "/img/Ice Blended/Taro.png",
-//   },
-// ];
-
-// const milkTea = [
-//   {
-//     name: "Brown Sugar Milk Tea",
-//     image: "/img/Milk Tea/Brown Sugar Milk Tea.png",
-//   },
-//   { name: "Classic Thai Tea", image: "/img/Milk Tea/Classic Thai Tea.png" },
-//   {
-//     name: "Coconut Milk Tea",
-//     image: "/img/Milk Tea/Coconut Milk Tea.png",
-//   },
-//   {
-//     name: "Coffee Milk Tea",
-//     image: "/img/Milk Tea/Coffee Milk Tea.png",
-//   },
-//   {
-//     name: "Honey Milk Tea",
-//     image: "/img/Milk Tea/Honey Milk Tea.png",
-//   },
-//   { name: "House Milk Tea", image: "/img/Milk Tea/House Milk Tea.png" },
-//   {
-//     name: "KOKEE Milk Tea",
-//     image: "/img/Milk Tea/KOKEE Milk Tea.png",
-//   },
-//   {
-//     name: "Matcha Latte",
-//     image: "/img/Milk Tea/Matcha Latte.png",
-//   },
-//   {
-//     name: "Oreo Milk Tea",
-//     image: "/img/Milk Tea/Oreo Milk Tea.png",
-//   },
-//   {
-//     name: "Strawberry Milk Tea",
-//     image: "/img/Milk Tea/Strawberry Milk Tea.png",
-//   },
-// ];
-
-// const signature = [
-//   { name: "Black Lychee", image: "/img/Signature/Black Lychee.png" },
-//   { name: "Dragon and Rose", image: "/img/Signature/Dragon and Rose.png" },
-//   {
-//     name: "Dream Of Butterfly",
-//     image: "/img/Signature/Dream Of Butterfly.png",
-//   },
-//   {
-//     name: "Georgia On My Mind",
-//     image: "/img/Signature/Georgia On My Mind.png",
-//   },
-//   {
-//     name: "Mango Passionfruit",
-//     image: "/img/Signature/Mango Passionfruit.png",
-//   },
-//   { name: "Purple Love", image: "/img/Signature/Purple Love.png" },
-//   {
-//     name: "Rose From San Francisco",
-//     image: "/img/Signature/Rose From San Francisco.png",
-//   },
-// ];
-
 function MenuSlide() {
   const [selectedMenu, setSelectedMenu] = useState(coldCloud);
 
@@ -308,7 +169,6 @@ function MenuSlide() {
 
   return (
     <div className={style.MenuSlide}>
-      <div className={style.container}> </div>
       <div className={style.MENU}>MENU</div>
       <div className={style.MenuTabs}>
         <span

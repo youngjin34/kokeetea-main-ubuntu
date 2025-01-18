@@ -7,10 +7,10 @@ function Slider({ selectedMenu = "coldCloud" }) {
 
   // 랜덤 파스텔톤 색상을 생성하는 함수
   const generatePastelColor = () => {
-    const r = Math.floor(Math.random() * 30 + 220); // 220~255 (매우 밝은 빨강)
-    const g = Math.floor(Math.random() * 40 + 150); // 180~220 (부드러운 초록)
-    const b = Math.floor(Math.random() * 35 + 150); // 180~220 (부드러운 파랑)
-    return `rgb(${r}, ${g}, ${b})`;
+    const r = Math.floor(Math.random() * 100 + 50); // 50~150 (어두운 빨강)
+    const g = Math.floor(Math.random() * 100 + 50); // 50~150 (어두운 초록)
+    const b = Math.floor(Math.random() * 100 + 50); // 50~150 (어두운 파랑)
+    return `rgba(${r}, ${g}, ${b}, 0.1)`; // 투명도 90% 추가
   };
 
   useEffect(() => {
@@ -41,13 +41,15 @@ function Slider({ selectedMenu = "coldCloud" }) {
     <div className={style.SliderContainer}>
       <div className={style.SliderWrapper} ref={sliderRef}>
         {selectedMenu.concat(selectedMenu).map((item, index) => (
-          <div
-            className={style.SlideItem}
-            key={index}
-            style={{ backgroundColor: generatePastelColor() }} // 파스텔톤 배경색 추가
-          >
+          <div>
+            <div
+              className={style.SlideItem}
+              key={index}
+              style={{ backgroundColor: generatePastelColor() }} // 파스텔톤 배경색 추가
+            >
+              <img src={item.image} alt={item.name} />
+            </div>
             <p className={style.menu_name}>{item.name}</p>
-            <img src={item.image} alt={item.name} />
           </div>
         ))}
       </div>

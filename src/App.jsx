@@ -1,12 +1,26 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
 import style from "./App.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import MenuPage from "./pages/MenuPage";
+import Notice from "./pages/Notice";
+import Inquiry from "./pages/Inquiry";
+
+function AppContent() {
+  const location = useLocation(); // 현재 경로 확인
+
+  return (
+    <>
+      {/* 현재 경로가 '/'(Home)일 때 Footer 숨김 */}
+      {/* 이거 안 하면 Home에서는 Footer가 두 번 생깁니다... */}
+      {location.pathname !== "/" && <Footer />}
+    </>
+  );
+}
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
-import Inquiry from "./pages/Inquiry";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
@@ -19,6 +33,7 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
+
       <div className={`${style.App}`}>
         <Routes>
           <Route
@@ -27,27 +42,15 @@ function App() {
               <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
             }
           />
-          <Route
-            path="/kokeestory"
-            element={
-              <KokeeStory />
-            }
-          />
-          <Route
-            path="/affiliated"
-            element={
-              <Affiliated />
-            }
-          />
-          <Route
-            path="/inquiry"
-            element={
-              <Inquiry />
-            }
-          />
+          <Route path="/menupage" element={<MenuPage />} />
+          <Route path="/kokeestory" element={<KokeeStory />} />
+          <Route path="/affiliated" element={<Affiliated />} />
+          <Route path="/notice" element={<Notice />} />
+          <Route path="/inquiry" element={<Inquiry />} />
         </Routes>
+        <AppContent />
       </div>
-      <Footer />
+
     </BrowserRouter>
   );
 }
