@@ -6,18 +6,32 @@ import style from "./Navigation.module.css";
 
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(""); //아이디 입력란 처음공백
-  const [pass, setPass] = useState(""); //이메일 입력란 처음공백
-  const [headerLogined, setHeaderLogined] = useState(false);
 
-  const [isHovered, setIsHovered] = useState(false); // 마우스 오버 상태 관리
+  const [userName, setUserName] = useState("");
+  const [pass, setPass] = useState("");
+  const [headerLogined, setHeaderLogined] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const menuRef = useRef(null);
+  const modalRef = useRef(null);
+
+  const [activeSubMenu, setActiveSubMenu] = useState(null);
 
   const handleMouseEnter = () => {
-    setIsHovered(true); // 마우스 오버시 상태 true로 설정
+    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false); // 마우스 떠날 때 상태 false로 설정
+    setIsHovered(false);
+  };
+
+  // 햄버거 아이콘 경로 결정
+  const getHamburgerIcon = () => {
+    if (isHovered || fontColor === "black" || currentPage % 2 === 1) {
+      return "./img/hamberger_black.png";
+    }
+    return "./img/hamberger_white.png";
   };
 
   // Facebook 아이콘 경로 결정
@@ -54,7 +68,22 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     if (localStorage.getItem("realname")) {
       setHeaderLogined(true);
     }
-  }, []);
+    // 메뉴 영역 외부 클릭 시 메뉴 닫기
+    const handleClickOutside = (event) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        isModalOpen
+      ) {
+        setModalOpen(false);
+        setActiveSubMenu(null); // 모달 닫을 때 하위 메뉴도 닫기
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   async function fn_login() {
     const regExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
@@ -107,165 +136,248 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     window.location.reload();
   }
 
-  // 모달 열기/닫기 상태
-  const [isModalOpen, setModalOpen] = useState(false);
-  const modalRef = useRef(null);
-
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
+    setActiveSubMenu(null); // 모달 열 때 하위 메뉴 초기화
   };
 
-  // 바깥쪽 클릭 시 모달 닫기
-  const handleOutsideClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      setModalOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    // 모달이 열릴 때 스크롤 막기
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden"; // 스크롤 막기
-      document.addEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 추가
-    } else {
-      document.body.style.overflow = "auto"; // 스크롤 다시 허용
-      document.removeEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 제거
-    }
-  }, [isModalOpen]);
+  // 모달 열기/닫기 상태
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
 
   // 회원가입 이동
   const toForm = () => {
-    setModalOpen(false);
+    setLoginModalOpen(false);
     navigate("/form");
+  };
+
+  const toggleLoginModal = () => {
+    setLoginModalOpen(!isLoginModalOpen);
   };
 
   return (
     <div className={`${style.Navigation}`}>
-      <div className={style.dropdown} style={{ transition: "0.3s" }}>
-        {/* KOKEE STORY 메뉴 */}
-        <div style={{ color: fontColor }}>
-          KOKEE STORY
-          <div>
-            <Link to="/kokeestory" style={{ color: fontColor }}>
-              Brand
-            </Link>
-          </div>
+      <div className={style.nav_container}>
+        {/* 이미지 햄버거 버튼 */}
+        <div className={style.ham_menu_button}>
+          <img
+            onClick={toggleModal}
+            src={getHamburgerIcon()}
+            alt="Hamburger Menu"
+            className={`${style.ham_menu_icon}`}
+          />
+
+          <Link
+            to="/"
+            className={style.logo_text}
+            style={{
+              color: fontColor,
+            }}
+          >
+            KOKEE TEA
+          </Link>
         </div>
 
-        {/* MENU 메뉴 */}
-        <div style={{ color: fontColor }}>
-          MENU
-          <div>
-            <Link to="/menupage" style={{ color: fontColor }}>
-              Drink
-            </Link>
+        {/* 모달 창 */}
+        <div
+          className={`${style.modal_overlay} ${
+            isModalOpen ? style.active : ""
+          }`}
+          ref={modalRef}
+        >
+          <div
+            className={`${style.modal_menu} ${isModalOpen ? style.active : ""}`}
+            ref={menuRef}
+          >
+            {/* 모달 닫기 버튼 */}
+            <button className={style.modal_close_button} onClick={toggleModal}>
+              x
+            </button>
+
+            {/* KOKEE STORY 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "KOKEE STORY" ? style.active : ""
+              }`}
+            >
+              KOKEE STORY
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "KOKEE STORY" ? style.active : ""
+                }`}
+              >
+                <Link to="/kokeestory" onClick={toggleModal}>
+                  Brand
+                </Link>
+              </div>
+            </div>
+
+            {/* MENU 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "MENU" ? style.active : ""
+              }`}
+            >
+              MENU
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "MENU" ? style.active : ""
+                }`}
+              >
+                <Link to="./menupage" onClick={toggleModal}>
+                  Drink
+                </Link>
+              </div>
+            </div>
+
+            {/* STORE 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "STORE" ? style.active : ""
+              }`}
+            >
+              STORE
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "STORE" ? style.active : ""
+                }`}
+              >
+                <Link to="./waytocome" onClick={toggleModal}>
+                  The way to find
+                </Link>
+              </div>
+            </div>
+
+            {/* AFFILIATED 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "AFFILIATED" ? style.active : ""
+              }`}
+            >
+              AFFILIATED
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "AFFILIATED" ? style.active : ""
+                }`}
+              >
+                <Link to="/affiliated" onClick={toggleModal}>
+                  제휴 및 제안
+                </Link>
+              </div>
+            </div>
+
+            {/* NOTICE 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "NOTICE" ? style.active : ""
+              }`}
+            >
+              NOTICE
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "NOTICE" ? style.active : ""
+                }`}
+              >
+                <Link to="/notice" onClick={toggleModal}>
+                  공지사항
+                </Link>
+              </div>
+            </div>
+
+            {/* SUPPORT 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "SUPPORT" ? style.active : ""
+              }`}
+            >
+              SUPPORT
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "SUPPORT" ? style.active : ""
+                }`}
+              >
+                <Link to="/faq" onClick={toggleModal}>
+                  FAQ
+                </Link>
+                <Link to="/inquiry" onClick={toggleModal}>
+                  1:1 문의하기
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* STORE 메뉴 */}
-        <div style={{ color: fontColor }}>
-          STORE
-          <div>
-            <Link to="./waytocome" style={{ color: fontColor }}>
-              The way to find
-            </Link>
-          </div>
-        </div>
-
-        {/* AFFILIATED 메뉴 */}
-        <div style={{ color: fontColor }}>
-          AFFILIATED
-          <div>
-            <Link to="/affiliated" style={{ color: fontColor }}>
-              Inquire
-            </Link>
-          </div>
-        </div>
-
-        {/* SUPPORT 메뉴 */}
-        <div style={{ color: fontColor }}>
-          SUPPORT
-          <div>
-            <Link to="./faq" style={{ color: fontColor }}>
-              FAQ
-            </Link>
-            <Link to="./VoiceOfCustomer" style={{ color: fontColor }}>
-              1:1 Inquire
-            </Link>
-          </div>
+        <div className="inner">
+          <ul className={`${style.header_top}`}>
+            {headerLogined ? (
+              <li onClick={logoutFunction}>
+                <Link to="#" style={{ color: fontColor }}>
+                  {localStorage.getItem("realname")}님 LOGOUT |
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link onClick={toggleLoginModal} style={{ color: fontColor }}>
+                  LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
+                </Link>
+              </li>
+            )}
+            {!headerLogined && (
+              <li>
+                <Link to="/form" style={{ color: fontColor }}>
+                  JOIN
+                </Link>
+              </li>
+            )}
+            {headerLogined && (
+              <li>
+                <Link to="/mypage" style={{ color: fontColor }}>
+                  MY PAGE
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link
+                to="https://ko-kr.facebook.com/luvkokeetea/"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getFacebookIcon()}
+                  alt="Facebook logo"
+                  className={style.sns}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="https://www.instagram.com/kokeetea/"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getInstaIcon()}
+                  alt="Facebook logo"
+                  className={style.sns}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="https://www.youtube.com/@kokeetea2886"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getYoutubeIcon()}
+                  alt="YouTube logo"
+                  className={style.youtube_icon}
+                />
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
-      <div className="inner">
-        <ul className={`${style.header_top}`}>
-          {headerLogined ? (
-            <li onClick={logoutFunction}>
-              <Link to="#" style={{ color: fontColor }}>
-                {localStorage.getItem("realname")}님 LOGOUT |
-              </Link>
-            </li>
-          ) : (
-            <li>
-              <Link onClick={toggleModal} style={{ color: fontColor }}>
-                LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
-              </Link>
-            </li>
-          )}
-          {!headerLogined && (
-            <li>
-              <Link to="/form" style={{ color: fontColor }}>
-                JOIN
-              </Link>
-            </li>
-          )}
-          {headerLogined && (
-            <li>
-              <Link to="/mypage" style={{ color: fontColor }}>
-                MY PAGE
-              </Link>
-            </li>
-          )}
-          <li>
-            <Link
-              to="https://ko-kr.facebook.com/luvkokeetea/"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getFacebookIcon()}
-                alt="Facebook logo"
-                className={style.sns}
-              />
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="https://www.instagram.com/kokeetea/"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getInstaIcon()}
-                alt="Facebook logo"
-                className={style.sns}
-              />
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="https://www.youtube.com/@kokeetea2886"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={getYoutubeIcon()}
-                alt="YouTube logo"
-                className={style.youtube_icon}
-              />
-            </Link>
-          </li>
-        </ul>
-      </div>
-      {isModalOpen && (
+
+      {isLoginModalOpen && (
         <div className={style.modal}>
           <div className={style.modalContent}>
             <h2>로그인</h2>
@@ -296,7 +408,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <div className={style.join} onClick={toForm}>
               회원가입
             </div>
-            <div className={style.modalClose} onClick={toggleModal}>
+            <div className={style.modalClose} onClick={toggleLoginModal}>
               <img src="/public/img/close.png" />
             </div>
           </div>

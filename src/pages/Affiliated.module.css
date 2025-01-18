@@ -2,6 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background: #fff;
+  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
@@ -50,6 +51,7 @@
 }
 
 .FormContainer {
+  width: 100%;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -63,12 +65,12 @@
   margin-top: 20px;
   background-color: #ffffff;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .FormTitle {
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 40px;
   display: flex;  
   align-items: center;
   gap: 12px;  
@@ -102,9 +104,10 @@
   margin-bottom: 1rem;
 }
 
-.FormGroup label {
+.FormGroup > label {
   min-width: 80px;
   line-height: 36px;
+  font-weight: bold;
 }
 
 .FormGroup input {
@@ -114,6 +117,7 @@
   margin: 0;
   border: 1px solid #F5EDF0;
   border-radius: 8px;
+  font-family: "Pretendard-Regular";
 }
 
 .FormGroup textarea {
@@ -124,6 +128,7 @@
   padding: 8px;
   margin: 0;
   height: 100px;
+  font-family: "Pretendard-Regular";
 }
 
 .FormGroup:has(textarea) {
@@ -154,32 +159,42 @@
 }
 
 .SubmitButton:hover {
-  background-color: #BA274A;
+  background-color: #9e1f3e;
 }
 
 .RadioGroup {
   display: flex;
-  gap: 20px;
+  gap: 10px;
+  align-items: center;
 }
 
 .RadioItem input[type="radio"] {
   margin: 0;
   cursor: pointer;
   accent-color: #BA274A; 
-  width: 20px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 0;
 }
 
 .RadioItem {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   cursor: pointer;
   color: #000; 
+  font-weight: normal;
+  height: 36px;
+  margin-right: 20px;
 }
 
 .RadioItem label {
   cursor: pointer;
+  margin-left: 0;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
 }
 
 .TermsContainer {
@@ -194,4 +209,43 @@
   background-color: #f9f9f9;
   font-size: 14px;
   line-height: 1.6;
+}
+
+.PhoneInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.PhonePrefix {
+  width: 80px;
+  flex: none;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #F5EDF0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: "Pretendard-Regular";
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.PhoneInput {
+  flex: 1;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #F5EDF0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.PhoneSeparator {
+  color: #666;
+  font-weight: bold;
 }

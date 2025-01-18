@@ -12,12 +12,13 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
   // Home 페이지 여부 확인
   const isHomePage = location.pathname === "/";
 
+  // 헤더 배경색 결정
   const getHeaderColor = () => {
     if (isHovered || isNavHovered) {
       return "white"; // 마우스를 올렸을 때 헤더 배경색을 하얗게
     }
     if (!isHomePage) {
-      return "white"; // Home 페이지가 아닐 경우 배경은 검은색
+      return "white"; // Home 페이지가 아닐 경우 배경색은 하얗게
     }
     switch (currentPage) {
       case 0:
@@ -33,12 +34,13 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
     }
   };
 
+  // 네비게이션 글씨 색상 결정
   const getFontColor = () => {
     if (isHovered) {
       return "black"; // 배경이 하얗게 될 때 네비게이션 글씨 색을 검정색으로 변경
     }
     if (!isHomePage) {
-      return "black"; // Home이 아닐 때 글씨 색은 흰색
+      return "black"; // Home이 아닐 때 글씨 색은 검은색
     }
     switch (currentPage) {
       case 0:
@@ -54,44 +56,12 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
     }
   };
 
-  // 로고 이미지 경로 결정
-  const getLogoSrc = () => {
-    if (isHovered) {
-      return "./img/logo_black.png"; // 마우스를 올렸을 때 검은색 로고로 변경
-    }
-    if (!isHomePage) {
-      return "./img/logo_black.png"; // Home이 아닐 경우 흰색 로고
-    }
-    return currentPage % 2 === 0
-      ? "./img/logo_white.png"
-      : "./img/logo_black.png";
-  };
-
   return (
     <div
       className={`${style.Header}`}
-      style={{
-        background: getHeaderColor(),
-        transition: "0.7s",
-      }}
-      onMouseEnter={() => {
-        setIsHovered(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-      }}
+      style={{ backgroundColor: getHeaderColor() }} // 헤더 배경색 설정
     >
-      <Link to="/">
-        <img src={getLogoSrc()} alt="logo" className={style.logo} />
-      </Link>
-      <div
-        onMouseEnter={() => {
-          setIsNavHovered(true);
-        }}
-        onMouseLeave={() => {
-          setIsNavHovered(false);
-        }}
-      >
+      <div>
         <Navigation
           fontColor={getFontColor()}
           currentPage={currentPage}
