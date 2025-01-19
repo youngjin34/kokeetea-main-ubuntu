@@ -296,6 +296,9 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
       <button>
         <Link to="./cart">Cart</Link>
       </button>
+      <button>
+        <Link to="./memberinfo">Order</Link>
+      </button>
 
       <div className="inner">
         <ul className={`${style.header_top}`}>

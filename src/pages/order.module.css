@@ -1,0 +1,347 @@
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 30px 0;
+}
+
+.MainContent {
+  display: flex;
+  flex-direction: column;
+  width: 1097px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  margin: 0 auto;
+}
+
+.checkout_title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.checkout_menu_container{
+  display: flex;
+  justify-content: space-between;
+}
+.checkout_items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 20px;
+  width: 771px;
+}
+
+.checkout_order_title{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.store_button{
+  font-size: 15px;
+  color: #cf3d3f;
+  margin-left: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #cf3d3f;
+  padding: 3px;
+}
+.checkout_item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  height: 120px;
+}
+
+.checkout_item_image {
+  margin-right: 15px;
+  width: 60px;
+  height: 60px;
+}
+.checkout_item_image > img{
+  width: 100%;
+  height: 100%;
+}
+.checkout_item_description {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.checkout_item_header{
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.checkout_item_name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.checkout_item_price {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+.checkout_item_options{
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 5px;
+}
+.checkout_item_totalPrice{
+  font-size: 14px;
+  font-weight: 600;
+}
+.checkout_item_totalPrice_money{
+  color: #f75656;
+  margin-left: 5px;
+}
+
+.checkout_pickup{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.pickup_method {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.pickup_button {
+  background-color: #f2f2f2;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  width: 252px;
+  height: 58px;
+}
+
+.pickup_button.active {
+  background-color: #cf3d3f;
+  color: white;
+}
+
+.checkout_coupon{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.select_coupon {
+  margin-bottom: 15px;
+}
+.select_coupon select{
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.discount_price{
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+.discount_price_money{
+  color: #cf3d3f;
+}
+
+.checkout_stamp{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.stamp_container{
+  margin-bottom: 15px;
+}
+.stamp_text{
+  font-size: 16px;
+  font-weight: 600;
+}
+.stamp_text_sub{
+  font-size: 13px;
+  color: #999;
+  margin-top: 5px;
+}
+.stamp_buttons {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center buttons vertically */
+  gap: 10px;
+  margin-top: 10px;
+  /* flex-wrap: wrap; 삭제 */
+  flex-direction: column; /* 추가 */
+  width: 764px; /* Set the desired width */
+  height: 200px;  /* Set the desired height */
+  background-color: #999; /* Set the desired background color */
+}
+
+.stamp_buttons_top {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center buttons vertically */
+  gap: 20px;
+  /* flex-wrap: wrap; 삭제 */
+  background-color: #999; /* Set the desired background color */
+  width: 364px;
+  height: 60px;
+}
+
+.stamp_buttons_bottom {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center buttons vertically */
+  gap: 20px;
+  /* flex-wrap: wrap; 삭제 */
+  background-color: #999; /* Set the desired background color */
+  width: 364px;
+  height: 60px;
+}
+
+.stamp_button {
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+}
+
+.stamp_button > img{
+  width: 25px;
+}
+
+.stamp_button.active{
+  background-color: #eee;
+  border-color: #ddd;
+}
+
+/* Order Summary Section */
+.checkout_summary {
+  display: flex;
+  flex-direction: column;
+  width: 326px;
+  height: 336px;
+  padding: 15px;
+  gap: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.order_summary_title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.order_summary_detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.order_summary_item {
+  font-size: 14px;
+}
+.order_summary_count,
+.order_summary_price {
+  font-size: 16px;
+  font-weight: 600;
+}
+.order_summary_discount {
+font-size: 16px;
+font-weight: 600;
+color: #f75656;
+}
+.order_summary_finalPrice {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f75656;
+}
+.payment_button {
+  background-color: #cf3d3f;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 237px;
+  height: 58px;
+  margin-top: 10px;
+}
+
+.payment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 변경 */
+  gap: 20px;
+}
+
+.payment_button:hover {
+  background-color: #b73033;
+}
+.payment_cancel_button{
+  margin-top: 5px;
+  font-size: 14px;
+  background: #f2f2f2;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 80px;
+  height: 58px;
+}
+.payment_cancel_button:hover{
+  background: #e6e6e6;
+}
+.order_summary_line {
+border-bottom: 1px solid #ddd;
+margin: 10px 0;
+}
+
+.payment_methods_container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.payment_methods_title{
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.payment_methods {
+  display: flex;
+  gap: 10px;
+}
+
+.payment_method_button {
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+  color: #666;
+  width: 252px;
+  height: 58px;
+}
+
+.payment_method_button.active {
+  border-color: #cf3d3f;
+  color: #cf3d3f;
+  font-weight: 600;
+}
