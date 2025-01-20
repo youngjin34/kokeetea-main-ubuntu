@@ -1,127 +1,95 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import style from "./NoticePage.module.css";
 import { BiSearch } from "react-icons/bi";
 
 const Notice = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const [notices, setNotices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedNotice, setExpandedNotice] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 10;
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchNotices();
+    checkAdminStatus();
+  }, []);
 
-  const noticeList = [
-    {
-      id: 1,
-      title: "공지사항 1",
-      date: "2024-01-01",
-      views: 100,
-      content: "내용",
-    },
-    {
-      id: 2,
-      title: "공지사항 2",
-      date: "2024-01-02",
-      views: 70,
-      content: "내용",
-    },
-    {
-      id: 3,
-      title: "공지사항 3",
-      date: "2024-01-03",
-      views: 100,
-      content: "내용",
-    },
-    {
-      id: 4,
-      title: "공지사항 4",
-      date: "2024-01-04",
-      views: 150,
-      content: "내용",
-    },
-    {
-      id: 5,
-      title: "공지사항 5",
-      date: "2024-01-05",
-      views: 250,
-      content: "내용",
-    },
-    {
-      id: 6,
-      title: "공지사항 6",
-      date: "2024-01-06",
-      views: 54,
-      content: "내용",
-    },
-    {
-      id: 7,
-      title: "공지사항 7",
-      date: "2024-01-07",
-      views: 12,
-      content: "내용",
-    },
-    {
-      id: 8,
-      title: "공지사항 8",
-      date: "2024-01-08",
-      views: 1,
-      content: "내용",
-    },
-    {
-      id: 9,
-      title: "공지사항 9",
-      date: "2024-01-09",
-      views: 45,
-      content: "내용",
-    },
-    {
-      id: 10,
-      title: "공지사항 10",
-      date: "2024-01-10",
-      views: 34,
-      content: "내용",
-    },
-    {
-      id: 11,
-      title: "공지사항 11",
-      date: "2024-01-11",
-      views: 78,
-      content: "내용",
-    },
-    {
-      id: 12,
-      title: "공지사항 12",
-      date: "2024-01-12",
-      views: 67,
-      content: "내용",
-    },
-    {
-      id: 13,
-      title: "공지사항 13",
-      date: "2024-01-13",
-      views: 56,
-      content: "내용",
-    },
-    {
-      id: 14,
-      title: "공지사항 14",
-      date: "2024-01-14",
-      views: 34,
-      content: "내용",
-    },
-    {
-      id: 15,
-      title: "공지사항 15",
-      date: "2024-01-15",
-      views: 89,
-      content: "내용",
-    },
-  ];
+  const fetchNotices = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:8080/kokee/notice/list");
+      setNotices(response.data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // 검색만 적용한 리스트 필터링
-  const filteredList = noticeList.filter((notice) =>
+  const checkAdminStatus = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setIsAdmin(response.data.isAdmin);
+      }
+    } catch (error) {
+      console.error('Admin check failed:', error);
+    }
+  };
+
+  const addNotice = async (noticeData) => {
+    try {
+      setLoading(true);
+      await axios.post("http://localhost:8080/kokee/notice/add", {
+        subject: noticeData.title,
+        content: noticeData.text,
+        email: noticeData.email
+      });
+      await fetchNotices();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateNotice = async (id, noticeData) => {
+    try {
+      setLoading(true);
+      await axios.put(`http://localhost:8080/kokee/notice/update/${id}`, {
+        subject: noticeData.title,
+        content: noticeData.text
+      });
+      await fetchNotices();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteNotice = async (id) => {
+    try {
+      setLoading(true);
+      await axios.delete(`http://localhost:8080/kokee/notice/delete/${id}`);
+      await fetchNotices();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredList = notices.filter((notice) =>
     notice.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -204,33 +172,41 @@ const Notice = () => {
           </div>
 
           <div className={style.NoticeTable}>
-            <div className={style.TableHeader}>
-              <div className={style.HeaderNo}>번호</div>
-              <div className={style.HeaderTitle}>제목</div>
-              <div className={style.HeaderDate}>작성일</div>
-              <div className={style.HeaderViews}>조회수</div>
-            </div>
-
-            {currentItems.map((notice) => (
-              <React.Fragment key={notice.id}>
-                <div className={style.TableRow}>
-                  <div className={style.RowNo}>{notice.id}</div>
-                  <div
-                    className={style.RowTitle}
-                    onClick={() => handleTitleClick(notice.id)}
-                  >
-                    {notice.title}
-                  </div>
-                  <div className={style.RowDate}>{notice.date}</div>
-                  <div className={style.RowViews}>{notice.views}</div>
+            {loading ? (
+              <div className={style.Loading}>로딩중...</div>
+            ) : error ? (
+              <div className={style.Error}>{error}</div>
+            ) : (
+              <>
+                <div className={style.TableHeader}>
+                  <div className={style.HeaderNo}>번호</div>
+                  <div className={style.HeaderTitle}>제목</div>
+                  <div className={style.HeaderDate}>작성일</div>
+                  <div className={style.HeaderViews}>작성자</div>
                 </div>
-                {expandedNotice === notice.id && (
-                  <div className={style.ContentRow}>
-                    <div className={style.Content}>{notice.content}</div>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
+
+                {currentItems.map((notice) => (
+                  <React.Fragment key={notice.id}>
+                    <div className={style.TableRow}>
+                      <div className={style.RowNo}>{notice.id}</div>
+                      <div
+                        className={style.RowTitle}
+                        onClick={() => handleTitleClick(notice.id)}
+                      >
+                        {notice.title}
+                      </div>
+                      <div className={style.RowDate}>{notice.date}</div>
+                      <div className={style.RowEmail}>{notice.email}</div>
+                    </div>
+                    {expandedNotice === notice.id && (
+                      <div className={style.ContentRow}>
+                        <div className={style.Content}>{notice.text}</div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+              </>
+            )}
           </div>
 
           <div className={style.Pagination}>
@@ -282,6 +258,17 @@ const Notice = () => {
               »
             </button>
           </div>
+
+          {isAdmin && (
+            <div className={style.WriteButtonContainer}>
+              <button 
+                className={style.WriteButton}
+                onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+              >
+                작성하기
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
