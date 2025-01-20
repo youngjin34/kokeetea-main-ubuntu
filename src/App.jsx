@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
+import FranchisePromotion from "./pages/FranchisePromotion";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -47,6 +48,7 @@ function App() {
           <Route path="/affiliated" element={<Affiliated />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
+          <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
         </Routes>
         <AppContent />
       </div>

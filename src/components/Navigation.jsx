@@ -180,77 +180,138 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         <div className={style.main_menu}>
           <ul className={style.main_menu_list}>
             <li className={style.main_menu_item}>
-              <Link to="/kokeestory" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/kokeestory"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 KOKEE STORY
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/kokeestory" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/kokeestory"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     브랜드 소개
                   </Link>
                 </li>
               </ul>
             </li>
             <li className={style.main_menu_item}>
-              <Link to="/menupage" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/menupage"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 MENU
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/menupage" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/menupage"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     음료
                   </Link>
                 </li>
               </ul>
             </li>
             <li className={style.main_menu_item}>
-              <Link to="/waytocome" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/waytocome"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 STORE
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/waytocome" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/waytocome"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     매장 찾기
                   </Link>
                 </li>
               </ul>
             </li>
             <li className={style.main_menu_item}>
-              <Link to="/affiliated" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/affiliated"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 AFFILIATED
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/affiliated" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/affiliated"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     제휴 및 제안
+                  </Link>
+                </li>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/franchisepromotion"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    가맹홍보
                   </Link>
                 </li>
               </ul>
             </li>
             <li className={style.main_menu_item}>
-              <Link to="/notice" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/notice"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 NOTICE
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/notice" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/notice"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     공지사항
                   </Link>
                 </li>
               </ul>
             </li>
             <li className={style.main_menu_item}>
-              <Link to="/support" className={style.main_menu_link} style={{ color: fontColor }}>
+              <Link
+                to="/support"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
                 SUPPORT
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
-                  <Link to="/faq" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/faq"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     자주하는 질문
                   </Link>
                 </li>
                 <li className={style.sub_menu_item}>
-                  <Link to="/inquiry" className={style.sub_menu_link} style={{ color: fontColor }}>
+                  <Link
+                    to="/inquiry"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
                     1:1 문의하기
                   </Link>
                 </li>
@@ -343,6 +404,9 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               >
                 <Link to="/affiliated" onClick={toggleModal}>
                   제휴 및 제안
+                </Link>
+                <Link to="franchisepromotion" onClick={toggleModal}>
+                  가맹홍보
                 </Link>
               </div>
             </div>
