@@ -7,7 +7,6 @@ import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
-import OrderComplete from "./pages/OrderComplete";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -24,7 +23,7 @@ import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
   const [isLogined, setIsLogined] = useState(false);
 
   return (
