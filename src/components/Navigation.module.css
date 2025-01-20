@@ -410,7 +410,7 @@ ul {
 .main_menu a {
   text-decoration: none;
   color: white;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
   position: relative;
 }
 
@@ -422,7 +422,7 @@ ul {
   width: 0;
   height: 2px;
   background-color: #ba274a;
-  transition: width 0.3s ease;
+  transition: width 0.5s ease;
 }
 
 .main_menu li:hover > a::after {
@@ -431,7 +431,7 @@ ul {
 
 .main_menu li:hover > a {
   opacity: 0;
-  transition: color 0.3s ease;
+  transition: color 0.5s ease;
 }
 
 .main_menu li > ul {
@@ -446,7 +446,7 @@ ul {
   align-items: center;
   gap: 1rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .main_menu li:hover > ul {
@@ -465,6 +465,6 @@ ul {
 .main_menu li > ul a:hover {
   color: #ba274a !important;
   opacity: 1;
-  transition: color 0.3s ease;
+  transition: color 0.5s ease;
   font-weight: bold;
 }
