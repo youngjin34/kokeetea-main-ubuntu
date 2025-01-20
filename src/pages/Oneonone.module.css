@@ -8,10 +8,10 @@
 }
 
 .MainContent {
+  width: 1116px;
   padding: 20px;
   padding-top: 180px;
   padding-bottom: 170px;
-  width: 70%;
   margin: 0 auto;
   text-align: center;
 }
@@ -53,19 +53,21 @@
 }
 
 .FormContainer {
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
+  text-align: center;
 }
 
 .Form {
   text-align: left;
   border: 1px solid #f5edf0;
   border-radius: 8px;
-  padding: 20px 30px;
+  /* padding: 20px 30px; */
   margin-top: 20px;
   margin-bottom: 20px;
   background-color: #ffffff;
   width: 100%;
+  height: 758px;
 }
 
 .FormTitle {
@@ -146,7 +148,7 @@ input::-webkit-inner-spin-button {
 }
 
 .SubmitButton {
-  width: 100%;
+  width: 409px;
   padding: 15px;
   background-color: #ba274a;
   color: white;
@@ -154,7 +156,7 @@ input::-webkit-inner-spin-button {
   border-radius: 8px;
   cursor: pointer;
   font-size: 24px;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
 }
