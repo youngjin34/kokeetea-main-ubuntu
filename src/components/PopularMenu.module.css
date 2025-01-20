@@ -1,16 +1,16 @@
 /* ------------- 폰트 ---------------- */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 .PopularMenu {
-  width: 1000px;
+  height: 100vh;
   display: flex;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 }
 
 .menu_introduce {
@@ -24,7 +24,7 @@
 }
 
 .underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0; /* 텍스트 하단에 배경 배치 */
@@ -49,9 +49,4 @@
 .content {
   font-size: 18px;
   line-height: 30px;
-}
-
-/*  ----------------- carousel --------------- */
-.carousel {
-  width: 50%;
 }

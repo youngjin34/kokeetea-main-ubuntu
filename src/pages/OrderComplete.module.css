@@ -1,0 +1,176 @@
+.container {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.orderComplete {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 3rem 2rem;
+  position: relative;
+}
+
+.orderComplete::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #BA274A;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.successSection {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.checkmarkWrapper {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  background: #BA274A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark {
+  font-size: 2rem;
+  color: white;
+}
+
+.successSection h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.orderNumberText {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.highlight {
+  color: #BA274A;
+  font-weight: 600;
+}
+
+.estimateTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #F8F8F8;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1A1A1A;
+}
+
+.clockIcon {
+  color: #BA274A;
+}
+
+/* 주문 요약 섹션 */
+.orderSummary {
+  margin-top: 2rem;
+}
+
+.orderSummary h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #1A1A1A;
+}
+
+/* 결제 정보 */
+.paymentInfo {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #EEEEEE;
+}
+
+.paymentInfo > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.totalAmount {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #EEEEEE;
+}
+
+.totalAmount .highlight {
+  font-size: 1.2rem;
+  color: #BA274A;
+}
+
+/* 버튼 섹션 */
+.actions {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.actions button {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.trackButton {
+  background: #BA274A;
+  color: white;
+}
+
+.trackButton:hover {
+  background: #A32242;
+}
+
+.homeButton {
+  background: #F8F8F8;
+  color: #1A1A1A;
+}
+
+.homeButton:hover {
+  background: #EEEEEE;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .orderComplete {
+    padding: 2rem 1.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+} 

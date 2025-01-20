@@ -5,6 +5,8 @@ import style from "./App.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
+import NoticePage from "./pages/NoticePage";
+import Inquiry from "./pages/Inquiry";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -19,15 +21,9 @@ function AppContent() {
 }
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
-import Faq from "./pages/Faq";
-import Oneonone from "./pages/Oneonone";
-import Store from "./pages/Store";
-import Cart from "./pages/cart";
-import Order from "./pages/order";
-import MemberInfo from "./pages/MemberInfo";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
   const [isLogined, setIsLogined] = useState(false);
 
   return (
@@ -49,16 +45,11 @@ function App() {
           <Route path="/menupage" element={<MenuPage />} />
           <Route path="/kokeestory" element={<KokeeStory />} />
           <Route path="/affiliated" element={<Affiliated />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/oneonone" element={<Oneonone />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/memberinfo" element={<MemberInfo />} />
+          <Route path="/notice" element={<NoticePage />} />
+          <Route path="/inquiry" element={<Inquiry />} />
         </Routes>
         <AppContent />
       </div>
-
     </BrowserRouter>
   );
 }

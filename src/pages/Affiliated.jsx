@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./Affiliated.module.css";
 
 const Affiliated = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
@@ -25,6 +29,7 @@ const Affiliated = () => {
                     type="radio"
                     name="consultationType"
                     value="가맹상담"
+                    defaultChecked
                   />
                   가맹상담
                 </label>
@@ -54,7 +59,20 @@ const Affiliated = () => {
 
             <div className={style.FormGroup}>
               <label>연락처</label>
-              <input type="number" placeholder="연락처를 입력해주세요." />
+              <div className={style.PhoneInputGroup}>
+                <select className={style.PhonePrefix}>
+                  <option value="010">010</option>
+                  <option value="011">011</option>
+                  <option value="016">016</option>
+                  <option value="017">017</option>
+                  <option value="018">018</option>
+                  <option value="019">019</option>
+                </select>
+                <span className={style.PhoneSeparator}>-</span>
+                <input type="text" maxLength="4" className={style.PhoneInput} />
+                <span className={style.PhoneSeparator}>-</span>
+                <input type="text" maxLength="4" className={style.PhoneInput} />
+              </div>
             </div>
 
             <div className={style.FormGroup}>
@@ -85,6 +103,7 @@ const Affiliated = () => {
                       id="agree"
                       name="agreement"
                       value="동의함"
+                      defaultChecked
                     />
                     <label htmlFor="agree">동의함</label>
                   </div>

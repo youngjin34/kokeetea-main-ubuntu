@@ -1,3 +1,12 @@
+/* ------------- 폰트 ---------------- */
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
 a {
   text-decoration: none;
   color: white;
@@ -11,7 +20,6 @@ a {
 
 .ham_menu_button {
   display: flex;
-  flex-direction: column;
   cursor: pointer;
   justify-content: space-between;
   z-index: 3;
@@ -48,10 +56,10 @@ a {
 
 input {
   width: 94%;
-  /* padding: 10px; */
-  /* margin-bottom: 10px; */
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  /* border-radius: 5px; */
+  border-radius: 5px;
 }
 
 .login_btn {
@@ -109,55 +117,57 @@ ul {
 }
 
 /*  ---------------------- sns 버튼 ----------------------- */
-
 .nav_container {
   display: flex;
   align-items: center;
-  width: 100%;
-  justify-content: space-around;
-}
-
-.rotate {
-  transform: rotate(-45deg);
+  width: 80vw;
+  justify-content: space-between;
 }
 
 .ham_menu_button {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.ham_menu_button img {
   cursor: pointer;
   width: 60px;
   height: 60px;
-  justify-content: space-between;
-  z-index: 3;
+  animation: rotateEffect 2s ease-in-out infinite alternate; /* 좌우로 기울어지는 애니메이션 */
 }
 
-.ham_menu_icon {
-  width: 100%;
-  transition: transform 0.3s ease;
+@keyframes rotateEffect {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(15deg); /* 오른쪽으로 기울어짐 */
+  }
+  100% {
+    transform: rotate(-15deg); /* 왼쪽으로 기울어짐 */
+  }
 }
 
 .logo_text {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  text-align: center;
+  font-family: "Pretendard-Regular";
 }
 
 .inner {
   display: flex;
   align-items: center;
-  margin-left: auto;
 }
 
 .header_top {
   display: flex;
   align-items: center;
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .header_top li {
-  margin-left: 1rem;
+  margin-left: 5px;
 }
 
 .sns {
@@ -226,7 +236,6 @@ ul {
 
 .join {
   text-align: center;
-  color: blue;
   font-size: 0.9rem;
   text-decoration: underline;
   cursor: pointer;
@@ -277,13 +286,15 @@ ul {
 }
 
 .modal_menu > button.modal_close_button {
+  color: #ba274a;
+  font-weight: bolder;
   position: absolute;
   top: 50px;
   right: 40px;
   width: 50px;
   height: 50px;
   background: transparent;
-  font-size: 2rem;
+  font-size: 3rem;
   border: none;
   cursor: pointer;
   padding: 5px;

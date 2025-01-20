@@ -7,19 +7,18 @@
   font-style: normal;
 }
 
-.padding {
-  padding: 30px;
-}
-
-.MunuSlide {
-  width: 100%;
+.MenuSlide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 50px;
+  width: 90%;
   height: 100vh;
 }
 
 .MENU {
   font-size: 38px;
   font-weight: bold;
-  padding: 10px;
   display: flex;
   justify-content: center;
 }
@@ -28,12 +27,10 @@
   display: flex;
   justify-content: center;
   gap: 40px;
-  padding-bottom: 80px;
 }
 
 .menu {
   cursor: pointer;
-
   font-size: 28px;
   font-family: "Pretendard-Regular";
   font-weight: bold;

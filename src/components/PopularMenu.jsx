@@ -1,6 +1,6 @@
-import Carousel from './Carousel';
+import Carousel from "./Carousel";
 
-import style from './PopularMenu.module.css';
+import style from "./PopularMenu.module.css";
 
 function PopularMenu({ items }) {
   return (

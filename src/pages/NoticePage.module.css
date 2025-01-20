@@ -1,0 +1,248 @@
+.Container {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  font-family: "Pretendard-Regular";
+}
+
+.MainContent {
+  padding: 20px;
+  padding-top: 180px;
+  padding-bottom: 170px;
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.menu_title {
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+
+.underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background-color: #ba274a;
+  z-index: -1;
+}
+
+.menu_content {
+  font-size: 14px;
+  padding-bottom: 30px;
+}
+
+.FormContainer {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Form {
+  text-align: left;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  padding: 30px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.FormTitle {
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0px;
+}
+
+.FormTitle::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.NoticeTable {
+  width: 100%;
+  margin-top: 20px;
+  border-top: 3px solid #ba274a;
+}
+
+.TableHeader {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 100px;
+  background-color: #f8f9fa;
+  padding: 15px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.TableRow {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 100px;
+  padding: 15px 0;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.RowTitle {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.RowTitle:hover {
+  color: #ba274a;
+}
+
+.ContentRow {
+  display: grid;
+  grid-column: 1 / -1;
+  background-color: #f8f9fa;
+  overflow: hidden;
+  animation: slideDown 0.5s ease-out;
+}
+
+.Content {
+  padding: 20px 40px;
+  color: #666;
+  line-height: 1.6;
+  border-bottom: 1px solid #eee;
+}
+
+.Pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.PageButton {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.PageButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ActivePage {
+  padding: 8px 12px;
+  border: none;
+  background: #ba274a;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 50%;
+}
+
+.PageButton:hover:not(:disabled) {
+  color: #ba274a;
+}
+
+.TopControls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.SearchBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.SearchSelect {
+  height: 35px;
+  padding: 8px 12px;
+  border: none;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ba274a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+.SearchSelect:focus {
+  outline: none;
+  border-color: #ba274a;
+}
+
+.SearchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.SearchInput {
+  padding: 8px 12px;
+  padding-right: 40px;
+  border: none;
+  width: 250px;
+  font-size: 14px;
+  height: 35px;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+.SearchInput:focus {
+  outline: none;
+  border-color: #ba274a;
+}
+
+.SearchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7a7a7a;
+}
+
+.SearchButton:hover {
+  color: #000;
+}
