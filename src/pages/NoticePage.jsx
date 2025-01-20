@@ -173,7 +173,7 @@ const Notice = () => {
 
           <div className={style.NoticeTable}>
             {loading ? (
-              <div className={style.Loading}>로딩중...</div>
+              <div className={style.Loading}>로딩중...☕</div>
             ) : error ? (
               <div className={style.Error}>{error}</div>
             ) : (
@@ -182,7 +182,7 @@ const Notice = () => {
                   <div className={style.HeaderNo}>번호</div>
                   <div className={style.HeaderTitle}>제목</div>
                   <div className={style.HeaderDate}>작성일</div>
-                  <div className={style.HeaderViews}>작성자</div>
+                  <div className={style.HeaderViews}>조회수</div>
                 </div>
 
                 {currentItems.map((notice) => (
