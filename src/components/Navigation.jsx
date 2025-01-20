@@ -12,7 +12,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const [headerLogined, setHeaderLogined] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-
   const [isModalOpen, setModalOpen] = useState(false);
   const menuRef = useRef(null);
   const modalRef = useRef(null);
@@ -303,6 +302,21 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             </div>
           </div>
         </div>
+        <button>
+          <Link to="/cart" style={{ color: fontColor }}>
+            CART
+          </Link>
+        </button>
+        <button>
+          <Link to="/order" style={{ color: fontColor }}>
+            ORDER
+          </Link>
+        </button>
+        <button>
+          <Link to="/memberinfoupdate" style={{ color: fontColor }}>
+          MemberInfoUpdate
+          </Link>
+        </button>
         <div className="inner">
           <ul className={`${style.header_top}`}>
             {headerLogined ? (

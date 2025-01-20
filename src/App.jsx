@@ -24,7 +24,7 @@ import Affiliated from "./pages/Affiliated";
 import Faq from "./pages/Faq";
 import Order from "./pages/order";
 import Cart from "./pages/Cart";
-import MemberInfo from "./pages/MemberInfo";
+import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 import Store from "./pages/Store";
 
 function App() {
@@ -56,7 +56,7 @@ function App() {
           <Route path="/store" element={<Store />} />
           <Route path="/order" element={<Order />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/memberinfo" element={<MemberInfo />} />
+          <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
         </Routes>
         <AppContent />
       </div>
