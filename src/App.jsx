@@ -5,7 +5,7 @@ import style from "./App.module.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
-import Notice from "./pages/Notice";
+import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
 
 function AppContent() {
@@ -45,12 +45,11 @@ function App() {
           <Route path="/menupage" element={<MenuPage />} />
           <Route path="/kokeestory" element={<KokeeStory />} />
           <Route path="/affiliated" element={<Affiliated />} />
-          <Route path="/notice" element={<Notice />} />
+          <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
         </Routes>
         <AppContent />
       </div>
-
     </BrowserRouter>
   );
 }
