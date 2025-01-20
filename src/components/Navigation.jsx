@@ -177,6 +177,88 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           </Link>
         </div>
 
+        <div className={style.main_menu}>
+          <ul className={style.main_menu_list}>
+            <li className={style.main_menu_item}>
+              <Link to="/kokeestory" className={style.main_menu_link} style={{ color: fontColor }}>
+                KOKEE STORY
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/kokeestory" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    브랜드 소개
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link to="/menupage" className={style.main_menu_link} style={{ color: fontColor }}>
+                MENU
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/menupage" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    음료
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link to="/waytocome" className={style.main_menu_link} style={{ color: fontColor }}>
+                STORE
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/waytocome" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    매장 찾기
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link to="/affiliated" className={style.main_menu_link} style={{ color: fontColor }}>
+                AFFILIATED
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/affiliated" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    제휴 및 제안
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link to="/notice" className={style.main_menu_link} style={{ color: fontColor }}>
+                NOTICE
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/notice" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    공지사항
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link to="/support" className={style.main_menu_link} style={{ color: fontColor }}>
+                SUPPORT
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link to="/faq" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    자주하는 질문
+                  </Link>
+                </li>
+                <li className={style.sub_menu_item}>
+                  <Link to="/inquiry" className={style.sub_menu_link} style={{ color: fontColor }}>
+                    1:1 문의하기
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
         {/* 모달 창 */}
         <div
           className={`${style.modal_overlay} ${
@@ -206,7 +288,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="/kokeestory" onClick={toggleModal}>
-                  Brand
+                  브랜드 소개
                 </Link>
               </div>
             </div>
@@ -224,7 +306,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="./menupage" onClick={toggleModal}>
-                  Drink
+                  음료
                 </Link>
               </div>
             </div>
@@ -242,7 +324,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="./waytocome" onClick={toggleModal}>
-                  The way to find
+                  매장 찾기
                 </Link>
               </div>
             </div>
@@ -296,7 +378,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="/faq" onClick={toggleModal}>
-                  FAQ
+                  자주하는 질문
                 </Link>
                 <Link to="/inquiry" onClick={toggleModal}>
                   1:1 문의하기
