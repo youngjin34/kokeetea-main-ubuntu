@@ -240,7 +240,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "STORE" ? style.active : ""
                 }`}
               >
-                <Link to="./waytocome" onClick={toggleModal}>
+                <Link to="./store" onClick={toggleModal}>
                   The way to find
                 </Link>
               </div>

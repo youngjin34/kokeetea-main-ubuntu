@@ -21,6 +21,11 @@ function AppContent() {
 }
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
+import Faq from "./pages/Faq";
+import Order from "./pages/order";
+import Cart from "./pages/Cart";
+import MemberInfo from "./pages/MemberInfo";
+import Store from "./pages/Store";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
@@ -47,6 +52,11 @@ function App() {
           <Route path="/affiliated" element={<Affiliated />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/memberinfo" element={<MemberInfo />} />
         </Routes>
         <AppContent />
       </div>
