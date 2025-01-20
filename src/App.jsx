@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
+import OrderComplete from "./pages/OrderComplete";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
