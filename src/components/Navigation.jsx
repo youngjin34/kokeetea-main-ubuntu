@@ -448,7 +448,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             ) : (
               <li>
                 <Link onClick={toggleLoginModal} style={{ color: fontColor }}>
-                  LOGIN&nbsp;&nbsp;&nbsp;&nbsp;|
+                  LOGIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
                 </Link>
               </li>
             )}
