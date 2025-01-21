@@ -21,24 +21,24 @@ const FranchisePromotion = () => {
           <h2>가맹점 개설 혜택</h2>
           <div className={style.BenefitGrid}>
             <div className={style.BenefitCard}>
-              <img src="/public/img/benefit1.png" alt="교육 지원" />
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135810.png" alt="교육 지원" />
               <h3>체계적인 교육 지원</h3>
-              <p>전문 바리스타의 체계적인 교육으로 완벽한 맛 구현</p>
+              <p>전문가의 체계적인 교육으로<br/>완벽한 맛 구현</p>
             </div>
             <div className={style.BenefitCard}>
-              <img src="/public/img/benefit2.png" alt="운영 지원" />
+              <img src="https://cdn-icons-png.flaticon.com/512/3281/3281295.png" alt="운영 지원" />
               <h3>운영 관리 지원</h3>
               <p>매장 운영에 필요한 모든 노하우와 관리 시스템 제공</p>
             </div>
             <div className={style.BenefitCard}>
-              <img src="/public/img/benefit3.png" alt="마케팅 지원" />
+              <img src="https://cdn-icons-png.flaticon.com/512/1998/1998087.png" alt="마케팅 지원" />
               <h3>마케팅 지원</h3>
-              <p>효과적인 홍보 전략과 마케팅 자료 지원</p>
+              <p>효과적인 홍보 전략과<br/>마케팅 자료 지원</p>
             </div>
             <div className={style.BenefitCard}>
-              <img src="/public/img/benefit4.png" alt="품질 관리" />
+              <img src="https://cdn-icons-png.flaticon.com/512/1087/1087840.png" alt="품질 관리" />
               <h3>품질 관리 시스템</h3>
-              <p>최상의 품질 유지를 위한 체계적인 관리 시스템</p>
+              <p>최상의 품질 유지를 위한<br/>체계적인 관리 시스템</p>
             </div>
           </div>
         </div>

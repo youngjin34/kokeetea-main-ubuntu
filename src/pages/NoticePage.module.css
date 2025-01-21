@@ -200,6 +200,7 @@
   background-repeat: no-repeat;
   background-position: right 8px center;
   padding-right: 28px;
+  font-family: "Pretendard-Regular";
 }
 
 .SearchSelect:focus {
@@ -222,6 +223,7 @@
   height: 35px;
   box-sizing: border-box;
   margin-bottom: 0;
+  font-family: "Pretendard-Regular";
 }
 
 .SearchInput:focus {

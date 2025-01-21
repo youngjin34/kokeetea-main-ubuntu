@@ -179,10 +179,11 @@
   color: white;
   border: none;
   padding: 15px 40px;
-  font-size: 18px;
+  font-size: 1.2rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: "Pretendard-Regular";
 }
 
 .ConsultButton:hover {

@@ -251,20 +251,20 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
                   <Link
-                    to="/affiliated"
-                    className={style.sub_menu_link}
-                    style={{ color: fontColor }}
-                  >
-                    제휴 및 제안
-                  </Link>
-                </li>
-                <li className={style.sub_menu_item}>
-                  <Link
                     to="/franchisepromotion"
                     className={style.sub_menu_link}
                     style={{ color: fontColor }}
                   >
                     가맹안내
+                  </Link>
+                </li>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/affiliated"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    제휴 및 제안
                   </Link>
                 </li>
               </ul>
@@ -403,11 +403,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "AFFILIATED" ? style.active : ""
                 }`}
               >
+                <Link to="/franchisepromotion" onClick={toggleModal}>
+                  가맹안내
+                </Link>
                 <Link to="/affiliated" onClick={toggleModal}>
                   제휴 및 제안
-                </Link>
-                <Link to="franchisepromotion" onClick={toggleModal}>
-                  가맹안내
                 </Link>
               </div>
             </div>
