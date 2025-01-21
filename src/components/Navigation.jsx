@@ -146,8 +146,8 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   // 회원가입 이동
   const toForm = () => {
-    setLoginModalOpen(false);
-    navigate("/form");
+    setModalOpen(false); // 로그인 모달 닫기
+    navigate('/form'); // 회원가입 페이지로 이동
   };
 
   const toggleLoginModal = () => {

@@ -61,11 +61,14 @@
 .BenefitSection h2, .ProcessSection h2, .ContactSection h2 {
   text-align: center;
   font-size: 32px;
-
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   gap: 12px;
+}
+
+.ContactSection h2 {
+  justify-content: center;
 }
 
 .BenefitSection h2::before, 
