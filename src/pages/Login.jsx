@@ -49,7 +49,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
       <div className={`${styles.container} ${isSignUpActive ? styles.rightPanelActive : ''}`}>
         <div className={`${styles.formContainer} ${styles.signUpContainer}`}>
           <form className={styles.form} onSubmit={handleLogin}>
-            <h1>점주 로그인</h1>
+            <h2 className={styles.LoginTitle}>점주 로그인</h2>
             <input 
               className={styles.input} 
               type="text" 
@@ -72,7 +72,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
         </div>
         <div className={`${styles.formContainer} ${styles.signInContainer}`}>
           <form className={styles.form} onSubmit={handleLogin}>
-            <h1>일반 로그인</h1>
+            <h2 className={styles.LoginTitle}>일반 로그인</h2>
             <div className={styles.socialContainer}>
               <a href="#" className={`${styles.socialLink} ${styles.kakao}`}>
                 <span className={styles.socialText}>Kakao</span>
