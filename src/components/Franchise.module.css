@@ -29,10 +29,23 @@
   padding: 0;
 }
 
+.img_container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
 .franchise_img {
   height: 100vh;
   width: 100%;
-  max-width: 100%; /* 화면 너비 초과 방지 */
+  max-width: 100%;
+  position: relative;
+  z-index: 0;
 }
 
 .franchise_content {
@@ -81,12 +94,10 @@
   border: 3px solid #ba274a;
 }
 
-/* 기본 버튼 스타일 */
 .btn {
   margin: 1rem;
 }
 
-/* ghost 스타일 */
 .btn_ghost {
   background: transparent;
   border: 2px solid var(--btn-bg);
@@ -97,15 +108,4 @@
 .btn_ghost:hover {
   background: #ba274a;
   color: white;
-}
-
-.img_container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
 }
