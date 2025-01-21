@@ -1,15 +1,21 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { useState } from "react";
-import Home from "./pages/Home";
-import style from "./App.module.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import MenuPage from "./pages/MenuPage";
-import NoticePage from "./pages/NoticePage";
-import Inquiry from "./pages/Inquiry";
-import FranchisePromotion from "./pages/FranchisePromotion";
-import Form from "./pages/Form";
-import Store from "./pages/Store";
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import Home from './pages/Home';
+import style from './App.module.css';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import MenuPage from './pages/MenuPage';
+import NoticePage from './pages/NoticePage';
+import Inquiry from './pages/Inquiry';
+import FranchisePromotion from './pages/FranchisePromotion';
+import Register from './pages/Register';
+import Store from './pages/Store';
+import KokeeStory from './pages/KokeeStory';
+import Affiliated from './pages/Affiliated';
+import Faq from './pages/Faq';
+import Order from './pages/Order';
+import Cart from './pages/Cart';
+import MemberInfoUpdate from './pages/MemberInfoUpdate';
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -18,16 +24,10 @@ function AppContent() {
     <>
       {/* 현재 경로가 '/'(Home)일 때 Footer 숨김 */}
       {/* 이거 안 하면 Home에서는 Footer가 두 번 생깁니다... */}
-      {location.pathname !== "/" && <Footer />}
+      {location.pathname !== '/' && <Footer />}
     </>
   );
 }
-import KokeeStory from "./pages/KokeeStory";
-import Affiliated from "./pages/Affiliated";
-import Faq from "./pages/Faq";
-import Order from "./pages/order";
-import Cart from "./pages/Cart";
-import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
@@ -60,7 +60,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
-          <Route path="/form" element={<Form />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
         <AppContent />
       </div>

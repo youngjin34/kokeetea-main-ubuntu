@@ -1,14 +1,14 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import style from "./Navigation.module.css";
+import style from './Navigation.module.css';
 
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
 
-  const [userName, setUserName] = useState("");
-  const [pass, setPass] = useState("");
+  const [userName, setUserName] = useState('');
+  const [pass, setPass] = useState('');
   const [headerLogined, setHeaderLogined] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -28,44 +28,44 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
-    if (isHovered || fontColor === "black" || currentPage % 2 === 1) {
-      return "./img/hamberger_black.png";
+    if (isHovered || fontColor === 'black' || currentPage % 2 === 1) {
+      return './img/hamberger_black.png';
     }
-    return "./img/hamberger_white.png";
+    return './img/hamberger_white.png';
   };
 
   // Facebook 아이콘 경로 결정
   const getFacebookIcon = () => {
-    if (isHovered || fontColor === "black") {
-      return "./img/facebook_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === 'black') {
+      return './img/facebook_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./img/facebook_white.png"
-      : "./img/facebook_black.png";
+      ? './img/facebook_white.png'
+      : './img/facebook_black.png';
   };
 
   // Insta 아이콘 경로 결정
   const getInstaIcon = () => {
-    if (isHovered || fontColor === "black") {
-      return "./img/insta_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === 'black') {
+      return './img/insta_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./img/insta_white.png"
-      : "./img/insta_black.png";
+      ? './img/insta_white.png'
+      : './img/insta_black.png';
   };
 
   // YouTube 아이콘 경로 결정
   const getYoutubeIcon = () => {
-    if (isHovered || fontColor === "black") {
-      return "./img/yutube_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+    if (isHovered || fontColor === 'black') {
+      return './img/yutube_black.png'; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
     }
     return currentPage % 2 === 0
-      ? "./img/yutube_white.png"
-      : "./img/yutube_black.png";
+      ? './img/yutube_white.png'
+      : './img/yutube_black.png';
   };
 
   useEffect(() => {
-    if (localStorage.getItem("realname")) {
+    if (localStorage.getItem('realname')) {
       setHeaderLogined(true);
     }
     // 메뉴 영역 외부 클릭 시 메뉴 닫기
@@ -79,9 +79,9 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         setActiveSubMenu(null); // 모달 닫을 때 하위 메뉴도 닫기
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isModalOpen]);
 
@@ -89,20 +89,20 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     const regExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
 
     if (!userName.trim()) {
-      alert("아이디가 공백입니다.");
+      alert('아이디가 공백입니다.');
       return;
     }
     if (!pass.trim()) {
-      alert("비밀번호가 공백입니다.");
+      alert('비밀번호가 공백입니다.');
       return;
     }
     if (regExp.test(userName)) {
-      alert("아이디에 한글을 입력하실 수 없습니다.");
+      alert('아이디에 한글을 입력하실 수 없습니다.');
       return;
     }
 
     try {
-      const result = await axios.post("http://localhost:8080/kokee/login", {
+      const result = await axios.post('http://localhost:8080/kokee/login', {
         userName: userName,
         password: pass,
       });
@@ -111,28 +111,28 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
       if (result.status === 200) {
         setIsLogined(!isLogined);
         setHeaderLogined(!headerLogined);
-        document.querySelector(".sec_modal").classList.remove("active");
-        localStorage.setItem("userName", userName);
-        localStorage.setItem("realname", result.data.name);
-        localStorage.setItem("email", result.data.email);
-        alert(`${localStorage.getItem("realname")}님 환영합니다!`);
-        navigate("/");
-        console.log("userName:", localStorage.getItem("userName"));
-        console.log("realname:", localStorage.getItem("realname"));
-        console.log("email:", localStorage.getItem("email"));
+        document.querySelector('.sec_modal').classList.remove('active');
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('realname', result.data.name);
+        localStorage.setItem('email', result.data.email);
+        alert(`${localStorage.getItem('realname')}님 환영합니다!`);
+        navigate('/');
+        console.log('userName:', localStorage.getItem('userName'));
+        console.log('realname:', localStorage.getItem('realname'));
+        console.log('email:', localStorage.getItem('email'));
       }
     } catch (error) {
-      alert("아이디과 비밀번호를 확인해보세요");
+      alert('아이디과 비밀번호를 확인해보세요');
     }
   }
 
   function logoutFunction() {
     alert(
-      `로그아웃 합니다. ${localStorage.getItem("realname")}님 안녕히 가세요.`
+      `로그아웃 합니다. ${localStorage.getItem('realname')}님 안녕히 가세요.`
     );
     localStorage.clear();
     setIsLogined(!isLogined);
-    navigate("/");
+    navigate('/');
     window.location.reload();
   }
 
@@ -147,7 +147,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   // 회원가입 이동
   const toForm = () => {
     setLoginModalOpen(false);
-    navigate("/form");
+    navigate('/form');
   };
 
   const toggleLoginModal = () => {
@@ -315,12 +315,12 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         {/* 햄버거 버튼 눌렀을 때 모달 창 */}
         <div
           className={`${style.modal_overlay} ${
-            isModalOpen ? style.active : ""
+            isModalOpen ? style.active : ''
           }`}
           ref={modalRef}
         >
           <div
-            className={`${style.modal_menu} ${isModalOpen ? style.active : ""}`}
+            className={`${style.modal_menu} ${isModalOpen ? style.active : ''}`}
             ref={menuRef}
           >
             {/* 모달 닫기 버튼 */}
@@ -331,13 +331,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* KOKEE STORY 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "KOKEE STORY" ? style.active : ""
+                activeSubMenu === 'KOKEE STORY' ? style.active : ''
               }`}
             >
               KOKEE STORY
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "KOKEE STORY" ? style.active : ""
+                  activeSubMenu === 'KOKEE STORY' ? style.active : ''
                 }`}
               >
                 <Link to="/kokeestory" onClick={toggleModal}>
@@ -348,13 +348,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* MENU 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "MENU" ? style.active : ""
+                activeSubMenu === 'MENU' ? style.active : ''
               }`}
             >
               MENU
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "MENU" ? style.active : ""
+                  activeSubMenu === 'MENU' ? style.active : ''
                 }`}
               >
                 <Link to="./menupage" onClick={toggleModal}>
@@ -365,13 +365,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* STORE 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "STORE" ? style.active : ""
+                activeSubMenu === 'STORE' ? style.active : ''
               }`}
             >
               STORE
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "STORE" ? style.active : ""
+                  activeSubMenu === 'STORE' ? style.active : ''
                 }`}
               >
                 <Link to="/store" onClick={toggleModal}>
@@ -382,13 +382,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* AFFILIATED 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "AFFILIATED" ? style.active : ""
+                activeSubMenu === 'AFFILIATED' ? style.active : ''
               }`}
             >
               AFFILIATED
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "AFFILIATED" ? style.active : ""
+                  activeSubMenu === 'AFFILIATED' ? style.active : ''
                 }`}
               >
                 <Link to="/franchisepromotion" onClick={toggleModal}>
@@ -403,13 +403,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* NOTICE 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "NOTICE" ? style.active : ""
+                activeSubMenu === 'NOTICE' ? style.active : ''
               }`}
             >
               NOTICE
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "NOTICE" ? style.active : ""
+                  activeSubMenu === 'NOTICE' ? style.active : ''
                 }`}
               >
                 <Link to="/notice" onClick={toggleModal}>
@@ -421,13 +421,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {/* SUPPORT 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
-                activeSubMenu === "SUPPORT" ? style.active : ""
+                activeSubMenu === 'SUPPORT' ? style.active : ''
               }`}
             >
               SUPPORT
               <div
                 className={`${style.submenu} ${
-                  activeSubMenu === "SUPPORT" ? style.active : ""
+                  activeSubMenu === 'SUPPORT' ? style.active : ''
                 }`}
               >
                 <Link to="/faq" onClick={toggleModal}>
@@ -442,7 +442,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {headerLogined ? (
               <li onClick={logoutFunction}>
                 <Link to="#" style={{ color: fontColor }}>
-                  {localStorage.getItem("realname")}님 LOGOUT |
+                  {localStorage.getItem('realname')}님 LOGOUT |
                 </Link>
               </li>
             ) : (
@@ -454,7 +454,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             )}
             {!headerLogined && (
               <li>
-                <Link to="/form" style={{ color: fontColor }}>
+                <Link to="/register" style={{ color: fontColor }}>
                   JOIN
                 </Link>
               </li>
@@ -524,7 +524,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               placeholder="비밀번호"
               value={pass}
               onChange={(e) => setPass(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && fn_login()}
+              onKeyDown={(e) => e.key === 'Enter' && fn_login()}
             />
             <label className={style.checkboxWrap}>
               <input type="checkbox" />

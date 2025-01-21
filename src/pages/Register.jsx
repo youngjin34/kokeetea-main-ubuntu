@@ -1,23 +1,23 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import style from "./Form.module.css";
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import style from './Register.module.css';
 
 const Form = () => {
-  const [userId, setUserId] = useState("");
-  const [userPw, setUserPw] = useState("");
-  const [userPwCheck, setUserPwCheck] = useState("");
-  const [userName, setUserName] = useState("");
-  const [phone02, setPhone02] = useState("");
-  const [phone03, setPhone03] = useState("");
-  const [email01, setEmail01] = useState("");
-  const [email02, setEmail02] = useState("");
+  const [userId, setUserId] = useState('');
+  const [userPw, setUserPw] = useState('');
+  const [userPwCheck, setUserPwCheck] = useState('');
+  const [userName, setUserName] = useState('');
+  const [phone02, setPhone02] = useState('');
+  const [phone03, setPhone03] = useState('');
+  const [email01, setEmail01] = useState('');
+  const [email02, setEmail02] = useState('');
   const [agree1, setAgree1] = useState(false); // 이용약관 동의
   const [agree2, setAgree2] = useState(false); // 개인정보 처리방침 동의
   const [validId, setValidId] = useState(false);
   const [validPw, setValidPw] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림/닫힘 상태
-  const [modalContent, setModalContent] = useState(""); // 모달에 표시할 내용
+  const [modalContent, setModalContent] = useState(''); // 모달에 표시할 내용
   const navigate = useNavigate();
 
   // 모달 열기 함수
@@ -42,7 +42,8 @@ const Form = () => {
   };
 
   const onChangeUserPw = (e) => {
-    const userPwRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+{}|:"<>?]).{8,16}$/;
+    const userPwRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+{}|:"<>?]).{8,16}$/;
     if (!e.target.value || userPwRegex.test(e.target.value)) {
       setValidPw(false);
     } else {
@@ -54,27 +55,27 @@ const Form = () => {
   const onJoin = (event) => {
     event.preventDefault();
     if (
-      userId === "" ||
-      userPw === "" ||
-      userPwCheck === "" ||
-      userName === "" ||
-      phone02 === "" ||
-      phone03 === "" ||
-      email01 === "" ||
-      email02 === ""
+      userId === '' ||
+      userPw === '' ||
+      userPwCheck === '' ||
+      userName === '' ||
+      phone02 === '' ||
+      phone03 === '' ||
+      email01 === '' ||
+      email02 === ''
     ) {
-      alert("필수 항목은 빈칸이 없게 모두 입력해 주세요.");
+      alert('필수 항목은 빈칸이 없게 모두 입력해 주세요.');
     } else if (userPw !== userPwCheck) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert('비밀번호가 일치하지 않습니다.');
     } else if (!agree1 || !agree2) {
-      alert("필수 항목에 동의해 주세요.");
+      alert('필수 항목에 동의해 주세요.');
     } else if (validId || validPw) {
       alert(
-        "사용할 수 없는 아이디 혹은 비밀번호 입니다. \n양식에 맞게 다시 작성해주세요."
+        '사용할 수 없는 아이디 혹은 비밀번호 입니다. \n양식에 맞게 다시 작성해주세요.'
       );
     } else {
       axios
-        .post("http://localhost:8080/kokee/join", {
+        .post('http://localhost:8080/kokee/join', {
           userId: userId,
           userPw: userPw,
           userPwCheck: userPwCheck,
@@ -83,22 +84,22 @@ const Form = () => {
           phone03: phone03,
           email01: email01,
           email02: email02,
-          role: "user",
+          role: 'user',
         })
         .then((res) => {
           console.log(res);
-          if (res.data === "success") {
-            alert("회원가입을 환영합니다. 메인페이지로 이동합니다.");
-            navigate("/");
+          if (res.data === 'success') {
+            alert('회원가입을 환영합니다. 메인페이지로 이동합니다.');
+            navigate('/');
           }
         })
         .catch((err) => {
-          if (err.response.data === "failed") {
+          if (err.response.data === 'failed') {
             alert(
               `입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요.`
             );
           } else {
-            alert("알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.");
+            alert('알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.');
           }
         });
     }
@@ -118,15 +119,20 @@ const Form = () => {
     <>
       <div className={style.joinForm}>
         <h2>회원가입</h2>
+        <div className={style.required}>
+          <span className={style.start}>* </span> 표시는 필수 입력 사항입니다.
+        </div>
         <p className={style.requiredItems}></p>
         <p className={style.itemTitle1}>로그인 정보</p>
         <form id="frm">
           <div className={style.formSection}>
             <div className={style.formRow}>
               <div className={style.frmTitle}>
-                <span className={style.after}>아이디</span>
+                <span className={`${style.redStar} ${style.default_size}`}>
+                  아이디
+                </span>
               </div>
-              <div className={style.formInput}>
+              <div className={`${style.formInput} ${style.error_display}`}>
                 <input
                   type="text"
                   name="userId"
@@ -143,9 +149,11 @@ const Form = () => {
             </div>
             <div className={style.formRow}>
               <div className={style.frmTitle}>
-                <span className={style.after}>비밀번호</span>
+                <span className={`${style.redStar} ${style.default_size}`}>
+                  비밀번호
+                </span>
               </div>
-              <div className={style.formInput}>
+              <div className={`${style.formInput} ${style.error_display}`}>
                 <input
                   type="password"
                   name="userPw"
@@ -161,7 +169,9 @@ const Form = () => {
               </div>
             </div>
             <div className={style.formRow}>
-              <div className={style.frmTitle}>비밀번호 확인</div>
+              <div className={`${style.frmTitle} ${style.default_size}`}>
+                비밀번호 확인
+              </div>
               <div className={style.formInput}>
                 <input
                   type="password"
@@ -173,7 +183,9 @@ const Form = () => {
             </div>
             <div className={style.formRow}>
               <div className={style.frmTitle}>
-                <span className={style.after}>이름</span>
+                <span className={`${style.redStar} ${style.default_size}`}>
+                  이름
+                </span>
               </div>
               <div className={style.formInput}>
                 <input
@@ -188,11 +200,16 @@ const Form = () => {
 
             <div className={style.formRow}>
               <div className={style.frmTitle}>
-                <span className={style.after}>휴대폰번호</span>
+                <span className={`${style.redStar} ${style.default_size}`}>
+                  휴대폰번호
+                </span>
               </div>
               <div className={style.formInput}>
                 <select name="phone01" className={style.phone01}>
                   <option value="010">010</option>
+                  <option value="010">011</option>
+                  <option value="010">016</option>
+                  <option value="010">017</option>
                 </select>
                 -
                 <input
@@ -200,7 +217,7 @@ const Form = () => {
                   name="phone02"
                   className={style.phoneInput}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
+                    const value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
                     setPhone02(value);
                   }}
                   value={phone02}
@@ -211,7 +228,7 @@ const Form = () => {
                   name="phone03"
                   className={style.phoneInput}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
+                    const value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
                     setPhone03(value);
                   }}
                   value={phone03}
@@ -220,7 +237,9 @@ const Form = () => {
             </div>
             <div className={style.formRow}>
               <div className={style.frmTitle}>
-                <span className={style.after}>이메일</span>
+                <span className={`${style.redStar} ${style.default_size}`}>
+                  이메일
+                </span>
               </div>
               <div className={style.formInput}>
                 <input
@@ -252,7 +271,10 @@ const Form = () => {
                   onChange={(e) => setAgree1(e.target.checked)}
                   checked={agree1}
                 />
-                <label>[필수] 이용약관에 동의합니다.</label>
+                <label>
+                  <span className={style.font_red}>[필수]</span> 이용약관에
+                  동의합니다.
+                </label>
                 <div
                   className={style.detailButton}
                   onClick={() => openModal(termsContent)}
@@ -266,7 +288,10 @@ const Form = () => {
                   onChange={(e) => setAgree2(e.target.checked)}
                   checked={agree2}
                 />
-                <label>[필수] 개인정보 처리방침에 동의합니다.</label>
+                <label>
+                  <span className={style.font_red}>[필수]</span> 개인정보
+                  처리방침에 동의합니다.
+                </label>
                 <div
                   className={style.detailButton}
                   onClick={() => openModal(privacyContent)}
@@ -292,7 +317,7 @@ const Form = () => {
         <div className={style.modalOverlay}>
           <div className={style.modalContent}>
             <p className={style.modalTitle}>
-              {modalContent === termsContent ? "이용약관" : "개인정보처리방침"}
+              {modalContent === termsContent ? '이용약관' : '개인정보처리방침'}
             </p>
             <pre>{modalContent}</pre>
             <div className={style.modalButtons}>
