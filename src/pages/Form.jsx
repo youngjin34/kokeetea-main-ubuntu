@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "../pages/Form.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import style from "./Form.module.css";
 
 const Form = () => {
   const [userId, setUserId] = useState("");
@@ -116,20 +116,17 @@ const Form = () => {
 
   return (
     <>
-      <div className="joinForm">
+      <div className={style.joinForm}>
         <h2>회원가입</h2>
-        <p className="requiredItems">
-        </p>
-        <p className="item-title1">로그인 정보</p>
+        <p className={style.requiredItems}></p>
+        <p className={style.itemTitle1}>로그인 정보</p>
         <form id="frm">
-          <div className="form-section">
-            <div className="form-row">
-              <div className="frm_title">
-                <span className="after">
-                  아이디
-                </span>
+          <div className={style.formSection}>
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>
+                <span className={style.after}>아이디</span>
               </div>
-              <div className="form-input">
+              <div className={style.formInput}>
                 <input
                   type="text"
                   name="userId"
@@ -137,20 +134,18 @@ const Form = () => {
                   value={userId}
                 />
                 {validId && (
-                  <span className="error-message">
+                  <span className={style.errorMessage}>
                     아이디는 특수 문자를 제외하고, 영문과 숫자를 이용한 4~16자만
                     가능합니다.
                   </span>
                 )}
               </div>
             </div>
-            <div className="form-row">
-              <div className="frm_title">
-                <span className="after">
-                  비밀번호
-                </span>
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>
+                <span className={style.after}>비밀번호</span>
               </div>
-              <div className="form-input">
+              <div className={style.formInput}>
                 <input
                   type="password"
                   name="userPw"
@@ -158,18 +153,16 @@ const Form = () => {
                   value={userPw}
                 />
                 {validPw && (
-                  <span className="error-message">
+                  <span className={style.errorMessage}>
                     비밀번호는 특수 문자를 포함한, 영문과 숫자를 이용한 8~16자만
                     가능합니다.
                   </span>
                 )}
               </div>
             </div>
-            <div className="form-row">
-              <div className="frm_title">
-                비밀번호 확인
-              </div>
-              <div className="form-input">
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>비밀번호 확인</div>
+              <div className={style.formInput}>
                 <input
                   type="password"
                   name="userPwCheck"
@@ -178,13 +171,11 @@ const Form = () => {
                 />
               </div>
             </div>
-            <div className="form-row">
-              <div className="frm_title">
-                <span className="after">
-                  이름
-                </span>
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>
+                <span className={style.after}>이름</span>
               </div>
-              <div className="form-input">
+              <div className={style.formInput}>
                 <input
                   type="text"
                   name="userName"
@@ -193,21 +184,21 @@ const Form = () => {
                 />
               </div>
             </div>
-            <p className="item-title2">연락처 정보</p>
+            <p className={style.itemTitle2}>연락처 정보</p>
 
-            <div className="form-row">
-              <div className="frm_title">
-                <span className="after">휴대폰번호</span>
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>
+                <span className={style.after}>휴대폰번호</span>
               </div>
-              <div className="form-input">
-                <select name="phone01" className="phone01">
+              <div className={style.formInput}>
+                <select name="phone01" className={style.phone01}>
                   <option value="010">010</option>
                 </select>
                 -
                 <input
                   type="text"
                   name="phone02"
-                  className="phone-input"
+                  className={style.phoneInput}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
                     setPhone02(value);
@@ -218,7 +209,7 @@ const Form = () => {
                 <input
                   type="text"
                   name="phone03"
-                  className="phone-input"
+                  className={style.phoneInput}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
                     setPhone03(value);
@@ -227,11 +218,11 @@ const Form = () => {
                 />
               </div>
             </div>
-            <div className="form-row">
-              <div className="frm_title">
-                <span className="after">이메일</span>
+            <div className={style.formRow}>
+              <div className={style.frmTitle}>
+                <span className={style.after}>이메일</span>
               </div>
-              <div className="form-input">
+              <div className={style.formInput}>
                 <input
                   type="text"
                   name="email1"
@@ -241,7 +232,7 @@ const Form = () => {
                 @
                 <input
                   type="text"
-                  className="email2"
+                  className={style.email2}
                   name="email2"
                   onChange={(e) => setEmail02(e.target.value)}
                   value={email02}
@@ -250,34 +241,34 @@ const Form = () => {
             </div>
           </div>
 
-          <div className="form-section">
-            <div className="form-header">
-              <span className="frm_h3">약관동의</span>
+          <div className={style.formSection}>
+            <div className={style.formHeader}>
+              <span className={style.frmH3}>약관동의</span>
             </div>
-            <div className="bg-gray">
-              <div className="agree-item">
+            <div className={style.bgGray}>
+              <div className={style.agreeItem}>
                 <input
                   type="checkbox"
-                  onChange={(e) => setAgree1(e.target.checked)} // 개별적으로 상태 관리
+                  onChange={(e) => setAgree1(e.target.checked)}
                   checked={agree1}
                 />
                 <label>[필수] 이용약관에 동의합니다.</label>
                 <div
-                  className="detail-button"
+                  className={style.detailButton}
                   onClick={() => openModal(termsContent)}
                 >
                   자세히 보기
                 </div>
               </div>
-              <div className="agree-item">
+              <div className={style.agreeItem}>
                 <input
                   type="checkbox"
-                  onChange={(e) => setAgree2(e.target.checked)} // 개별적으로 상태 관리
+                  onChange={(e) => setAgree2(e.target.checked)}
                   checked={agree2}
                 />
                 <label>[필수] 개인정보 처리방침에 동의합니다.</label>
                 <div
-                  className="detail-button"
+                  className={style.detailButton}
                   onClick={() => openModal(privacyContent)}
                 >
                   자세히 보기
@@ -286,9 +277,9 @@ const Form = () => {
             </div>
           </div>
 
-          <div className="form-section">
-            <div className="dflex2">
-              <button className="cursor" type="button" onClick={onJoin}>
+          <div className={style.formSection}>
+            <div className={style.dflex2}>
+              <button className={style.cursor} type="button" onClick={onJoin}>
                 회원가입
               </button>
             </div>
@@ -298,15 +289,15 @@ const Form = () => {
 
       {/* 모달 창 */}
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <p className="modal-title">
+        <div className={style.modalOverlay}>
+          <div className={style.modalContent}>
+            <p className={style.modalTitle}>
               {modalContent === termsContent ? "이용약관" : "개인정보처리방침"}
             </p>
             <pre>{modalContent}</pre>
-            <div className="modal-buttons">
+            <div className={style.modalButtons}>
               <button
-                className="modal-confirm"
+                className={style.modalConfirm}
                 onClick={() => {
                   if (modalContent === termsContent) {
                     setAgree1(true); // 이용약관 동의
@@ -318,7 +309,7 @@ const Form = () => {
               >
                 동의
               </button>
-              <button className="modal-close" onClick={closeModal}>
+              <button className={style.modalClose} onClick={closeModal}>
                 닫기
               </button>
             </div>
