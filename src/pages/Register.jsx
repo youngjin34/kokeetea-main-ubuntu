@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import style from "./Resister.module.css";
+import style from "./Register.module.css";
 
-// ID 입력 컴포넌트
 const IdInput = ({ value, onChange }) => (
   <div className={style.FormGroup}>
     <label>아이디<span className={style.required}>*</span></label>
@@ -17,7 +16,6 @@ const IdInput = ({ value, onChange }) => (
   </div>
 );
 
-// 비밀번호 입력 컴포넌트
 const PasswordInput = ({ value, onChange, confirmValue, onConfirmChange }) => (
   <>
     <div className={style.FormGroup}>
@@ -47,7 +45,6 @@ const PasswordInput = ({ value, onChange, confirmValue, onConfirmChange }) => (
   </>
 );
 
-// 이름 입력 컴포넌트
 const NameInput = ({ value, onChange }) => (
   <div className={style.FormGroup}>
     <label>이름<span className={style.required}>*</span></label>
@@ -63,7 +60,6 @@ const NameInput = ({ value, onChange }) => (
   </div>
 );
 
-// 전화번호 입력 컴포넌트
 const PhoneInput = ({ prefix, middle, last, onChange }) => (
   <div className={style.FormGroup}>
     <label>휴대폰 번호<span className={style.required}>*</span></label>
@@ -103,7 +99,6 @@ const PhoneInput = ({ prefix, middle, last, onChange }) => (
   </div>
 );
 
-// 이메일 입력 컴포넌트
 const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
   const emailDomains = [
     { value: "", label: "직접입력" },
@@ -149,8 +144,7 @@ const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
   );
 };
 
-// 메인 Form 컴포넌트
-const Resister = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     userId: '',
     password: '',
@@ -276,7 +270,6 @@ const Resister = () => {
         </div>
       </div>
 
-      {/* 이용약관 모달 */}
       {isTermsModalOpen && (
         <div className={style.modalOverlay}>
           <div className={style.modalContent}>
@@ -289,14 +282,12 @@ const Resister = () => {
               제2조 (약관의 효력과 변경)
               1. 이 약관은 서비스를 통하여 이를 공지하거나 전자메일 등의 방법으로 회원에게 통지함으로써 효력이 발생합니다.
               2. 회사는 필요한 경우 이 약관을 변경할 수 있으며, 변경된 약관은 제1항과 같은 방법으로 공지 또는 통지함으로써 효력이 발생합니다.
-              {/* 추가 약관 내용 */}
             </pre>
             <button onClick={() => setIsTermsModalOpen(false)}>닫기</button>
           </div>
         </div>
       )}
 
-      {/* 개인정보처리방침 모달 */}
       {isPrivacyModalOpen && (
         <div className={style.modalOverlay}>
           <div className={style.modalContent}>
@@ -311,7 +302,6 @@ const Resister = () => {
               2. 개인정보의 처리 및 보유기간
               회사는 법령에 따른 개인정보 보유·이용기간 또는 정보주체로부터 
               개인정보를 수집 시에 동의받은 개인정보 보유·이용기간 내에서 개인정보를 처리·보유합니다.
-              {/* 추가 개인정보처리방침 내용 */}
             </pre>
             <button onClick={() => setIsPrivacyModalOpen(false)}>닫기</button>
           </div>
@@ -321,4 +311,4 @@ const Resister = () => {
   );
 };
 
-export default Resister;
+export default Register;

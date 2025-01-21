@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
-import Login from "../pages/Login";
 
 function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   const navigate = useNavigate();
@@ -455,7 +454,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             )}
             {!headerLogined && (
               <li>
-                <Link to="/register" style={{ color: fontColor }}>
+                <Link to="/resister" style={{ color: fontColor }}>
                   JOIN
                 </Link>
               </li>
@@ -470,7 +469,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <li>
               <Link
                 to="https://ko-kr.facebook.com/luvkokeetea/"
-                onMouseEnter={handleMouseEnter}
+                // onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 <img
@@ -483,12 +482,12 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <li>
               <Link
                 to="https://www.instagram.com/kokeetea/"
-                onMouseEnter={handleMouseEnter}
+                // onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 <img
                   src={getInstaIcon()}
-                  alt="Instagram logo"
+                  alt="Facebook logo"
                   className={style.sns}
                 />
               </Link>
@@ -496,7 +495,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             <li>
               <Link
                 to="https://www.youtube.com/@kokeetea2886"
-                onMouseEnter={handleMouseEnter}
+                // onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 <img
@@ -513,14 +512,37 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
       {isLoginModalOpen && (
         <div className={style.modal}>
           <div className={style.modalContent}>
-            <div className={style.modalClose} onClick={toggleLoginModal}>
-              <img src="/public/img/close.png" alt="Close" />
-            </div>
-            <Login 
-              onClose={toggleLoginModal} 
-              setIsLogined={setIsLogined}
-              setHeaderLogined={setHeaderLogined}
+            <h2>로그인</h2>
+            <input
+              type="text"
+              placeholder="아이디"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && fn_login()}
+            />
+            <label className={style.checkboxWrap}>
+              <input type="checkbox" />
+              <p>로그인 상태 유지</p>
+            </label>
+            <button
+              type="button"
+              className={`${style.login_btn}`}
+              onClick={fn_login}
+            >
+              로그인
+            </button>
+            <div className={style.join} onClick={toForm}>
+              회원가입
+            </div>
+            <div className={style.modalClose} onClick={toggleLoginModal}>
+              <img src="/public/img/close.png" />
+            </div>
           </div>
         </div>
       )}

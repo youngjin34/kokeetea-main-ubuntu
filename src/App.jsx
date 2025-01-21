@@ -8,8 +8,9 @@ import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
 import FranchisePromotion from "./pages/FranchisePromotion";
-import Resister from "./pages/Resister";
+import Register from "./pages/Register";
 import Store from "./pages/Store";
+import Login from "./pages/Login";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -60,7 +61,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
-          <Route path="/resister" element={<Resister />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <AppContent />
       </div>
