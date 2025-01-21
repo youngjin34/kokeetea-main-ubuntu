@@ -430,9 +430,10 @@ ul {
 }
 
 .main_menu li:hover > a {
-  transform: translateY(-20px);
-  opacity: 0.3;
+  transform: translateY(0);
+  opacity: 0;
   cursor: default;
+  transition: opacity 0.5s ease;
 }
 
 .main_menu li:hover > a::after {
@@ -441,9 +442,9 @@ ul {
 
 .main_menu li > ul {
   position: absolute;
-  top: 100%;
+  top: 0;
   left: 50%;
-  transform: translate(-50%, -10px);
+  transform: translate(-50%, 0);
   width: auto;
   height: auto;
   display: flex;
@@ -453,7 +454,7 @@ ul {
   gap: 1.5rem;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s ease;
 }
 
 .main_menu li:hover > ul {
@@ -476,4 +477,26 @@ ul {
   transform: none;
   opacity: 1 !important;
   cursor: pointer;
+}
+
+.main_menu_item {
+  position: relative;
+}
+
+.main_menu_item:hover .main_menu_link {
+  opacity: 0;  /* 호버 시 메인 메뉴 텍스트를 숨김 */
+  transition: opacity 0.3s ease;
+}
+
+.sub_menu_list {
+  position: absolute;
+  top: 0;  /* 상위 메뉴와 같은 위치에 배치 */
+  left: 50%;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.main_menu_item:hover .sub_menu_list {
+  opacity: 1;
+  visibility: visible;
 }
