@@ -1,5 +1,6 @@
 .Container {
-  width: 100%;
+  width: 70%;
+  margin: 0 auto;
   min-height: 100vh;
   background: #fff;
 }
@@ -8,7 +9,7 @@
   padding: 20px;
   padding-top: 180px;
   padding-bottom: 170px;
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }

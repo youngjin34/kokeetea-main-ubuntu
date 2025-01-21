@@ -1,16 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./Cart.module.css";
-import { useState } from "react";
 
 const Cart = () => {
-  const categories = ["전체선택", "브라운슈가밀크티", "타로밀크티"];
-  const [activeCategory, setActiveCategory] = useState("전체선택");
+  const [cartItems, setCartItems] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("전체선택"); // 카테고리 기능 삭제
+
+  // 샘플 데이터 삭제
+
+    const handleAddToCart = async (product) => {
+    try {
+      const response = await fetch("/kokee/carts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            product_name : product.category,
+            mount: product.amount,
+            price: parseInt(product.price.replace(/,/g, "").replace("원", "")),
+            email: "test@example.com" // 임시 이메일
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.text();
+       if(result === "success"){
+            alert("상품이 장바구니에 추가되었습니다.");
+        } else {
+            alert("상품 추가에 실패했습니다. 다시 시도해주세요.")
+        }
+
+      // 장바구니 업데이트 기능은 현재 제공하지 않음
+    } catch (error) {
+      console.error("상품 추가에 실패했습니다:", error);
+      alert("상품 추가에 실패했습니다. 다시 시도해주세요.")
+    }
+  };
+
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
   };
 
-  const tableData = [
+  const calculateTotalPrice = (amount, price) => {
+    return amount * parseInt(price.replace(/,/g, "").replace("원", ""));
+  };
+  const calculateTotalCartPrice = () => {
+    return cartItems.reduce(
+      (acc, curr) => acc + calculateTotalPrice(curr.amount, curr.price),
+      0
+    );
+  };
+  const calculateTotalCartAmount = () => {
+    return cartItems.reduce((acc, curr) => acc + curr.amount, 0);
+  };
+
+
+   const tableData = [
     {
       id: 1,
       category: "브라운슈가밀크티",
@@ -26,27 +74,28 @@ const Cart = () => {
       amount: 2,
     },
     {
-      id: 2,
+      id: 3,
       category: "타로밀크티",
       price: "5,600원",
       options: "ICE",
       amount: 2,
     },
     {
-      id: 2,
+      id: 4,
       category: "타로밀크티",
       price: "5,600원",
       options: "ICE",
       amount: 2,
     },
     {
-      id: 2,
+      id: 5,
       category: "타로밀크티",
       price: "5,600원",
       options: "ICE",
       amount: 2,
     },
   ];
+
 
   return (
     <div className={style.Container}>
@@ -60,50 +109,51 @@ const Cart = () => {
               </span>
               <span className={style.total_select_text}>전체선택</span>
             </div>
-            <hr className={style.hr}/>
-            {tableData.map((row) => (
-              <div key={row.id} className={style.cart_item}>
-                <div className={style.checkbox_item}>
-                  <span className={style.checkbox_round}>
-                    <input type="checkbox" />
-                  </span>
-                </div>
-                <div className={style.cart_item_image}>
-                  {row.category === "브라운슈가밀크티" ? (
-                    <img
-                      src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
-                      alt=""
-                    />
-                  ) : (
-                    <img
-                      src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
-                      alt=""
-                    />
-                  )}
-                </div>
-                <div className={style.cart_item_description}>
-                  <div className={style.cart_item_header}>
-                    <span className={style.cart_item_name}>{row.category}</span>
-                  </div>
-                  <div className={style.cart_item_price}>{row.price}</div>
-                  <div className={style.cart_item_options}>{row.options}</div>
-                  <div className={style.cart_item_count}>
-                    <button className={style.minus_button}>-</button>
-                    <span className={style.amount}>{row.amount}</span>
-                    <button className={style.plus_button}>+</button>
-                  </div>
-                  <div className={style.cart_item_totalPrice}>
-                    종금액{" "}
-                    <span className={style.cart_item_totalPrice_money}>
-                      {row.amount *
-                        parseInt(row.price.replace(/,/g, "").replace("원", ""))}
+            <hr className={style.hr} />
+            <div className={style.cart_items_scrollable}>
+              {tableData.map((row) => (
+                <div key={row.id} className={style.cart_item}>
+                  <div className={style.checkbox_item}>
+                    <span className={style.checkbox_round}>
+                      <input type="checkbox" />
                     </span>
-                    원
+                  </div>
+                  <div className={style.cart_item_image}>
+                    {row.category === "브라운슈가밀크티" ? (
+                      <img
+                        src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
+                        alt=""
+                      />
+                    ) : (
+                      <img
+                        src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
+                        alt=""
+                      />
+                    )}
+                  </div>
+                  <div className={style.cart_item_description}>
+                    <div className={style.cart_item_header}>
+                      <span className={style.cart_item_name}>{row.category}</span>
+                    </div>
+                    <div className={style.cart_item_price}>{row.price}</div>
+                    <div className={style.cart_item_options}>{row.options}</div>
+                    <div className={style.cart_item_count}>
+                      <button className={style.minus_button}>-</button>
+                      <span className={style.amount}>{row.amount}</span>
+                      <button className={style.plus_button}>+</button>
+                    </div>
+                    <div className={style.cart_item_totalPrice}>
+                      종금액{" "}
+                      <span className={style.cart_item_totalPrice_money}>
+                        {calculateTotalPrice(row.amount, row.price).toLocaleString()}
+                      </span>
+                      원
+                    </div>
+                    <button className={style.add_cart_button} onClick={() => handleAddToCart(row)}>장바구니 추가</button>
                   </div>
                 </div>
-              </div>
-            ))}
-
+              ))}
+            </div>
             <button className={style.remove_button}>삭제</button>
           </div>
 
@@ -113,24 +163,13 @@ const Cart = () => {
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문수량</span>
                 <span className={style.order_summary_count}>
-                  {tableData.reduce((acc, curr) => acc + curr.amount, 0)}개
+                  {calculateTotalCartAmount()}개
                 </span>
               </div>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>결제예정금액</span>
                 <span className={style.order_summary_price}>
-                  {tableData
-                    .reduce(
-                      (acc, curr) =>
-                        acc +
-                        curr.amount *
-                          parseInt(
-                            curr.price.replace(/,/g, "").replace("원", "")
-                          ),
-                      0
-                    )
-                    .toLocaleString()}
-                  원
+                  {calculateTotalCartPrice().toLocaleString()}원
                 </span>
               </div>
               <hr />

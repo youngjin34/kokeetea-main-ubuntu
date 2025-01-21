@@ -1,0 +1,39 @@
+{
+  "cartItems": [
+    {
+      "id": 1,
+      "category": "브라운슈가밀크티",
+      "price": "5,600원",
+      "options": "ICE / 펄 추가(+500원) / 샷 추가(+500원)",
+      "amount": 1
+    },
+    {
+      "id": 2,
+      "category": "타로밀크티",
+      "price": "5,600원",
+      "options": "ICE",
+      "amount": 2
+    },
+    {
+      "id": 3,
+      "category": "타로밀크티",
+      "price": "5,600원",
+      "options": "ICE",
+      "amount": 2
+    },
+    {
+        "id": 4,
+        "category": "타로밀크티",
+        "price": "5,600원",
+        "options": "ICE",
+        "amount": 2
+      },
+      {
+        "id": 5,
+        "category": "타로밀크티",
+        "price": "5,600원",
+        "options": "ICE",
+        "amount": 2
+      }
+  ]
+}
