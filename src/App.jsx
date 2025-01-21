@@ -9,6 +9,7 @@ import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
 import FranchisePromotion from "./pages/FranchisePromotion";
 import Form from "./pages/Form";
+import Store from "./pages/Store";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -27,7 +28,6 @@ import Faq from "./pages/Faq";
 import Order from "./pages/order";
 import Cart from "./pages/Cart";
 import MemberInfoUpdate from "./pages/MemberInfoUpdate";
-import Store from "./pages/Store";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)

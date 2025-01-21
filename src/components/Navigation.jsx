@@ -222,7 +222,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             </li>
             <li className={style.main_menu_item}>
               <Link
-                to="/waytocome"
+                to="/store"
                 className={style.main_menu_link}
                 style={{ color: fontColor }}
               >
@@ -231,7 +231,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
                   <Link
-                    to="/waytocome"
+                    to="/store"
                     className={style.sub_menu_link}
                     style={{ color: fontColor }}
                   >
@@ -383,7 +383,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "STORE" ? style.active : ""
                 }`}
               >
-                <Link to="./waytocome" onClick={toggleModal}>
+                <Link to="/store" onClick={toggleModal}>
                   매장 찾기
                 </Link>
               </div>
