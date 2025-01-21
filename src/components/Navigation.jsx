@@ -307,15 +307,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                     자주하는 질문
                   </Link>
                 </li>
-                <li className={style.sub_menu_item}>
-                  <Link
-                    to="/inquiry"
-                    className={style.sub_menu_link}
-                    style={{ color: fontColor }}
-                  >
-                    1:1 문의하기
-                  </Link>
-                </li>
               </ul>
             </li>
           </ul>
@@ -441,9 +432,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               >
                 <Link to="/faq" onClick={toggleModal}>
                   자주하는 질문
-                </Link>
-                <Link to="/inquiry" onClick={toggleModal}>
-                  1:1 문의하기
                 </Link>
               </div>
             </div>
