@@ -119,7 +119,7 @@ const FAQ = () => {
               <button
                 key={category}
                 className={`${style.CategoryButton} ${
-                  selectedCategory === category ? style.ActiveCategory : ""
+                  selectedCategory === category ? style.CategoryButtonActive : ""
                 }`}
                 onClick={() => setSelectedCategory(category)}
               >
