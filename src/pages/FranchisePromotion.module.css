@@ -7,24 +7,33 @@
 }
 
 .Container {
-  padding: 20px;
-  padding-top: 180px;
-  padding-bottom: 170px;
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
   font-family: "Pretendard-Regular";
 }
 
 .MainContent {
-  width: 80%;
+  padding: 20px;
+  padding-top: 180px;
+  padding-bottom: 170px;
+  width: 70%;
   margin: 0 auto;
-  max-width: 1200px;
+  text-align: center;
+}
+
+.menu_introduce {
+  font-family: "Pretendard-Regular";
+
+  width: 40%;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .menu_title {
   font-size: 64px;
   font-weight: bold;
-  text-align: center;
-  letter-spacing: 5px;
-  margin-bottom: 20px;
+  letter-spacing: 5px; 
 }
 
 .underline {
@@ -37,28 +46,22 @@
   content: "";
   position: absolute;
   left: -3px;
-  bottom: 0;
+  bottom: 0; 
   width: 100%;
-  height: 40%;
+  height: 40%; 
   background-color: #ba274a;
-  z-index: -1;
+  z-index: -1; 
 }
 
 .menu_content {
-  text-align: center;
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 60px;
-}
-
-.BenefitSection, .ProcessSection, .ContactSection {
-  margin: 80px 0;
+  font-size: 14px;
+  padding-bottom: 30px;
 }
 
 .BenefitSection h2, .ProcessSection h2, .ContactSection h2 {
   text-align: center;
   font-size: 32px;
-  margin-bottom: 40px;
+
   display: flex;
   align-items: center;
   justify-content: center;
