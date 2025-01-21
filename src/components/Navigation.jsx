@@ -177,6 +177,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           </Link>
         </div>
 
+        {/* 상단 네비게이션 메뉴 */}
         <div className={style.main_menu}>
           <ul className={style.main_menu_list}>
             <li className={style.main_menu_item}>
@@ -185,7 +186,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 className={style.main_menu_link}
                 style={{ color: fontColor }}
               >
-                KOKEE STORY
+                BRAND
               </Link>
               <ul className={style.sub_menu_list}>
                 <li className={style.sub_menu_item}>
@@ -263,7 +264,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                     className={style.sub_menu_link}
                     style={{ color: fontColor }}
                   >
-                    가맹홍보
+                    가맹안내
                   </Link>
                 </li>
               </ul>
@@ -320,7 +321,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           </ul>
         </div>
 
-        {/* 모달 창 */}
+        {/* 햄버거 버튼 눌렀을 때 모달 창 */}
         <div
           className={`${style.modal_overlay} ${
             isModalOpen ? style.active : ""
@@ -406,7 +407,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   제휴 및 제안
                 </Link>
                 <Link to="franchisepromotion" onClick={toggleModal}>
-                  가맹홍보
+                  가맹안내
                 </Link>
               </div>
             </div>

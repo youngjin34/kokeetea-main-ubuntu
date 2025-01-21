@@ -16,6 +16,7 @@ a {
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease;
+  background-color: transparent;
 }
 
 .ham_menu_button {
@@ -153,6 +154,7 @@ ul {
   font-size: 2.5rem;
   font-weight: bold;
   font-family: "Pretendard-Regular";
+  white-space: nowrap;
 }
 
 .inner {
@@ -353,7 +355,7 @@ ul {
   opacity: 0;
   pointer-events: none;
   transform: translateX(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
   font-size: 1.5rem;
 }
 
@@ -375,12 +377,12 @@ ul {
   display: block;
   text-decoration: none;
   color: white;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .submenu > a:hover {
   scale: 1.1;
-  transition: 0.3s;
+  transition: 0.5s;
   color: #ba274a;
 }
 
@@ -389,21 +391,23 @@ ul {
 .main_menu {
   display: flex;
   align-items: center;
-  margin: 0 auto;
+  margin-left: auto;
   position: relative;
+  height: 100%; 
+  justify-content: center;
+  font-family: "Pretendard-Regular";
 }
 
 .main_menu ul {
   display: flex;
   list-style: none;
-  gap: 5rem;
+  gap: 4rem;
   padding: 0;
   margin: 0;
+  align-items: center;
 }
 
 .main_menu li {
-  font-size: 1rem;
-  font-weight: 500;
   position: relative;
 }
 
@@ -412,6 +416,7 @@ ul {
   color: white;
   transition: opacity 0.5s ease;
   position: relative;
+  display: inline-block;
 }
 
 .main_menu a::after {
@@ -425,46 +430,51 @@ ul {
   transition: width 0.5s ease;
 }
 
+.main_menu li:hover > a {
+  transform: translateY(-20px);
+  opacity: 0.3;
+  cursor: default;
+}
+
 .main_menu li:hover > a::after {
   width: 100%;
 }
 
-.main_menu li:hover > a {
-  opacity: 0;
-  transition: color 0.5s ease;
-}
-
 .main_menu li > ul {
   position: absolute;
-  top: 0;  
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-  display: none;
-  flex-direction: column;
-  justify-content: center; 
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main_menu li:hover > ul {
-  display: flex;
   opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
 }
 
 .main_menu li > ul a {
   color: white;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
-  opacity: 1;
+  opacity: 1 !important;
   white-space: nowrap;
+  transform: none;
 }
 
 .main_menu li > ul a:hover {
   color: #ba274a !important;
-  opacity: 1;
-  transition: color 0.5s ease;
-  font-weight: bold;
+  transform: none;
+  opacity: 1 !important;
+  cursor: pointer;
 }
