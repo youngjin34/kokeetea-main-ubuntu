@@ -258,7 +258,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                     가맹안내
                   </Link>
                 </li>
-                <li className={style.sub_menu_item}>
+                {/* <li className={style.sub_menu_item}>
                   <Link
                     to="/affiliated"
                     className={style.sub_menu_link}
@@ -266,7 +266,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   >
                     제휴 및 제안
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </li>
             <li className={style.main_menu_item}>
@@ -403,9 +403,9 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 <Link to="/franchisepromotion" onClick={toggleModal}>
                   가맹안내
                 </Link>
-                <Link to="/affiliated" onClick={toggleModal}>
+                {/* <Link to="/affiliated" onClick={toggleModal}>
                   제휴 및 제안
-                </Link>
+                </Link> */}
               </div>
             </div>
 

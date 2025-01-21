@@ -167,66 +167,76 @@ const FAQ = () => {
             )}
           </div>
 
-          <div className={style.Pagination}>
-            <button
-              onClick={() => handlePageChange(1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              «
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              ‹
-            </button>
-
-            {getPageNumbers().map((pageNum) => (
+          <div className={style.PaginationContainer}>
+            <div className={style.Pagination}>
               <button
-                key={pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                className={
-                  currentPage === pageNum ? style.ActivePage : style.PageButton
+                onClick={() => handlePageChange(1)}
+                className={style.PageButton}
+                disabled={currentPage === 1}
+              >
+                «
+              </button>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={style.PageButton}
+                disabled={currentPage === 1}
+              >
+                ‹
+              </button>
+
+              {getPageNumbers().map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={
+                    currentPage === pageNum ? style.ActivePage : style.PageButton
+                  }
+                >
+                  {pageNum}
+                </button>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={style.PageButton}
+                disabled={
+                  currentPage === Math.ceil(filteredList.length / itemsPerPage)
                 }
               >
-                {pageNum}
+                ›
               </button>
-            ))}
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              ›
-            </button>
-            <button
-              onClick={() =>
-                handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
-              }
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              »
-            </button>
-          </div>
-
-          {isAdmin && (
-            <div className={style.WriteButtonContainer}>
-              <button 
-                className={style.WriteButton}
-                onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+              <button
+                onClick={() =>
+                  handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
+                }
+                className={style.PageButton}
+                disabled={
+                  currentPage === Math.ceil(filteredList.length / itemsPerPage)
+                }
               >
-                작성하기
+                »
               </button>
             </div>
-          )}
+            <div className={style.ButtonContainer}>
+              <button 
+                className={style.InquiryButton}
+                onClick={() => {
+                  window.location.href = '/inquiry'; // 1:1 문의 페이지로 이동
+                }}
+              >
+                1:1 문의하기
+              </button>
+              
+              {isAdmin && (
+                <button 
+                  className={style.WriteButton}
+                  onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+                >
+                  작성하기
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -129,6 +129,7 @@
   align-items: center;
   gap: 5px;
   margin-top: 20px;
+  flex: 1;
 }
 
 .PageButton {
@@ -224,4 +225,26 @@
 .CategoryButtonActive:hover {
   background-color: #ba274a;
   color: white;
+}
+
+.ButtonContainer {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.InquiryButton {
+  padding: 8px 16px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.PaginationContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
