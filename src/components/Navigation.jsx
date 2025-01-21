@@ -454,7 +454,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             )}
             {!headerLogined && (
               <li>
-                <Link to="/form" style={{ color: fontColor }}>
+                <Link to="/resister" style={{ color: fontColor }}>
                   JOIN
                 </Link>
               </li>

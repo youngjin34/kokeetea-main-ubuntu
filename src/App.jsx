@@ -8,7 +8,7 @@ import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
 import FranchisePromotion from "./pages/FranchisePromotion";
-import Form from "./pages/Form";
+import Resister from "./pages/Resister";
 import Store from "./pages/Store";
 
 function AppContent() {
@@ -60,7 +60,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
-          <Route path="/form" element={<Form />} />
+          <Route path="/resister" element={<Resister />} />
         </Routes>
         <AppContent />
       </div>
