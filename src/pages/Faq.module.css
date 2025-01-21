@@ -197,12 +197,12 @@
 
 .CategoryButton:first-child {
   border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-bottom-left-radius: 0px;
 }
 
 .CategoryButton:last-child {
   border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-right-radius: 0px;
 }
 
 .CategoryButton:not(:last-child) {
@@ -222,6 +222,6 @@
 }
 
 .CategoryButtonActive:hover {
-  background-color: #a02242;
+  background-color: #ba274a;
   color: white;
 }
