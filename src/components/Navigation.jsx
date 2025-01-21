@@ -354,7 +354,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
-
             {/* MENU 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -372,7 +371,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
-
             {/* STORE 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -390,7 +388,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
-
             {/* AFFILIATED 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -452,6 +449,21 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             </div>
           </div>
         </div>
+        <button>
+          <Link to="/cart" style={{ color: fontColor }}>
+            CART
+          </Link>
+        </button>
+        <button>
+          <Link to="/order" style={{ color: fontColor }}>
+            ORDER
+          </Link>
+        </button>
+        <button>
+          <Link to="/memberinfoupdate" style={{ color: fontColor }}>
+          MemberInfoUpdate
+          </Link>
+        </button>
         <div className="inner">
           <ul className={`${style.header_top}`}>
             {headerLogined ? (

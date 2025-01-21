@@ -1,0 +1,170 @@
+.container {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 30px 0;
+}
+
+.mainContent {
+  display: flex;
+  width: 1116px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  margin: 0 auto;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 20px;
+  }
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.basicInfo,
+.additionalInfo {
+  margin-bottom: 20px;
+}
+
+
+.formGroup {
+  display: flex;
+    flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  width: 300px;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.confirmButton{
+    padding: 10px 10px;
+    border: none;
+    background: #e6e6e6;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.confirmButton:hover{
+    background: #ddd;
+}
+
+.passwordRequirements {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+}
+.emailDomain{
+  padding: 10px 10px;
+  border: 1px solid #ddd;
+  border-left: 0px;
+  border-radius: 0 5px 5px 0;
+  font-size: 14px;
+  background-color: #e6e6e6;
+}
+.radioGroup {
+    display: flex;
+    align-items: center;
+    width: 500px;
+}
+
+.radioLabel {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    font-size: 14px;
+}
+.radioLabel input {
+  margin-right: 5px;
+}
+
+.receiveText{
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+.confirmBtn, .cancelBtn {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.confirmBtn {
+  background-color: #cf3d3f;
+  color: white;
+}
+
+.confirmBtn:hover {
+    background-color: #b73033;
+}
+
+.cancelBtn {
+    background-color: #f2f2f2;
+}
+.cancelBtn:hover {
+    background-color: #e6e6e6;
+}
+/* Side Navigation */
+.sideNav{
+    display: flex;
+    flex-direction: column;
+    width: 326px;
+  margin-left: 30px;
+
+}
+.sideNavItem{
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+.sideNavItem:hover {
+  background-color: #eee;
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        width: 95%;
+        flex-direction: column;
+    }
+     .formContainer{
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+     .sideNav{
+        margin-left: 0;
+         width: 100%;
+    }
+}

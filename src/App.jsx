@@ -22,9 +22,14 @@ function AppContent() {
 }
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
+import Faq from "./pages/Faq";
+import Order from "./pages/order";
+import Cart from "./pages/Cart";
+import MemberInfoUpdate from "./pages/MemberInfoUpdate";
+import Store from "./pages/Store";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
   const [isLogined, setIsLogined] = useState(false);
 
   return (
@@ -48,6 +53,11 @@ function App() {
           <Route path="/affiliated" element={<Affiliated />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
         </Routes>
         <AppContent />
