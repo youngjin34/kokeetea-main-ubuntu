@@ -106,7 +106,7 @@
 .FormGroup > label {
   min-width: 80px;
   line-height: 36px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .FormGroup input {
@@ -184,7 +184,7 @@
   gap: 8px;
   cursor: pointer;
   color: #000; 
-  font-weight: normal;
+  font-weight: 500;
   height: 36px;
   margin-right: 20px;
 }
@@ -247,5 +247,5 @@
 
 .PhoneSeparator {
   color: #666;
-  font-weight: bold;
+  font-weight: 500;
 }

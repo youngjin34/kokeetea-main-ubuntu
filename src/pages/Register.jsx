@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./Register.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const IdInput = ({ value, onChangeUserId, validId }) => (
   <div className={style.FormGroup}>
@@ -8,48 +9,46 @@ const IdInput = ({ value, onChangeUserId, validId }) => (
       아이디<span className={style.required}>*</span>
     </label>
     <div className={style.IdInputGroup}>
-      <input
-        type="text"
-        name="userId"
-        value={value}
-        onChange={onChangeUserId}
-        placeholder="아이디를 입력해주세요."
-      />
-      {validId && (
-        <span className={style.errorMessage}>
-          아이디는 특수 문자를 제외하고, 영문과 숫자를 이용한 4~16자만
-          가능합니다.
+      <div className={style.inputWrapper}>
+        <input
+          type="text"
+          name="userId"
+          value={value}
+          onChange={onChangeUserId}
+          placeholder="아이디를 입력해주세요."
+        />
+        <span className={`${style.guideMessage} ${validId ? style.errorMessage : ''}`}>
+        아이디는 영문과 숫자로 이루어진 4자 이상 16자 이하여야 합니다.
         </span>
-      )}
+      </div>
     </div>
   </div>
 );
 
-const PasswordInput = ({ value, confirmValue, onConfirmChange, validPw }) => (
+const PasswordInput = ({ value, confirmValue, onChangeUserPw, onConfirmChange, validPw }) => (
   <>
     <div className={style.FormGroup}>
       <label>
         비밀번호<span className={style.required}>*</span>
       </label>
       <div className={style.PasswordInputGroup}>
-        <input
-          type="password"
-          name="password"
-          value={value}
-          onChange={onConfirmChange}
-          placeholder="비밀번호를 입력해주세요."
-        />
-        {validPw && (
-          <span className={style.errorMessage}>
-            비밀번호는 특수 문자를 포함한, 영문과 숫자를 이용한 8~16자만
-            가능합니다.
+        <div className={style.inputWrapper}>
+          <input
+            type="password"
+            name="password"
+            value={value}
+            onChange={onChangeUserPw}
+            placeholder="비밀번호를 입력해주세요."
+          />
+          <span className={`${style.guideMessage} ${validPw ? style.errorMessage : ''}`}>
+          비밀번호는 영문, 숫자, 특수 문자를 포함하며, 8자 이상 16자 이하여야 합니다.
           </span>
-        )}
+        </div>
       </div>
     </div>
     <div className={style.FormGroup}>
       <label>
-        비밀번호 확인<span className={style.required}></span>
+        비밀번호 확인<span className={style.required}>*</span>
       </label>
       <div className={style.PasswordInputGroup}>
         <input
@@ -170,6 +169,7 @@ const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
 };
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userId: "",
     password: "",

@@ -22,7 +22,7 @@
 
 .menu_title {
   font-size: 64px;
-  font-weight: bold;
+  font-weight: 500;
   letter-spacing: 5px;
 }
 
@@ -64,7 +64,7 @@
 
 .FormTitle {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: bold;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -82,7 +82,7 @@
   text-align: right;
   color: #666;
   font-size: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .FormGroup {
@@ -95,7 +95,7 @@
 .FormGroup > label {
   min-width: 80px;
   line-height: 36px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .FormGroup input {
@@ -304,7 +304,7 @@
 
 .PhoneSeparator {
   color: #666;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .IdInputGroup {
@@ -321,6 +321,10 @@
   border: 1px solid #f5edf0;
   border-radius: 8px;
   box-sizing: border-box;
+}
+
+.inputWrapper {
+  width: 100%;
 }
 
 .PasswordInputGroup {
@@ -403,10 +407,11 @@
 
 .modalTitle {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 500;
   color: #333;
   text-align: center;
   font-family: "Pretendard-Regular";
+  margin: 0;
 }
 
 .modalContent button {
@@ -452,4 +457,16 @@
   font-weight: bold;
   margin-top: 50px;
   color: #333;
+}
+
+.guideMessage {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+.errorMessage {
+  color: #ba274a;
 }
