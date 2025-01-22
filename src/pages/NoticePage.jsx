@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import style from "./NoticePage.module.css";
 import { BiSearch } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const Notice = () => {
   const [notices, setNotices] = useState([]);
@@ -14,6 +15,8 @@ const Notice = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 10;
   
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchNotices();
@@ -35,14 +38,19 @@ const Notice = () => {
   const checkAdminStatus = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setIsAdmin(response.data.isAdmin);
+      if (!token) {
+        setIsAdmin(false);
+        return;
       }
+      
+      const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setIsAdmin(response.data.isAdmin);
     } catch (error) {
-      console.error('Admin check failed:', error);
+      console.error('관리자 확인 실패:', error);
+      setIsAdmin(false);
     }
   };
 
@@ -263,7 +271,7 @@ const Notice = () => {
             <div className={style.WriteButtonContainer}>
               <button 
                 className={style.WriteButton}
-                onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+                onClick={() => navigate('/notice/write')}
               >
                 작성하기
               </button>

@@ -77,11 +77,13 @@
   background-color: #ffffff;
   color: #ba274a;
   border: 2px solid #ba274a;
+  font-weight: 600;
 }
 
 .ownerButton:hover {
   background-color: #ba274a;
   color: #ffffff;
+  font-weight: 600;
 }
 
 .buttonContainer {

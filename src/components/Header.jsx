@@ -20,6 +20,7 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
     if (!isHomePage) {
       return "white"; // Home 페이지가 아닐 경우 배경색은 하얗게
     }
+    // Home 페이지일 경우 currentPage에 따라 배경색 결정
     switch (currentPage) {
       case 0:
         return "transparent";
@@ -32,7 +33,7 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
       case 4:
         return "white";
       default:
-        return "transparent";
+        return "transparent"; // Home 페이지 첫 진입 시 투명하게 설정
     }
   };
 

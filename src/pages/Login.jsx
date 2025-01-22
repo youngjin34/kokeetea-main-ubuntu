@@ -34,6 +34,11 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
         localStorage.setItem("userName", userName);
         localStorage.setItem("realname", result.data.name);
         localStorage.setItem("email", result.data.email);
+        localStorage.setItem("token", result.data.token);
+        
+        // 로그인 성공 후 바로 관리자 체크
+        await checkAdminStatus();
+        
         alert(`${result.data.name}님 환영합니다!`);
         setIsLogined(true);
         setHeaderLogined(true);
@@ -41,6 +46,25 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
       }
     } catch (error) {
       alert("아이디와 비밀번호를 확인해주세요");
+    }
+  };
+
+  const checkAdminStatus = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsAdmin(false);
+        return;
+      }
+      
+      const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setIsAdmin(response.data.isAdmin);
+    } catch (error) {
+      console.error('관리자 확인 실패:', error);
+      setIsAdmin(false);
     }
   };
 
