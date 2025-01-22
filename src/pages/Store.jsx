@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./Store.module.css";
 
 const Store = () => {
@@ -41,6 +41,47 @@ const Store = () => {
     },
   ];
 
+  useEffect(() => {
+    const loadKakaoMap = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById('map');
+        const options = {
+          center: new window.kakao.maps.LatLng(37.5013, 126.8765),
+          level: 3
+        };
+
+        const map = new window.kakao.maps.Map(container, options);
+
+        // 매장들의 마커 생성
+        stores.forEach(store => {
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(37.5013, 126.8765),
+            map: map
+          });
+        });
+      });
+    };
+
+    // 카카오맵 스크립트가 로드되었는지 확인
+    if (window.kakao && window.kakao.maps) {
+      loadKakaoMap();
+    } else {
+      const script = document.createElement('script');
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=902d4e0f0111b2f8bc5410404332a0ad&autoload=false`;
+      script.async = true;
+      
+      script.onload = () => {
+        loadKakaoMap();
+      };
+
+      document.head.appendChild(script);
+      
+      return () => {
+        document.head.removeChild(script);
+      };
+    }
+  }, []);
+
   return (
     <div className={style.Container}>
       {/* 검색창 영역 */}
@@ -66,9 +107,7 @@ const Store = () => {
           ))}
         </div>
       </div>
-      <div className={style.map}>
-        <img src="../../public/img/map.png" alt="img!!" />
-      </div>
+      <div id="map" className={style.map}></div>
     </div>
   );
 };

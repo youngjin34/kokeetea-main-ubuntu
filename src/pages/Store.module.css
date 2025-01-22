@@ -101,4 +101,10 @@
   display: flex;
   width: 1039px;
   height: 802px;
+  border: 1px solid #ddd;  /* 지도 영역을 시각적으로 확인하기 위한 테두리 추가 */
+}
+
+#map {
+  width: 100%;
+  height: 100%;
 }
