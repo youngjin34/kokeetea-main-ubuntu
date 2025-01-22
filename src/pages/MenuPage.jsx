@@ -5,11 +5,11 @@ import style from "./MenuPage.module.css";
 
 function MenuPage() {
   const [products, setProducts] = useState([]);
-  const [filteredMenu, setFilteredMenu] = useState([]); // 선택된 카테고리의 제품 상태
-  const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 기본 선택 카테고리
+  const [filteredMenu, setFilteredMenu] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택택
 
-  const [selectedProduct, setSelectedProduct] = useState(null); // 선택된 제품 상태
-  const [isModalOpen, setModalOpen] = useState(false); // 모달 열기/닫기 상태
+  const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
+  const [isModalOpen, setModalOpen] = useState(false);
   const modalRef = useRef(null);
 
   // 각 옵션에 대한 상태 관리
@@ -31,17 +31,15 @@ function MenuPage() {
   // 메뉴 클릭 시 카테고리별 필터링
   const selectedMenuClick = (menu) => {
     setSelectedMenu(menu);
-    filterByCategory(menu); // 카테고리 필터링
+    filterByCategory(menu);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/selecttea");
-        console.log(response.data);
-
-        setProducts(response.data); // 전체 데이터를 상태로 설정
-        filterByCategory("Cold Cloud"); // 기본적으로 Cold Cloud 메뉴를 필터링
+        setProducts(response.data);
+        filterByCategory("Cold Cloud");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -51,32 +49,38 @@ function MenuPage() {
   }, []);
 
   const toggleModal = (product = null) => {
-    setSelectedProduct(product); // 선택된 제품 상태 업데이트
+    setSelectedProduct(product);
     setModalOpen(!isModalOpen);
   };
 
   useEffect(() => {
     if (products.length > 0) {
-      filterByCategory(selectedMenu); // `products`가 업데이트된 후 필터링 실행
+      filterByCategory(selectedMenu);
     }
-  }, [products, selectedMenu]); // products나 selectedMenu가 변경될 때마다 실행
+  }, [products, selectedMenu]);
 
   // 바깥쪽 클릭 시 모달 닫기
   const handleOutsideClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
+    if (modalRef.current === e.target) {
       setModalOpen(false);
     }
   };
 
   useEffect(() => {
-    // 모달이 열릴 때 스크롤 막기
     if (isModalOpen) {
-      document.body.style.overflow = "hidden"; // 스크롤 막기
-      document.addEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 추가
+      // 모달이 열릴 때 스크롤 막기
+      document.body.style.overflow = "hidden";
+      document.addEventListener("click", handleOutsideClick);
     } else {
-      document.body.style.overflow = "auto"; // 스크롤 다시 허용
-      document.removeEventListener("click", handleOutsideClick); // 외부 클릭 이벤트 리스너 제거
+      // 모달이 닫힐 때 스크롤 허용
+      document.body.style.overflow = "auto";
+      document.removeEventListener("click", handleOutsideClick);
     }
+
+    // clean up function: 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
   }, [isModalOpen]);
 
   return (
@@ -133,21 +137,29 @@ function MenuPage() {
         </span>
       </div>
       <div className={style.MenuItems}>
-        {filteredMenu.map((product) => (
-          <div
-            key={product.pdId}
-            className={style.MenuItem}
-            onClick={() => toggleModal(product)} // 클릭 시 선택된 제품을 모달에 전달
-          >
-            <img src={product.image} alt={product.pdName} />
-            <h3>{product.pdName}</h3>
-            <p>{product.pdPrice} 원</p>
+        {filteredMenu.map((product, index) => (
+          <div key={index}>
+            <div
+              key={product.pdId}
+              className={style.MenuItem}
+              onClick={() => toggleModal(product)} // 클릭 시 선택된 제품을 모달에 전달
+            >
+              <img src={product.image} alt={product.pdName} />
+              <h3>{product.pdName}</h3>
+              <p>{product.pdPrice} 원</p>
+            </div>
+            <button
+              className={style.menu_order_btn}
+              onClick={() => toggleModal(product)} // 클릭 시 선택된 제품을 모달에 전달
+            >
+              <img src="/public/img/cart.png" /> 주문
+            </button>
           </div>
         ))}
       </div>
 
-      {isModalOpen && selectedMenu && (
-        <div className={style.modal}>
+      {isModalOpen && selectedProduct && (
+        <div className={style.modal} ref={modalRef}>
           <div className={style.modalContent}>
             <div className={style.modal_first}>
               <div className={style.option_title}>옵션 선택</div>

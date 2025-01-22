@@ -41,7 +41,7 @@ function Slider({ selectedMenu = "coldCloud" }) {
     <div className={style.SliderContainer}>
       <div className={style.SliderWrapper} ref={sliderRef}>
         {selectedMenu.concat(selectedMenu).map((item, index) => (
-          <div>
+          <div key={index}>
             <div
               className={style.SlideItem}
               key={index}

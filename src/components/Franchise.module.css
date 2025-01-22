@@ -1,16 +1,16 @@
 /* ------------- 폰트 ---------------- */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 .Franchise {
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   margin: 0;
   padding: 0;
   position: relative;
@@ -30,7 +30,7 @@
 }
 
 .img_container::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

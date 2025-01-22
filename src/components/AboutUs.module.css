@@ -1,18 +1,17 @@
 /* ------------- 폰트 ---------------- */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 .AboutUs {
-  font-family: 'Pretendard-Regular';
-
-  background-image: url('/public/img/aboutUs.png'); /* 배경 이미지 경로 */
-  background-size: cover; /* 이미지가 요소 크기에 맞게 조정됨 */
-  background-position: center; /* 이미지가 가운데 정렬 */
+  font-family: "Pretendard-Regular";
+  background-image: url("/public/img/aboutUs.png");
+  background-size: cover;
+  background-position: center;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -20,17 +19,18 @@
   justify-content: center;
   color: white;
   text-align: center;
-  position: relative; /* 추가 스타일을 위한 상대 위치 */
-  overflow: hidden; /* 내부 요소가 부모를 벗어나지 않도록 설정 */
+  position: relative;
+  overflow: hidden;
 }
 
 .AboutUs::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
   background: rgba(0, 0, 0, 0.5); /* 배경 위에 어두운 투명 레이어 */
   z-index: 1; /* 텍스트 뒤에 위치하도록 설정 */
 }
@@ -38,7 +38,7 @@
 .AboutUsContent {
   position: relative;
   z-index: 2;
-  width: 40%;
+  width: 43%;
   text-align: center;
   margin: 0 auto;
 }
@@ -57,7 +57,7 @@
 }
 
 .underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: -3px;
   bottom: 0;
@@ -67,13 +67,37 @@
   z-index: -1;
 }
 
-.content {
-  font-size: 16px;
-  padding-bottom: 30px;
-  line-height: 1.6;
-  margin-top: 0px;
+.imageContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 99;
 }
 
-.about_us_icon {
-  width: 60%;
+.imageWrapper img {
+  width: 150px;
+}
+
+.imageWrapper img:hover {
+  scale: 1.1;
+  transition: 0.3s ease;
+}
+
+.hoverContent {
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
+  font-size: 18px;
+  animation: slideUp 0.5s ease-out; /* 애니메이션 추가 */
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

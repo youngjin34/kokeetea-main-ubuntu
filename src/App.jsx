@@ -10,6 +10,12 @@ import Inquiry from "./pages/Inquiry";
 import FranchisePromotion from "./pages/FranchisePromotion";
 import Register from "./pages/Register";
 import Store from "./pages/Store";
+import KokeeStory from "./pages/KokeeStory";
+import Affiliated from "./pages/Affiliated";
+import Faq from "./pages/Faq";
+import Order from "./pages/Order";
+import Cart from "./pages/Cart";
+import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 import Login from "./pages/Login";
 
 function AppContent() {
@@ -23,12 +29,6 @@ function AppContent() {
     </>
   );
 }
-import KokeeStory from "./pages/KokeeStory";
-import Affiliated from "./pages/Affiliated";
-import Faq from "./pages/Faq";
-import Order from "./pages/order";
-import Cart from "./pages/Cart";
-import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
