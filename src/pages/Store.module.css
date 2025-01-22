@@ -36,8 +36,6 @@
 }
 
 .SearchContainer {
-  padding: 24px;
-  border-bottom: 1px solid #f0f0f0;
   display: flex;
   gap: 12px;
   border-radius: 8px 8px 0 0;
@@ -54,6 +52,8 @@
 
     &::placeholder {
       color: #999;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     &:focus {
