@@ -50,13 +50,48 @@ const Store = () => {
   // 지도와 마커들의 참조를 저장하기 위한 state 추가
   const [mapInstance, setMapInstance] = React.useState(null);
   const [markers, setMarkers] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [filteredStores, setFilteredStores] = React.useState(stores);
+  const [distances, setDistances] = React.useState({});
+  // 사용자 위치 상태 추가
+  const [userLocation, setUserLocation] = React.useState(null);
+
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("위치 정보를 가져올 수 없습니다:", error);
+          // 위치 정보를 가져올 수 없는 경우 기본값으로 구로디지털단지역 설정
+          setUserLocation({
+            lat: 37.4851,
+            lng: 126.9015
+          });
+        }
+      );
+    } else {
+      console.log("Geolocation이 지원되지 않습니다.");
+      setUserLocation({
+        lat: 37.4851,
+        lng: 126.9015
+      });
+    }
+  }, []);
 
   useEffect(() => {
+    if (!userLocation) return; // 사용자 위치가 없으면 맵 로딩 스킵
+
     const loadKakaoMap = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById('map');
         const options = {
-          center: new window.kakao.maps.LatLng(37.5013, 126.8765),
+          center: new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng), // 사용자 위치 중심으로 변경
           level: 3
         };
 
@@ -65,12 +100,37 @@ const Store = () => {
         const geocoder = new window.kakao.maps.services.Geocoder();
         const markersArray = [];
 
+        // 현재 위치 마커 추가
+        const userMarker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+          map: map
+        });
+
+        // 현재 위치 인포윈도우 추가
+        const userInfowindow = new window.kakao.maps.InfoWindow({
+          content: '<div style="padding:5px;font-size:12px;">현재 위치</div>'
+        });
+        userInfowindow.open(map, userMarker);
+
         // 매장들의 마커 생성
         stores.forEach(store => {
           geocoder.addressSearch(store.address, function(result, status) {
             if (status === window.kakao.maps.services.Status.OK) {
               const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
               
+              // 거리 계산
+              const distance = calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                parseFloat(result[0].y),
+                parseFloat(result[0].x)
+              );
+
+              setDistances(prev => ({
+                ...prev,
+                [store.id]: distance
+              }));
+
               // 마커 생성
               const marker = new window.kakao.maps.Marker({
                 position: coords,
@@ -105,15 +165,22 @@ const Store = () => {
       });
     };
 
+    // 스크립트 로드
+    const loadScript = () => {
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=902d4e0f0111b2f8bc5410404332a0ad&autoload=false&libraries=services`;
+        script.async = true;
+        script.onload = resolve;
+        document.head.appendChild(script);
+      });
+    };
+
     // 카카오맵 스크립트가 로드되었는지 확인
     if (window.kakao && window.kakao.maps) {
       loadKakaoMap();
     } else {
-      const script = document.createElement('script');
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=902d4e0f0111b2f8bc5410404332a0ad&autoload=false&libraries=services`;
-      script.async = true;
-      script.onload = () => loadKakaoMap();
-      document.head.appendChild(script);
+      loadScript().then(() => loadKakaoMap());
     }
 
     return () => {
@@ -122,7 +189,7 @@ const Store = () => {
         document.head.removeChild(script);
       }
     };
-  }, [stores]);
+  }, [stores, userLocation]); // userLocation 의존성 추가
 
   // 매장 클릭 핸들러 추가
   const handleStoreClick = (storeId) => {
@@ -133,31 +200,68 @@ const Store = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    
+    const filtered = stores.filter((store) => 
+      store.name.toLowerCase().includes(term.toLowerCase()) ||
+      store.address.toLowerCase().includes(term.toLowerCase())
+    );
+    
+    setFilteredStores(filtered);
+  };
+
+  // 거리 계산 함수 추가
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // 지구의 반지름 (km)
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c; // Distance in km
+    return distance.toFixed(1);
+  };
+
+  const deg2rad = (deg) => {
+    return deg * (Math.PI/180);
+  };
+
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
         <div className={style.SearchContainer}>
           <input
-            className={style.SearchBar}
             type="text"
-            placeholder="매장명 또는 주소를 입력하세요."
+            placeholder="매장명 또는 주소를 입력하세요"
+            value={searchTerm}
+            onChange={handleSearch}
           />
-          <button className={style.SearchButton}>◎</button>
         </div>
-        {/* 상점 목록 영역 */}
         <div className={style.StoreList}>
-          {stores.map((store) => (
+          {filteredStores.map((store) => (
             <div 
               key={store.id} 
               className={style.StoreItem}
               onClick={() => handleStoreClick(store.id)}
-              style={{ cursor: 'pointer' }} // 클릭 가능함을 표시
             >
-              <h3 className={style.StoreName}>{store.name}</h3>
-              <p className={style.StoreAddress}>{store.address}</p>
-              <p className={style.StorePhone}>
-                <i className="fas fa-phone"></i> {store.phone}
-              </p>
+              <div className={style.StoreContent}>
+                <div className={style.StoreHeader}>
+                  <h3 className={style.StoreName}>{store.name}</h3>
+                  <span className={style.StoreDistance}>
+                    {distances[store.id] ? `${distances[store.id]}km` : '거리 계산중...'}
+                  </span>
+                </div>
+                <p className={style.StoreAddress}>
+                  <i className="fas fa-map-marker-alt"></i> {store.address}
+                </p>
+                <p className={style.StorePhone}>
+                  <i className="fas fa-phone"></i> {store.phone}
+                </p>
+              </div>
             </div>
           ))}
         </div>
