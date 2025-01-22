@@ -16,6 +16,7 @@ import Faq from "./pages/Faq";
 import Order from "./pages/Order";
 import Cart from "./pages/Cart";
 import MemberInfoUpdate from "./pages/MemberInfoUpdate";
+import Login from "./pages/Login";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -61,6 +62,7 @@ function App() {
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <AppContent />
       </div>

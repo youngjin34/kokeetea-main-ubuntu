@@ -1,301 +1,455 @@
-.joinForm {
-  width: 1200px;
-  margin: 0 auto;
+.Container {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  font-family: "Pretendard-Regular";
+}
+
+.MainContent {
   padding: 20px;
-  padding-top: 100px;
+  padding-top: 180px;
+  padding-bottom: 170px;
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.joinForm h2 {
-  padding: 5px 0;
-  margin-bottom: 15px;
-  font-size: 36px;
+.menu_introduce {
+  width: 40%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.menu_title {
+  font-size: 64px;
   font-weight: bold;
+  letter-spacing: 5px;
 }
 
-.required {
-  text-align: end;
+.underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
 }
 
-.start {
-  font-size: 24px;
-  color: #ba274a;
+.underline::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background-color: #ba274a;
+  z-index: -1;
 }
 
-.requiredItems {
-  margin-bottom: 20px;
+.menu_content {
   font-size: 14px;
-  color: #666;
-  display: flex;
-  justify-content: end;
+  padding-bottom: 30px;
 }
 
-.redstar {
-  color: #ba274a;
-  font-weight: bold;
+.FormContainer {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.formSection {
-  margin-bottom: 20px;
+.Form {
+  text-align: left;
+  border-radius: 8px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.formHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.formRow {
+.FormTitle {
+  font-size: 32px;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  gap: 12px;
 }
 
-.frmTitle {
-  width: 180px;
-  padding-left: 10px;
-}
-
-.default_size {
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.redStar::after {
-  content: '*';
-  color: #ba274a;
-  padding: 5px;
-  font-size: 24px;
-}
-
-.error_display {
-  display: flex;
-  flex-direction: column;
-}
-
-.formInput {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.formInput input,
-.formInput select {
-  font-size: 18px;
-  height: 30px;
-  margin-right: 10px;
-  padding-left: 5px;
-  border: 1px solid #f5edf0;
-  border-radius: 6px;
-}
-
-.formInput input[type='checkbox'],
-.formInput input[type='radio'] {
-  width: 15px;
-  height: 15px;
-  color: #ba274a;
-}
-
-.formInput input:focus {
-  outline-color: #ba274a;
-}
-
-.phone01 {
-  height: 30px;
-}
-
-.bgGray {
-  background: #fafafa;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
+.FormTitle::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
   border-radius: 8px;
 }
 
-.agreeItem {
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+.RequiredFieldNotice {
+  text-align: right;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
-.font_red {
+.FormGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.FormGroup > label {
+  min-width: 80px;
+  line-height: 36px;
+  font-weight: bold;
+}
+
+.FormGroup input {
+  flex: 1;
+  height: 36px;
+  box-sizing: border-box;
+  margin: 0;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  font-family: "Pretendard-Regular";
+}
+
+.FormGroup textarea {
+  height: 100px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  flex: 1;
+  padding: 8px;
+  margin: 0;
+  font-family: "Pretendard-Regular";
+}
+
+.FormGroup:has(textarea) {
+  align-items: flex-start;
+}
+
+.SubmitButton {
+  width: 50%;
+  padding: 15px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-family: "Pretendard-Regular";
+  display: block;
+  margin: 0 auto;
+}
+
+.SubmitButton:hover {
+  background-color: #9e1f3e;
+}
+
+.required {
   color: #ba274a;
 }
 
-.agreeItem input {
-  margin-right: 10px;
-  width: 20px;
+.requiredText {
+  color: #ba274a;
+  display: flex;
+  align-items: center;
 }
 
-.detailButton {
-  margin-left: 10px;
-  padding: 0px 5px;
-  color: rgb(0, 0, 0);
+.EmailGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.EmailGroup input {
+  flex: 1;
+  min-width: 0;
+}
+
+.EmailAt {
+  color: #4d4d4d;
+}
+
+.EmailSelect {
+  width: 140px;
+  height: 36px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  padding: 0 8px;
+  background-color: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
   cursor: pointer;
-  font-size: 12px;
-  text-decoration: underline;
+  font-family: "Pretendard-Regular";
 }
 
-.detailButton:hover {
-  color: #333;
+.EmailSelect::-ms-expand {
+  display: none;
 }
 
-.errorMessage {
-  color: red;
-  font-size: 13px;
-  margin-top: 5px;
+.TabButton {
+  padding: 10px 20px;
+  border: 1px solid #f5edf0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.TabButton.active {
+  background-color: #000;
+  color: white;
+}
+
+.FormFooter {
+  margin: 20px 0px 50px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.AgreementItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.ButtonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.RadioGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.RadioItem input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: #ba274a;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 0;
+}
+
+.RadioItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #000;
+  font-weight: normal;
+  height: 36px;
+  margin-right: 20px;
+}
+
+.RadioItem label {
+  cursor: pointer;
+  margin-left: 0;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.TermsContainer {
+  margin: 20px 0;
+}
+
+.TermsContent {
+  height: 200px;
+  padding: 15px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.PhoneInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  width: 80%;
+  margin-left: auto;
+}
+
+.PhonePrefix {
+  width: 100px;
+  flex: none;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: "Pretendard-Regular";
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.PhoneInput {
+  flex: 1;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.PhoneSeparator {
+  color: #666;
+  font-weight: bold;
+}
+
+.IdInputGroup {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-left: auto;
+}
+
+.IdInputGroup input {
+  width: 100%;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.PasswordInputGroup {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-left: auto;
+}
+
+.PasswordInputGroup input {
+  width: 100%;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.NameInputGroup {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-left: auto;
+}
+
+.NameInputGroup input {
+  width: 100%;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #f5edf0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.EmailInputGroup {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-left: auto;
 }
 
 .modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
-
-.modalTitle {
-  font-weight: bold;
-  margin-left: 3px;
+  font-family: "Pretendard-Regular";
 }
 
 .modalContent {
   background: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
-  width: 500px;
-  height: 300px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  position: relative;
+  gap: 20px;
+  font-family: "Pretendard-Regular";
 }
 
 .modalContent pre {
   flex: 1;
   overflow-y: auto;
-  margin: 0;
-  padding: 10px;
-  white-space: pre-wrap;
+  padding: 15px;
+  background: #f8f8f8;
+  border-radius: 8px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: "Pretendard-Regular";
 }
 
-.modalButtons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.modalClose,
-.modalConfirm {
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modalConfirm {
-  background: #ba274a; /* 확인 버튼 색상 */
-  color: white;
-}
-
-.modalClose {
-  background: #fff;
-  border: solid 1px lightgray;
+.modalTitle {
+  font-size: 20px;
+  font-weight: bold;
   color: #333;
+  text-align: center;
+  font-family: "Pretendard-Regular";
 }
 
-.modalClose:hover {
-  background-color: #ececec;
-}
-
-.modalConfirm:hover {
-  background: #921f3a; /* 호버 시 더 진한 빨간색 */
-}
-
-/* 스크롤바 스타일 */
-.modalContent pre::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 */
-}
-
-.modalContent pre::-webkit-scrollbar-track {
-  background: #f1f1f1; /* 스크롤바 트랙 배경색 */
-  border-radius: 4px; /* 트랙 라운드 처리 */
-}
-
-.modalContent pre::-webkit-scrollbar-thumb {
-  background: #888; /* 스크롤바 막대 색상 */
-  border-radius: 4px; /* 막대 라운드 처리 */
-}
-
-.modalContent pre::-webkit-scrollbar-thumb:hover {
-  background: #555; /* 호버 시 스크롤바 막대 색상 */
-}
-
-.dflex2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
-}
-
-.dflex2 button {
-  padding: 10px 25px;
+.modalContent button {
+  padding: 10px 20px;
   background: #ba274a;
-  color: #fff;
-  font-size: 16px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  font-family: "Pretendard-Regular";
 }
 
-.dflex2 button:hover {
-  background: #921f3a;
-  color: #fff;
+.modalContent button:hover {
+  background: #9e1f3e;
 }
 
-input {
-  accent-color: #374259;
+.ViewTermsButton {
+  padding: 0;
+  background: none;
+  border: none;
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: "Pretendard-Regular";
 }
 
-.email2 {
-  margin-left: 10px;
+.ViewTermsButton:hover {
+  color: #666;
 }
 
-.formInput select {
-  width: 100px;
-}
-
-.formInput .phoneInput {
-  width: 100px;
-  margin-left: 10px;
-}
-
-.itemTitle1 {
-  margin: 20px 0 20px 0;
-  font-weight: bold;
-}
-
-.itemTitle2 {
-  margin: 40px 0 20px 0;
-  font-weight: bold;
-}
-
-.frmH3 {
-  margin: 40px 0 0 0;
-  font-weight: bold;
-}
-
-input[type='checkbox'] {
+.checkbox {
+  width: 13px;
+  height: 13px;
   accent-color: #ba274a;
+  cursor: pointer;
+  margin: 0;
+}
+
+.AgreementTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 50px;
+  color: #333;
 }

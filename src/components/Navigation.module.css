@@ -40,7 +40,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 배경 어두운 부분 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,13 +48,11 @@ a {
 }
 
 .modalContent {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 370px;
-  height: 350px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: transparent;
   position: relative;
+  width: 100%;
+  max-width: 768px;
+  margin: 20px;
 }
 
 input {
@@ -102,9 +100,15 @@ input {
 
 .modalClose {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   cursor: pointer;
+  z-index: 1001;
+}
+
+.modalClose img {
+  width: 24px;
+  height: 24px;
 }
 
 /* ----------------- 로그인, 회원가입, 마이페이지 버튼 ------------ */

@@ -1,7 +1,7 @@
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
@@ -10,7 +10,7 @@
   width: 100%;
   min-height: 100vh;
   background: #fff;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
@@ -23,7 +23,7 @@
 }
 
 .menu_introduce {
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 
   width: 40%;
   text-align: center;
@@ -43,7 +43,7 @@
 }
 
 .underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: -3px;
   bottom: 0;
@@ -63,17 +63,22 @@
 .ContactSection h2 {
   text-align: center;
   font-size: 32px;
-
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   gap: 12px;
 }
 
 .BenefitSection h2::before,
 .ProcessSection h2::before,
+.ContactSection h2 {
+  justify-content: center;
+}
+
+.BenefitSection h2::before,
+.ProcessSection h2::before,
 .ContactSection h2::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 32px;
   background: #ba274a;
@@ -193,7 +198,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 }
 
 .ConsultButton:hover {

@@ -38,7 +38,7 @@
 .AboutUsContent {
   position: relative;
   z-index: 2;
-  width: 40%;
+  width: 43%;
   text-align: center;
   margin: 0 auto;
 }
@@ -75,7 +75,7 @@
 }
 
 .imageWrapper img {
-  width: 200px;
+  width: 150px;
 }
 
 .imageWrapper img:hover {
@@ -100,15 +100,4 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.content {
-  font-size: 16px;
-  padding-bottom: 30px;
-  line-height: 1.6;
-  margin-top: 0px;
-}
-
-.about_us_icon {
-  width: 60%;
 }
