@@ -177,7 +177,142 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           </Link>
         </div>
 
-        {/* 모달 창 */}
+        {/* 상단 네비게이션 메뉴 */}
+        <div className={style.main_menu}>
+          <ul className={style.main_menu_list}>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/kokeestory"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                KOKEE STORY
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/kokeestory"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    브랜드 소개
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/menupage"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                MENU
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/menupage"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    음료
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/store"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                STORE
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/store"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    매장 찾기
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/affiliated"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                AFFILIATED
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/franchisepromotion"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    가맹안내
+                  </Link>
+                </li>
+                {/* <li className={style.sub_menu_item}>
+                  <Link
+                    to="/affiliated"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    제휴 및 제안
+                  </Link>
+                </li> */}
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/notice"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                NOTICE
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/notice"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    공지사항
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className={style.main_menu_item}>
+              <Link
+                to="/support"
+                className={style.main_menu_link}
+                style={{ color: fontColor }}
+              >
+                SUPPORT
+              </Link>
+              <ul className={style.sub_menu_list}>
+                <li className={style.sub_menu_item}>
+                  <Link
+                    to="/faq"
+                    className={style.sub_menu_link}
+                    style={{ color: fontColor }}
+                  >
+                    자주하는 질문
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        {/* 햄버거 버튼 눌렀을 때 모달 창 */}
         <div
           className={`${style.modal_overlay} ${
             isModalOpen ? style.active : ""
@@ -206,11 +341,10 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="/kokeestory" onClick={toggleModal}>
-                  브랜드
+                  브랜드 소개
                 </Link>
               </div>
             </div>
-
             {/* MENU 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -228,7 +362,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 </Link>
               </div>
             </div>
-
             {/* STORE 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -241,12 +374,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "STORE" ? style.active : ""
                 }`}
               >
-                <Link to="./waytocome" onClick={toggleModal}>
-                  근처 매장 찾기
+                <Link to="/store" onClick={toggleModal}>
+                  매장 찾기
                 </Link>
               </div>
             </div>
-
             {/* AFFILIATED 메뉴 */}
             <div
               className={`${style.modal_menu_item} ${
@@ -259,9 +391,12 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   activeSubMenu === "AFFILIATED" ? style.active : ""
                 }`}
               >
-                <Link to="/affiliated" onClick={toggleModal}>
-                  제휴 및 제안
+                <Link to="/franchisepromotion" onClick={toggleModal}>
+                  가맹안내
                 </Link>
+                {/* <Link to="/affiliated" onClick={toggleModal}>
+                  제휴 및 제안
+                </Link> */}
               </div>
             </div>
 
@@ -296,10 +431,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="/faq" onClick={toggleModal}>
-                  FAQ
-                </Link>
-                <Link to="/inquiry" onClick={toggleModal}>
-                  1:1 문의하기
+                  자주하는 질문
                 </Link>
               </div>
             </div>
@@ -322,7 +454,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             )}
             {!headerLogined && (
               <li>
-                <Link to="/form" style={{ color: fontColor }}>
+                <Link to="/register" style={{ color: fontColor }}>
                   JOIN
                 </Link>
               </li>

@@ -7,8 +7,15 @@ import Footer from "./components/Footer";
 import MenuPage from "./pages/MenuPage";
 import NoticePage from "./pages/NoticePage";
 import Inquiry from "./pages/Inquiry";
+import FranchisePromotion from "./pages/FranchisePromotion";
+import Register from "./pages/Register";
+import Store from "./pages/Store";
 import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
+import Faq from "./pages/Faq";
+import Order from "./pages/Order";
+import Cart from "./pages/Cart";
+import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -47,6 +54,13 @@ function App() {
           <Route path="/affiliated" element={<Affiliated />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
+          <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
         <AppContent />
       </div>

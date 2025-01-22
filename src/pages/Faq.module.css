@@ -78,13 +78,12 @@
 
 .NoticeTable {
   width: 100%;
-  margin-top: 20px;
   border-top: 3px solid #ba274a;
 }
 
 .TableHeader {
   display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 180px 100px;
+  grid-template-columns: 100px 150px minmax(0, 1fr) 150px 100px;
   background-color: #f8f9fa;
   padding: 15px 0;
   text-align: center;
@@ -93,7 +92,7 @@
 
 .TableRow {
   display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 180px 100px;
+  grid-template-columns: 100px 150px minmax(0, 1fr) 150px 100px;
   padding: 15px 0;
   text-align: center;
   border-bottom: 1px solid #eee;
@@ -130,6 +129,7 @@
   align-items: center;
   gap: 5px;
   margin-top: 20px;
+  flex: 1;
 }
 
 .PageButton {
@@ -178,127 +178,73 @@
   margin-bottom: 20px;
 }
 
-.SearchBox {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: white;
-  overflow: hidden;
-}
-
-.SearchSelect {
-  height: 35px;
-  padding: 8px 12px;
-  border: none;
-  font-size: 14px;
-  background-color: white;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ba274a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 28px;
-  font-family: "Pretendard-Regular";
-}
-
-.SearchSelect:focus {
-  outline: none;
-  border-color: #ba274a;
-}
-
-.SearchInputWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.SearchInput {
-  padding: 8px 12px;
-  padding-right: 40px;
-  border: none;
-  width: 250px;
-  font-size: 14px;
-  height: 35px;
-  box-sizing: border-box;
-  margin-bottom: 0;
-  font-family: "Pretendard-Regular";
-}
-
-.SearchInput:focus {
-  outline: none;
-  border-color: #ba274a;
-}
-
-.SearchButton {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #7a7a7a;
-}
-
-.SearchButton:hover {
-  color: #000;
-}
-
-.WriteButtonContainer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.WriteButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.WriteButton:hover {
-  background-color: #0056b3;
-}
-
 .CategoryContainer {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
   justify-content: center;
-  width: 100%;
+  gap: 0;
 }
 
 .CategoryButton {
-  padding: 8px 16px;
+  padding: 12px 24px;
   border: 1px solid #ba274a;
-  border-radius: 8px;
-  background: white;
+  background-color: white;
+  color: #666;
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: #ba274a;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-radius: 0;
+  font-family: "Pretendard-Regular";
+}
+
+.CategoryButton:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 0px;
+}
+
+.CategoryButton:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 0px;
+}
+
+.CategoryButton:not(:last-child) {
+  border-right: none;
 }
 
 .CategoryButton:hover {
-  background: #f5f5f5;
+  background-color: #f8f9fa;
+  color: #ba274a;
+  border-color: #ba274a;
 }
 
-.ActiveCategory {
-  background: #ba274a;
+.CategoryButtonActive {
+  background-color: #ba274a;
   color: white;
   border-color: #ba274a;
 }
 
-.ActiveCategory:hover {
-  background: #a32242;
+.CategoryButtonActive:hover {
+  background-color: #ba274a;
+  color: white;
+}
+
+.ButtonContainer {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.InquiryButton {
+  padding: 8px 16px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.PaginationContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

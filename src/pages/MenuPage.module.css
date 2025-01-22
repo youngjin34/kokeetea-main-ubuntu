@@ -54,28 +54,53 @@
 /* ------------------ 카테고리 버튼 ------------------- */
 .MenuTabs {
   font-family: "Pretendard-Regular";
-
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-  border-bottom: 1px solid #ba274a;
+  border-bottom: 3px solid #ba274a;
 }
 
 .menu {
+  padding: 12px 24px;
   border: 1px solid #ba274a;
-  padding: 10px 20px;
+  background-color: white;
+  color: #666;
   cursor: pointer;
-  color: #333;
-  font-size: 18px;
-  font-weight: bold;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-radius: 0;
+  font-family: "Pretendard-Regular";
 }
 
-.menu:hover,
+.menu:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 0px;
+}
+
+.menu:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 0px;
+}
+
+.menu:not(:last-child) {
+  border-right: none;
+}
+
+.menu:hover {
+  background-color: #f8f9fa;
+  color: #ba274a;
+  border-color: #ba274a;
+}
+
 .active {
   background-color: #ba274a;
-  color: white; /* 활성화된 메뉴의 색상 */
+  color: white;
+  border-color: #ba274a;
+}
+
+.active:hover {
+  background-color: #ba274a;
+  color: white;
 }
 
 .MenuItems {

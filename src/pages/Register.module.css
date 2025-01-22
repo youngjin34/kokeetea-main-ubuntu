@@ -1,0 +1,301 @@
+.joinForm {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 100px;
+}
+
+.joinForm h2 {
+  padding: 5px 0;
+  margin-bottom: 15px;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.required {
+  text-align: end;
+}
+
+.start {
+  font-size: 24px;
+  color: #ba274a;
+}
+
+.requiredItems {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  justify-content: end;
+}
+
+.redstar {
+  color: #ba274a;
+  font-weight: bold;
+}
+
+.formSection {
+  margin-bottom: 20px;
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.frmTitle {
+  width: 180px;
+  padding-left: 10px;
+}
+
+.default_size {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.redStar::after {
+  content: '*';
+  color: #ba274a;
+  padding: 5px;
+  font-size: 24px;
+}
+
+.error_display {
+  display: flex;
+  flex-direction: column;
+}
+
+.formInput {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.formInput input,
+.formInput select {
+  font-size: 18px;
+  height: 30px;
+  margin-right: 10px;
+  padding-left: 5px;
+  border: 1px solid #f5edf0;
+  border-radius: 6px;
+}
+
+.formInput input[type='checkbox'],
+.formInput input[type='radio'] {
+  width: 15px;
+  height: 15px;
+  color: #ba274a;
+}
+
+.formInput input:focus {
+  outline-color: #ba274a;
+}
+
+.phone01 {
+  height: 30px;
+}
+
+.bgGray {
+  background: #fafafa;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+.agreeItem {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.font_red {
+  color: #ba274a;
+}
+
+.agreeItem input {
+  margin-right: 10px;
+  width: 20px;
+}
+
+.detailButton {
+  margin-left: 10px;
+  padding: 0px 5px;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.detailButton:hover {
+  color: #333;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalTitle {
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.modalContent pre {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 10px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalClose,
+.modalConfirm {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modalConfirm {
+  background: #ba274a; /* 확인 버튼 색상 */
+  color: white;
+}
+
+.modalClose {
+  background: #fff;
+  border: solid 1px lightgray;
+  color: #333;
+}
+
+.modalClose:hover {
+  background-color: #ececec;
+}
+
+.modalConfirm:hover {
+  background: #921f3a; /* 호버 시 더 진한 빨간색 */
+}
+
+/* 스크롤바 스타일 */
+.modalContent pre::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.modalContent pre::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+  border-radius: 4px; /* 트랙 라운드 처리 */
+}
+
+.modalContent pre::-webkit-scrollbar-thumb {
+  background: #888; /* 스크롤바 막대 색상 */
+  border-radius: 4px; /* 막대 라운드 처리 */
+}
+
+.modalContent pre::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 호버 시 스크롤바 막대 색상 */
+}
+
+.dflex2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+}
+
+.dflex2 button {
+  padding: 10px 25px;
+  background: #ba274a;
+  color: #fff;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dflex2 button:hover {
+  background: #921f3a;
+  color: #fff;
+}
+
+input {
+  accent-color: #374259;
+}
+
+.email2 {
+  margin-left: 10px;
+}
+
+.formInput select {
+  width: 100px;
+}
+
+.formInput .phoneInput {
+  width: 100px;
+  margin-left: 10px;
+}
+
+.itemTitle1 {
+  margin: 20px 0 20px 0;
+  font-weight: bold;
+}
+
+.itemTitle2 {
+  margin: 40px 0 20px 0;
+  font-weight: bold;
+}
+
+.frmH3 {
+  margin: 40px 0 0 0;
+  font-weight: bold;
+}
+
+input[type='checkbox'] {
+  accent-color: #ba274a;
+}

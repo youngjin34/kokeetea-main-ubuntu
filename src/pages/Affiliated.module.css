@@ -16,7 +16,6 @@
 
 .menu_introduce {
   font-family: "Pretendard-Regular";
-
   width: 40%;
   text-align: center;
   margin: 0 auto;
@@ -155,7 +154,8 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-family: "Pretendard-Regular";
 }
 
 .SubmitButton:hover {

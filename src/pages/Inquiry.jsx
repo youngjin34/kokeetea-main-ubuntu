@@ -112,27 +112,15 @@ const Inquiry = () => {
               </div>
             </div>
 
-            {["name", "phone", "title"].map((field) => (
+            {["name"].map((field) => (
               <div key={field} className={style.FormGroup}>
-                <label>
-                  {field === "name"
-                    ? "이름"
-                    : field === "phone"
-                    ? "연락처"
-                    : "제목"}
-                </label>
+                <label>이름</label>
                 <input
-                  type={field === "phone" ? "tel" : "text"}
+                  type="text"
                   name={field}
                   value={formData[field]}
                   onChange={handleChange}
-                  placeholder={`${
-                    field === "name"
-                      ? "이름을"
-                      : field === "phone"
-                      ? "연락처를"
-                      : "제목을"
-                  } 입력해주세요.`}
+                  placeholder="이름을 입력해주세요."
                 />
               </div>
             ))}
@@ -154,6 +142,19 @@ const Inquiry = () => {
                 <input type="text" maxLength="4" className={style.PhoneInput} />
               </div>
             </div>
+
+            {["title"].map((field) => (
+              <div key={field} className={style.FormGroup}>
+                <label>제목</label>
+                <input
+                  type="text"
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  placeholder="제목을 입력해주세요."
+                />
+              </div>
+            ))}
 
             <div className={style.FormGroup}>
               <label>이메일</label>

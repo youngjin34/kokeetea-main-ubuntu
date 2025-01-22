@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import style from "./NoticePage.module.css";
-import { BiSearch } from "react-icons/bi";
+import style from "./Faq.module.css";
 
-const Notice = () => {
+const FAQ = () => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +11,19 @@ const Notice = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedNotice, setExpandedNotice] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
   const itemsPerPage = 10;
   
+  const categories = [
+    "전체",
+    "이벤트/프로모션",
+    "회원문의",
+    "결제/환불",
+    "매장문의",
+    "딜리버리",
+    "기타"
+  ];
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchNotices();
@@ -46,52 +56,11 @@ const Notice = () => {
     }
   };
 
-  const addNotice = async (noticeData) => {
-    try {
-      setLoading(true);
-      await axios.post("http://localhost:8080/kokee/notice/add", {
-        subject: noticeData.title,
-        content: noticeData.text,
-        email: noticeData.email
-      });
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateNotice = async (id, noticeData) => {
-    try {
-      setLoading(true);
-      await axios.put(`http://localhost:8080/kokee/notice/update/${id}`, {
-        subject: noticeData.title,
-        content: noticeData.text
-      });
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteNotice = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`http://localhost:8080/kokee/notice/delete/${id}`);
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredList = notices.filter((notice) =>
-    notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredList = notices.filter((notice) => {
+    const matchesSearch = notice.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "전체" || notice.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -138,37 +107,25 @@ const Notice = () => {
     <div className={style.Container}>
       <div className={style.MainContent}>
         <div className={style.menu_title}>
-          <span className={style.underline}>NOTICE</span>
+          <span className={style.underline}>FAQ</span>
         </div>
         <p className={style.menu_content}>
-          코키티의 최신 공지사항을 확인하시고,
-          <br />
-          중요한 정보를 놓치지 않도록 주의하세요.
+          궁금하신 내용을 확인해보세요.
         </p>
 
         <div className={style.FormContainer}>
-          <h2 className={style.FormTitle}>공지사항</h2>
-
-          <div className={style.TopControls}>
-            <div className={style.SearchBox}>
-              <select className={style.SearchSelect}>
-                <option value="title">제목</option>
-                <option value="content">내용</option>
-                <option value="all">전체</option>
-              </select>
-              <div className={style.SearchInputWrapper}>
-                <input
-                  type="text"
-                  placeholder="검색어를 입력하세요"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={style.SearchInput}
-                />
-                <button className={style.SearchButton}>
-                  <BiSearch size={20} />
-                </button>
-              </div>
-            </div>
+          <div className={style.CategoryContainer}>
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`${style.CategoryButton} ${
+                  selectedCategory === category ? style.CategoryButtonActive : ""
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
           </div>
 
           <div className={style.NoticeTable}>
@@ -180,6 +137,7 @@ const Notice = () => {
               <>
                 <div className={style.TableHeader}>
                   <div className={style.HeaderNo}>번호</div>
+                  <div className={style.HeaderSubject}>주제</div>
                   <div className={style.HeaderTitle}>제목</div>
                   <div className={style.HeaderDate}>작성일</div>
                   <div className={style.HeaderViews}>조회수</div>
@@ -209,70 +167,80 @@ const Notice = () => {
             )}
           </div>
 
-          <div className={style.Pagination}>
-            <button
-              onClick={() => handlePageChange(1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              «
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              ‹
-            </button>
-
-            {getPageNumbers().map((pageNum) => (
+          <div className={style.PaginationContainer}>
+            <div className={style.Pagination}>
               <button
-                key={pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                className={
-                  currentPage === pageNum ? style.ActivePage : style.PageButton
+                onClick={() => handlePageChange(1)}
+                className={style.PageButton}
+                disabled={currentPage === 1}
+              >
+                «
+              </button>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={style.PageButton}
+                disabled={currentPage === 1}
+              >
+                ‹
+              </button>
+
+              {getPageNumbers().map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={
+                    currentPage === pageNum ? style.ActivePage : style.PageButton
+                  }
+                >
+                  {pageNum}
+                </button>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={style.PageButton}
+                disabled={
+                  currentPage === Math.ceil(filteredList.length / itemsPerPage)
                 }
               >
-                {pageNum}
+                ›
               </button>
-            ))}
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              ›
-            </button>
-            <button
-              onClick={() =>
-                handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
-              }
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              »
-            </button>
-          </div>
-
-          {isAdmin && (
-            <div className={style.WriteButtonContainer}>
-              <button 
-                className={style.WriteButton}
-                onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+              <button
+                onClick={() =>
+                  handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
+                }
+                className={style.PageButton}
+                disabled={
+                  currentPage === Math.ceil(filteredList.length / itemsPerPage)
+                }
               >
-                작성하기
+                »
               </button>
             </div>
-          )}
+            <div className={style.ButtonContainer}>
+              <button 
+                className={style.InquiryButton}
+                onClick={() => {
+                  window.location.href = '/inquiry'; // 1:1 문의 페이지로 이동
+                }}
+              >
+                1:1 문의하기
+              </button>
+              
+              {isAdmin && (
+                <button 
+                  className={style.WriteButton}
+                  onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+                >
+                  작성하기
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Notice;
+export default FAQ;

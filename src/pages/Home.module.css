@@ -1,6 +1,7 @@
 .Home {
   height: 100vh;
   overflow: hidden; /* 외부 div에서는 스크롤을 숨깁니다 */
+  font-family: "Pretendard-Regular";
 }
 
 .one_page {

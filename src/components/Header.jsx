@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import style from "./Header.module.css";
 
@@ -29,6 +29,8 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
         return "transparent";
       case 3:
         return "white";
+      case 4:
+        return "white";
       default:
         return "transparent";
     }
@@ -50,6 +52,8 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
       case 2:
         return "white";
       case 3:
+        return "black";
+      case 4:
         return "black";
       default:
         return "white";

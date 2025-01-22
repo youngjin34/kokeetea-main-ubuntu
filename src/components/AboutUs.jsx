@@ -42,7 +42,7 @@ function AboutUs() {
   return (
     <div className={style.AboutUs}>
       <div className={style.AboutUsContent}>
-        <h1 className={`${style.title} ${style.underline}`}>ABOUT US</h1>
+        <h1 className={`${style.title} ${style.underline}`}>About Us</h1>
         <br />
         <div className={style.imageContainer}>
           <div className={style.imageWrapper}>

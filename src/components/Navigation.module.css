@@ -13,9 +13,12 @@ a {
 }
 
 .Navigation {
+  font-family: "Pretendard-Regular";
+
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease;
+  background-color: transparent;
 }
 
 .ham_menu_button {
@@ -110,7 +113,6 @@ ul {
 }
 
 .header_top {
-  margin-left: 100px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -153,6 +155,7 @@ ul {
   font-size: 2.5rem;
   font-weight: bold;
   font-family: "Pretendard-Regular";
+  white-space: nowrap;
 }
 
 .inner {
@@ -340,7 +343,7 @@ ul {
 /* 서브 메뉴 스타일 */
 .submenu {
   position: absolute;
-  left: 100%; /* 부모 요소의 오른쪽으로 배치 */
+  left: 100%;
   top: 0;
   border-radius: 8px;
   padding: 10px;
@@ -348,12 +351,12 @@ ul {
   display: flex;
   flex-direction: column;
   align-items: start;
-
+  gap: 20px;
   width: 260px;
   opacity: 0;
   pointer-events: none;
   transform: translateX(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
   font-size: 1.5rem;
 }
 
@@ -372,15 +375,131 @@ ul {
 
 .submenu > a {
   font-size: 32px;
-  padding: 5px;
   display: block;
   text-decoration: none;
   color: white;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .submenu > a:hover {
   scale: 1.1;
-  transition: 0.3s;
+
+  transition: 0.5s;
   color: #ba274a;
+}
+
+/* 여기부터 작업 */
+
+.main_menu {
+  display: flex;
+  align-items: center;
+
+  position: relative;
+  height: 100%;
+  justify-content: center;
+  font-family: "Pretendard-Regular";
+}
+
+.main_menu ul {
+  display: flex;
+  list-style: none;
+  gap: 4rem;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.main_menu li {
+  position: relative;
+}
+
+.main_menu a {
+  text-decoration: none;
+  color: white;
+  transition: opacity 0.7s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.main_menu a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ba274a;
+  transition: width 0.7s ease;
+}
+
+.main_menu li:hover > a {
+  transform: translateY(0);
+  opacity: 0;
+  cursor: default;
+  transition: opacity 0.5s ease;
+}
+
+.main_menu li:hover > a::after {
+  width: 100%;
+}
+
+.main_menu li > ul {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+}
+
+.main_menu li:hover > ul {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.main_menu li > ul a {
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 1 !important;
+  white-space: nowrap;
+  transform: none;
+}
+
+.main_menu li > ul a:hover {
+  color: #ba274a !important;
+  transform: none;
+  opacity: 1 !important;
+  cursor: pointer;
+}
+
+.main_menu_item {
+  position: relative;
+}
+
+.main_menu_item:hover .main_menu_link {
+  opacity: 0; /* 호버 시 메인 메뉴 텍스트를 숨김 */
+  transition: opacity 0.3s ease;
+}
+
+.sub_menu_list {
+  position: absolute;
+  top: 0; /* 상위 메뉴와 같은 위치에 배치 */
+  left: 50%;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.main_menu_item:hover .sub_menu_list {
+  opacity: 1;
+  visibility: visible;
 }
