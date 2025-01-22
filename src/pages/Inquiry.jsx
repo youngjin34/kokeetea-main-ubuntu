@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import style from "./Inquiry.module.css";
 
 const Inquiry = () => {
+  // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -77,7 +78,6 @@ const Inquiry = () => {
   };
 
   return (
-    
     <div className={style.Container}>
       <div className={style.MainContent}>
         <div className={style.menu_title}>

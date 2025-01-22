@@ -382,5 +382,5 @@ ul {
 .submenu > a:hover {
   scale: 1.1;
   transition: 0.3s;
-  color: gray;
+  color: #ba274a;
 }

@@ -124,6 +124,24 @@
   color: #555;
 }
 
+.menu_order_btn {
+  display: flex;
+  align-items: end;
+  gap: 5px;
+  cursor: pointer;
+  float: right;
+  border: none;
+  background: none;
+  padding: 5px;
+  font-weight: bold;
+  font-family: "Pretendard-Regular";
+}
+
+.menu_order_btn img {
+  width: 30px;
+  height: 30px;
+}
+
 /* ---------------------- 모달 ---------------------- */
 .modal {
   position: fixed;

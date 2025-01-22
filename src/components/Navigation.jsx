@@ -206,7 +206,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="/kokeestory" onClick={toggleModal}>
-                  Brand
+                  브랜드
                 </Link>
               </div>
             </div>
@@ -224,7 +224,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="./menupage" onClick={toggleModal}>
-                  Drink
+                  음료
                 </Link>
               </div>
             </div>
@@ -242,7 +242,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 }`}
               >
                 <Link to="./waytocome" onClick={toggleModal}>
-                  The way to find
+                  근처 매장 찾기
                 </Link>
               </div>
             </div>

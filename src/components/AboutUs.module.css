@@ -1,18 +1,17 @@
 /* ------------- 폰트 ---------------- */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 .AboutUs {
-  font-family: 'Pretendard-Regular';
-
-  background-image: url('/public/img/aboutUs.png'); /* 배경 이미지 경로 */
-  background-size: cover; /* 이미지가 요소 크기에 맞게 조정됨 */
-  background-position: center; /* 이미지가 가운데 정렬 */
+  font-family: "Pretendard-Regular";
+  background-image: url("/public/img/aboutUs.png");
+  background-size: cover;
+  background-position: center;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -20,30 +19,19 @@
   justify-content: center;
   color: white;
   text-align: center;
-  position: relative; /* 추가 스타일을 위한 상대 위치 */
-  overflow: hidden; /* 내부 요소가 부모를 벗어나지 않도록 설정 */
+  position: relative;
+  overflow: hidden;
 }
 
 .AboutUs::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* 배경 위에 어두운 투명 레이어 */
-  z-index: 1; /* 텍스트 뒤에 위치하도록 설정 */
-}
-
-.AboutUsContent {
-  position: relative; /* 텍스트가 위에 표시되도록 설정 */
-  z-index: 2; /* 어두운 배경 레이어보다 위에 표시 */
-  font-size: 24px; /* 글씨 크기 */
-  line-height: 1.5; /* 줄 간격 */
-}
-
-.about_us_icon {
-  width: 40%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .title {
@@ -58,17 +46,47 @@
 }
 
 .underline::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
-  bottom: 0; /* 텍스트 하단에 배경 배치 */
+  bottom: 0;
   width: 100%;
-  height: 30%; /* 높이를 텍스트의 절반으로 설정 */
+  height: 30%;
   background-color: #ba274a;
-  z-index: -1; /* 배경이 텍스트 뒤로 가도록 설정 */
+  z-index: -1;
 }
 
-.content {
-  font-size: 20px;
-  line-height: 35px;
+.imageContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 99;
+}
+
+.imageWrapper img {
+  width: 200px;
+}
+
+.imageWrapper img:hover {
+  scale: 1.1;
+  transition: 0.3s ease;
+}
+
+.hoverContent {
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
+  font-size: 18px;
+  animation: slideUp 0.5s ease-out; /* 애니메이션 추가 */
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
