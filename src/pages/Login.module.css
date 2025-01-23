@@ -38,11 +38,17 @@
 }
 
 .link {
+  border: none;
+  background: none;
   color: #333;
-  font-size: 14px;
-  text-decoration: none;
-  margin: 15px 0;
-  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.link:hover {
+  color: #666;
 }
 
 .button {
@@ -304,7 +310,7 @@
 }
 
 .socialText {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 

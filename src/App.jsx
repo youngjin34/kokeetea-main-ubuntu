@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import style from "./App.module.css";
 import Header from "./components/Header";
@@ -17,6 +19,8 @@ import Order from "./pages/Order";
 import Cart from "./pages/Cart";
 import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import MyPage from "./pages/MyPage";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -41,6 +45,18 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
 
       <div className={`${style.App}`}>
         <Routes>
@@ -63,6 +79,8 @@ function App() {
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
         <AppContent />
       </div>

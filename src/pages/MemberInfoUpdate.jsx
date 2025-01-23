@@ -30,8 +30,8 @@ const MemberInfoUpdate = () => {
 
   return (
     <div className={style.container}>
-      <div className={style.mainContent}>
-        <h1 className={style.title}>회원정보 확인·수정</h1>
+      <div className={style.content}>
+        <div className={style.title}>회원정보 확인·수정</div>
         <div className={style.formContainer}>
           <div className={style.basicInfo}>
             <h2 className={style.sectionTitle}>기본 정보</h2>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
@@ -78,9 +79,10 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   }, [isModalOpen]);
 
   function logoutFunction() {
-    alert(
-      `로그아웃 합니다. ${localStorage.getItem("realname")}님 안녕히 가세요.`
-    );
+    toast.success(`${localStorage.getItem("realname")}님 안녕히 가세요.`, {
+      position: "top-center",
+      autoClose: 3000,
+    });
     localStorage.clear();
     setIsLogined(!isLogined);
     navigate("/");
@@ -227,15 +229,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                     가맹안내
                   </Link>
                 </li>
-                {/* <li className={style.sub_menu_item}>
-                  <Link
-                    to="/affiliated"
-                    className={style.sub_menu_link}
-                    style={{ color: fontColor }}
-                  >
-                    제휴 및 제안
-                  </Link>
-                </li> */}
               </ul>
             </li>
             <li className={style.main_menu_item}>
@@ -365,9 +358,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                 <Link to="/franchisepromotion" onClick={toggleModal}>
                   가맹안내
                 </Link>
-                {/* <Link to="/affiliated" onClick={toggleModal}>
-                  제휴 및 제안
-                </Link> */}
               </div>
             </div>
 

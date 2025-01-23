@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './Login.module.css';
+import { useNavigate, Link } from 'react-router-dom';
+import style from './Login.module.css';
 import axios from 'axios';
+import { Slide, toast } from 'react-toastify';
+
 
 const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
   const navigate = useNavigate();
@@ -23,6 +25,11 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
     onClose();
   };
 
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
+    onClose();
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -37,16 +44,36 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
         localStorage.setItem("email", result.data.email);
         localStorage.setItem("token", result.data.token);
         
-        // 로그인 성공 후 바로 관리자 체크
         await checkAdminStatus();
         
-        alert(`${result.data.name}님 환영합니다!`);
+        toast(`${result.data.name}님 환영합니다!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Slide,
+        });
+        
         setIsLogined(true);
         setHeaderLogined(true);
         onClose();
       }
     } catch (error) {
-      alert("아이디와 비밀번호를 확인해주세요");
+      toast("아이디와 비밀번호를 확인해주세요", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Slide,
+      });
     }
   };
 
@@ -71,63 +98,75 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
   };
 
   return (
-    <div className={styles.pageContainer}>
-      <div className={`${styles.container} ${isSignUpActive ? styles.rightPanelActive : ''}`}>
-        <div className={`${styles.formContainer} ${styles.signUpContainer}`}>
-          <form className={styles.form} onSubmit={handleLogin}>
-            <h2 className={styles.LoginTitle}>점주 로그인</h2>
+    <div className={style.pageContainer}>
+      <div className={`${style.container} ${isSignUpActive ? style.rightPanelActive : ''}`}>
+        <div className={`${style.formContainer} ${style.signUpContainer}`}>
+          <form className={style.form} onSubmit={handleLogin}>
+            <h2 className={style.LoginTitle}>점주 로그인</h2>
             <input 
-              className={styles.input} 
+              className={style.input} 
               type="text" 
               placeholder="아이디" 
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
             <input 
-              className={styles.input} 
+              className={style.input} 
               type="password" 
               placeholder="비밀번호" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <a href="#" className={styles.link}>비밀번호를 잊으셨나요?</a>
-            <div className={styles.buttonContainer}>
-              <button className={styles.button}>로그인</button>
+            <button 
+              type="button" 
+              onClick={handleForgotPassword} 
+              className={style.link}
+            >
+              비밀번호를 잊으셨나요?
+            </button>
+            <div className={style.buttonContainer}>
+              <button className={style.button}>로그인</button>
             </div>
           </form>
         </div>
-        <div className={`${styles.formContainer} ${styles.signInContainer}`}>
-          <form className={styles.form} onSubmit={handleLogin}>
-            <h2 className={styles.LoginTitle}>일반 로그인</h2>
-            <div className={styles.socialContainer}>
-              <a href="#" className={`${styles.socialLink} ${styles.kakao}`}>
-                <span className={styles.socialText}>Kakao</span>
+        <div className={`${style.formContainer} ${style.signInContainer}`}>
+          <form className={style.form} onSubmit={handleLogin}>
+            <h2 className={style.LoginTitle}>일반 로그인</h2>
+            <div className={style.socialContainer}>
+              <a href="#" className={`${style.socialLink} ${style.kakao}`}>
+                <span className={style.socialText}>Kakao</span>
               </a>
-              <a href="#" className={`${styles.socialLink} ${styles.naver}`}>
-                <span className={styles.socialText}>Naver</span>
+              <a href="#" className={`${style.socialLink} ${style.naver}`}>
+                <span className={style.socialText}>Naver</span>
               </a>
             </div>
-            <span className={styles.socialText}>또는, 계정으로 로그인해주세요</span>
+            <span className={style.socialText}>또는, 계정으로 로그인해주세요</span>
             <input 
-              className={styles.input} 
+              className={style.input} 
               type="text" 
               placeholder="아이디" 
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
             <input 
-              className={styles.input} 
+              className={style.input} 
               type="password" 
               placeholder="비밀번호" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <a href="#" className={styles.link}>비밀번호를 잊으셨나요?</a>
-            <div className={styles.buttonContainer}>
-              <button className={styles.button}>로그인</button>
+            <button 
+              type="button" 
+              onClick={handleForgotPassword} 
+              className={style.link}
+            >
+              비밀번호를 잊으셨나요?
+            </button>
+            <div className={style.buttonContainer}>
+              <button className={style.button}>로그인</button>
               <button 
                 type="button"
-                className={styles.button}
+                className={style.button}
                 onClick={handleRegisterClick}
               >
                 회원가입
@@ -135,17 +174,17 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
             </div>
           </form>
         </div>
-        <div className={styles.overlayContainer}>
-          <div className={styles.overlay}>
-            <div className={`${styles.overlayPanel} ${styles.overlayLeft}`}>
+        <div className={style.overlayContainer}>
+          <div className={style.overlay}>
+            <div className={`${style.overlayPanel} ${style.overlayLeft}`}>
               <h1>일반 로그인</h1>
               <p>일반 계정으로 로그인하시려면 아래를 클릭해주세요</p>
-              <button className={styles.ownerButton} onClick={handleSignInClick}>일반 로그인</button>
+              <button className={style.ownerButton} onClick={handleSignInClick}>일반 로그인</button>
             </div>
-            <div className={`${styles.overlayPanel} ${styles.overlayRight}`}>
+            <div className={`${style.overlayPanel} ${style.overlayRight}`}>
               <h1>혹시 점주님이신가요?</h1>
               <p>점주님 계정으로 로그인하시려면 아래를 클릭해주세요</p>
-              <button className={styles.ownerButton} onClick={handleSignUpClick}>점주 로그인</button>
+              <button className={style.ownerButton} onClick={handleSignUpClick}>점주 로그인</button>
             </div>
           </div>
         </div>

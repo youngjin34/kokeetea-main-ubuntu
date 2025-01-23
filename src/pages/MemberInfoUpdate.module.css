@@ -1,75 +1,162 @@
 .container {
-  margin-top: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 30px 0;
-}
-
-.mainContent {
-  display: flex;
-  width: 1116px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: white;
+  padding-top: 180px;
+  width: 70%;
   margin: 0 auto;
+  font-family: "Pretendard-Regular";
+  min-height: calc(100vh - 120px); 
 }
 
 .title {
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 30px;
-  }
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 60px;
+  text-align: center;
+  display: flex;
+
+  justify-content: center;
+  gap: 12px;
+}
+
+.title::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
 .formContainer {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin-right: 20px;
-  }
+  flex: 1;
+  margin-right: 40px;
+  max-width: 800px;
+}
+
+.sideNav {
+  width: 200px;
+  margin-left: 20px;
+  padding-top: 100px;
+}
+
+.sideNavItem {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.sideNavItem:hover {
+  background-color: #ba274a;
+  color: white;
+}
+
+.formGroup {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.label {
+  width: 120px;
+  font-size: 14px;
+  color: #333;
+  flex-shrink: 0;
+  padding-top: 8px;
+  font-weight: normal;
+}
+
+.input {
+  width: 300px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.confirmButton {
+  padding: 6px 16px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.emailInput {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.emailInput input {
+  width: 140px;
+}
+
+.emailInput span {
+  color: #666;
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.warningText {
+  color: #ba274a;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 0;
+}
+
+.receiveText {
+  color: #999;
+  font-size: 12px;
+  margin-left: 120px;
+}
+
+.formActions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 .sectionTitle {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
 }
-.basicInfo,
+
+.basicInfo {
+  margin-bottom: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e6e6e6;
+}
+
 .additionalInfo {
   margin-bottom: 20px;
-}
-
-
-.formGroup {
-  display: flex;
-    flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.label {
-  font-size: 14px;
-  margin-bottom: 5px;
-  width: 300px;
-}
-
-.input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.confirmButton{
-    padding: 10px 10px;
-    border: none;
-    background: #e6e6e6;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 5px;
-}
-
-.confirmButton:hover{
-    background: #ddd;
 }
 
 .passwordRequirements {
@@ -77,7 +164,8 @@
   color: #999;
   margin-top: 5px;
 }
-.emailDomain{
+
+.emailDomain {
   padding: 10px 10px;
   border: 1px solid #ddd;
   border-left: 0px;
@@ -85,40 +173,14 @@
   font-size: 14px;
   background-color: #e6e6e6;
 }
-.radioGroup {
-    display: flex;
-    align-items: center;
-    width: 500px;
-}
 
-.radioLabel {
-    display: flex;
-    align-items: center;
-    margin-right: 15px;
-    font-size: 14px;
-}
-.radioLabel input {
-  margin-right: 5px;
-}
-
-.receiveText{
-    font-size: 12px;
-    color: #999;
-    margin-top: 5px;
-}
-
-.formActions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
 .confirmBtn, .cancelBtn {
-    padding: 10px 15px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 .confirmBtn {
@@ -127,44 +189,38 @@
 }
 
 .confirmBtn:hover {
-    background-color: #b73033;
+  background-color: #b73033;
 }
 
 .cancelBtn {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
-.cancelBtn:hover {
-    background-color: #e6e6e6;
-}
-/* Side Navigation */
-.sideNav{
-    display: flex;
-    flex-direction: column;
-    width: 326px;
-  margin-left: 30px;
 
+.cancelBtn:hover {
+  background-color: #e6e6e6;
 }
-.sideNavItem{
-    padding: 10px 15px;
-    background-color: #f9f9f9;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-.sideNavItem:hover {
-  background-color: #eee;
+
+.passwordWarning {
+  color: #ba274a;
+  font-size: 12px;
+  position: absolute;
+  left: 120px;
+  bottom: -18px;
 }
 
 @media (max-width: 768px) {
-    .mainContent {
-        width: 95%;
-        flex-direction: column;
-    }
-     .formContainer{
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-     .sideNav{
-        margin-left: 0;
-         width: 100%;
-    }
+  .mainContent {
+    width: 95%;
+    flex-direction: column;
+  }
+
+  .formContainer {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .sideNav {
+    margin-left: 0;
+    width: 100%;
+  }
 }

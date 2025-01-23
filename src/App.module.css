@@ -20,3 +20,40 @@ body {
 .App {
   position: relative;
 }
+
+:global(.Toastify__toast) {
+  font-family: "Pretendard-Regular";
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: white;
+  color: #333;
+  border-left: 4px solid #BA274A;
+}
+
+:global(.Toastify__toast--success) {
+  background: white;
+  color: #333;
+  border-left: 4px solid #BA274A;
+}
+
+:global(.Toastify__toast--error) {
+  background: white;
+  color: #333;
+  border-left: 4px solid #BA274A;
+}
+
+:global(.Toastify__progress-bar) {
+  background: rgba(186, 39, 74, 0.3);
+  height: 3px;
+}
+
+:global(.Toastify__close-button) {
+  color: #666;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+:global(.Toastify__close-button:hover) {
+  opacity: 1;
+}
