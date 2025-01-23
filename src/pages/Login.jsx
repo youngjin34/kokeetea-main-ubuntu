@@ -8,6 +8,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleSignUpClick = () => {
     setIsSignUpActive(true);
@@ -62,6 +63,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
       });
       
       setIsAdmin(response.data.isAdmin);
+      localStorage.setItem("isAdmin", response.data.isAdmin);
     } catch (error) {
       console.error('관리자 확인 실패:', error);
       setIsAdmin(false);

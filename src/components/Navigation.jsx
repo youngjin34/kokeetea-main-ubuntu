@@ -412,28 +412,27 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
           <ul className={`${style.header_top}`}>
             {headerLogined ? (
               <li onClick={logoutFunction}>
-                <Link to="#" style={{ color: fontColor }}>
-                  {localStorage.getItem("realname")}님
+                <Link to="#" style={{ color: fontColor }} className={style.user_menu_text}>
                   LOGOUT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
                 </Link>
               </li>
             ) : (
               <li>
-                <Link onClick={toggleLoginModal} style={{ color: fontColor }}>
+                <Link onClick={toggleLoginModal} style={{ color: fontColor }} className={style.login_join_text}>
                   LOGIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
                 </Link>
               </li>
             )}
             {!headerLogined && (
               <li>
-                <Link to="/register" style={{ color: fontColor }}>
+                <Link to="/register" style={{ color: fontColor }} className={style.login_join_text}>
                   JOIN
                 </Link>
               </li>
             )}
             {headerLogined && (
               <li>
-                <Link to="/mypage" style={{ color: fontColor }}>
+                <Link to="/mypage" style={{ color: fontColor }} className={style.user_menu_text}>
                   MY PAGE
                 </Link>
               </li>

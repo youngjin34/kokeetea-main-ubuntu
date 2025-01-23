@@ -120,6 +120,11 @@ ul {
   display: flex;
   align-items: center;
   gap: 20px;
+  padding: 0;
+  width: 300px;
+  justify-content: flex-end;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 /*  ---------------------- sns 버튼 ----------------------- */
@@ -167,14 +172,13 @@ ul {
   align-items: center;
 }
 
-.header_top {
-  display: flex;
-  align-items: center;
-  list-style: none;
-}
-
 .header_top li {
   margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  white-space: nowrap;
 }
 
 .sns {
@@ -506,4 +510,17 @@ ul {
 .main_menu_item:hover .sub_menu_list {
   opacity: 1;
   visibility: visible;
+}
+
+.user_menu_text {
+  font-size: 14px; 
+  font-weight: 400;
+}
+
+.login_join_text {
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+  display: block; 
+  text-align: right;
 }
