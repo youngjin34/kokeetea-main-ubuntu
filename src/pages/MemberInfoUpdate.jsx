@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import style from "./MemberInfoUpdate.module.css";
+import { useNavigate } from "react-router-dom";
 
 const MemberInfoUpdate = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "홍길동",
     id: "test123@email.com",
@@ -31,6 +33,10 @@ const MemberInfoUpdate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   return (
@@ -157,7 +163,6 @@ const MemberInfoUpdate = () => {
                     id="smsReceive"
                     name="smsReceive"
                     value="수신함"
-                    defaultChecked
                   />
                   <label htmlFor="smsReceive">수신함</label>
                 </div>
@@ -184,7 +189,6 @@ const MemberInfoUpdate = () => {
                     id="emailReceive"
                     name="emailReceive"
                     value="수신함"
-                    defaultChecked
                   />
                   <label htmlFor="emailReceive">수신함</label>
                 </div>
@@ -218,10 +222,30 @@ const MemberInfoUpdate = () => {
         </div>
 
         <div className={style.sideNav}>
-          <div className={style.sideNavItem}>회원정보 확인·수정</div>
-          <div className={style.sideNavItem}>쿠폰·스탬프 조회</div>
-          <div className={style.sideNavItem}>주문내역 조회</div>
-          <div className={style.sideNavItem}>1:1 문의 내역</div>
+          <div 
+            className={style.sideNavItem} 
+            onClick={() => handleNavigation('/memberinfoupdate')}
+          >
+            회원정보 확인 · 수정
+          </div>
+          <div 
+            className={style.sideNavItem}
+            onClick={() => handleNavigation('/couponstamp')}
+          >
+            쿠폰 · 스탬프 조회
+          </div>
+          <div 
+            className={style.sideNavItem}
+            onClick={() => handleNavigation('/orderhistory')}
+          >
+            주문내역 조회
+          </div>
+          <div 
+            className={style.sideNavItem}
+            onClick={() => handleNavigation('/inquiryhistory')}
+          >
+            1:1 문의 내역
+          </div>
         </div>
       </div>
     </div>

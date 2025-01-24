@@ -28,7 +28,7 @@ const MyPage = () => {
             <p>회원정보를 확인하거나 수정할 수 있습니다.</p>
           </Link>
 
-          <Link to="/orderhistory" className={style.menuItem}>
+          <Link to="/mypage" className={style.menuItem}>
             <div className={style.iconWrapper}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -39,7 +39,7 @@ const MyPage = () => {
             <p>보유한 멤버십과 쿠폰을 조회할 수 있는 공간입니다.</p>
           </Link>
 
-          <Link to="/cart" className={style.menuItem}>
+          <Link to="/orderhistory" className={style.menuItem}>
             <div className={style.iconWrapper}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="9" cy="21" r="1"></circle>
@@ -51,7 +51,7 @@ const MyPage = () => {
             <p>주문한 상품의 내역을 확인할 수 있습니다.</p>
           </Link>
 
-          <Link to="/faq" className={style.menuItem}>
+          <Link to="/inquiryhistory" className={style.menuItem}>
             <div className={style.iconWrapper}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>

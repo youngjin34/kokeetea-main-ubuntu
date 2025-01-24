@@ -21,6 +21,8 @@ import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import MyPage from "./pages/MyPage";
+import OrderHistory from "./pages/OrderHistory";
+import InquiryHistory from "./pages/InquiryHistory";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -81,6 +83,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/orderhistory" element={<OrderHistory />} />
+          <Route path="/inquiryhistory" element={<InquiryHistory />} />
         </Routes>
         <AppContent />
       </div>

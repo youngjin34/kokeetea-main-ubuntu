@@ -1,0 +1,138 @@
+.container {
+  padding-top: 180px;
+  width: 70%;
+  margin: 0 auto;
+  font-family: "Pretendard-Regular";
+  min-height: calc(100vh - 120px); 
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.title::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.formContainer {
+  flex: 1;
+  margin-right: 40px;
+  max-width: 800px;
+}
+
+.sideNav {
+  width: 200px;
+  margin-left: 20px;
+  border-top: 2px solid #cccccc;
+  height: 100%;
+}
+
+.sideNavItem {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #cccccc;
+  font-weight: 600;
+}
+
+.sideNavItem:last-child {
+  border-bottom: 2px solid #cccccc;
+}
+
+.sideNavItem:hover {
+  color: #ba274a;
+}
+
+.periodFilter {
+  background-color: #f5f5f5;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.periodFilter span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.periodButton {
+  padding: 5px 15px;
+  border: 1px solid #ddd;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.periodButton.active {
+  background: #BA274A;
+  color: white;
+  border-color: #BA274A;
+}
+
+.dateInput {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100px;
+  margin-bottom: 0;
+}
+
+.dateInput::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(327deg) brightness(87%) contrast(97%);
+}
+
+.searchButton {
+  padding: 5px 15px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.orderTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.orderTable th,
+.orderTable td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.orderTable th {
+  border-top: 2px solid #BA274A;
+  font-weight: bold;
+}
+
+.orderTable tr:hover {
+  background-color: #f5f5f5;
+}
