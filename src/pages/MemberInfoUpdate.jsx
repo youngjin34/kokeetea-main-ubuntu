@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const MemberInfoUpdate = () => {
   const navigate = useNavigate();
+  const currentPath = window.location.pathname;
   const [formData, setFormData] = useState({
     name: "홍길동",
     id: "test123@email.com",
@@ -223,25 +224,25 @@ const MemberInfoUpdate = () => {
 
         <div className={style.sideNav}>
           <div 
-            className={style.sideNavItem} 
+            className={`${style.sideNavItem} ${currentPath === '/memberinfoupdate' ? style.active : ''}`}
             onClick={() => handleNavigation('/memberinfoupdate')}
           >
             회원정보 확인 · 수정
           </div>
           <div 
-            className={style.sideNavItem}
+            className={`${style.sideNavItem} ${currentPath === '/couponstamp' ? style.active : ''}`}
             onClick={() => handleNavigation('/couponstamp')}
           >
             쿠폰 · 스탬프 조회
           </div>
           <div 
-            className={style.sideNavItem}
+            className={`${style.sideNavItem} ${currentPath === '/orderhistory' ? style.active : ''}`}
             onClick={() => handleNavigation('/orderhistory')}
           >
             주문내역 조회
           </div>
           <div 
-            className={style.sideNavItem}
+            className={`${style.sideNavItem} ${currentPath === '/inquiryhistory' ? style.active : ''}`}
             onClick={() => handleNavigation('/inquiryhistory')}
           >
             1:1 문의 내역

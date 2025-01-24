@@ -91,6 +91,7 @@
     border-radius: 8px;
     padding: 8px;
     font-family: "Pretendard-Regular";
+    font-size: 14px;
   }
   
   .FormGroup textarea {
@@ -112,8 +113,8 @@
     margin: 0;
     cursor: pointer;
     accent-color: #BA274A; 
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     position: relative;
     top: 0;
   }
@@ -194,7 +195,7 @@
   }
 
   .FormContainer_content {
-    font-size: 12px;
+    font-size: 14px;
     color: #4d4d4d;
     font-family: "Pretendard-Regular";
     text-align: left;
