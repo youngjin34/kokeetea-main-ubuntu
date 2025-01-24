@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
-import style from './MemberInfoUpdate.module.css';
+import React, { useState } from "react";
+import style from "./MemberInfoUpdate.module.css";
 
 const MemberInfoUpdate = () => {
   const [formData, setFormData] = useState({
-    name: '홍길동',
-    id: 'test123@email.com',
-    currentPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
-    phoneNumber: '010-1234-5678',
-    email: 'test123@email.com',
+    name: "홍길동",
+    id: "test123@email.com",
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+    phoneNumber: "010-1234-5678",
+    email: "test123@email.com",
     smsReceive: true,
     emailReceive: true,
   });
+  const [validPw, setValidPw] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
+
+    if (name === "newPassword") {
+      const passwordRegex =
+        /^(?=.*[a-zA-Z])(?=.*[0-9!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{10,16}$/;
+      setValidPw(!passwordRegex.test(value));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Handle form submission
-    console.log('Form data:', formData);
   };
 
   return (
     <div className={style.container}>
+      <div className={style.title}>회원정보 확인·수정</div>
       <div className={style.content}>
-        <div className={style.title}>회원정보 확인·수정</div>
         <div className={style.formContainer}>
           <div className={style.basicInfo}>
             <h2 className={style.sectionTitle}>기본 정보</h2>
@@ -45,7 +50,7 @@ const MemberInfoUpdate = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={style.input}
+                className={`${style.nameInput} ${style.readOnlyInput}`}
                 readOnly
               />
             </div>
@@ -59,7 +64,7 @@ const MemberInfoUpdate = () => {
                 name="id"
                 value={formData.id}
                 onChange={handleInputChange}
-                className={style.input}
+                className={`${style.idInput} ${style.readOnlyInput}`}
                 readOnly
               />
             </div>
@@ -81,17 +86,23 @@ const MemberInfoUpdate = () => {
               <label htmlFor="newPassword" className={style.label}>
                 변경 비밀번호
               </label>
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleInputChange}
-                className={style.input}
-              />
-              <p className={style.passwordRequirements}>
-                * 영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자
-              </p>
+              <div className={style.inputWrapper}>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleInputChange}
+                  className={style.input}
+                />
+                <span
+                  className={`${style.guideMessage} ${
+                    validPw ? style.errorMessage : ""
+                  }`}
+                >
+                  * 영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자
+                </span>
+              </div>
             </div>
             <div className={style.formGroup}>
               <label htmlFor="confirmNewPassword" className={style.label}>
@@ -135,75 +146,72 @@ const MemberInfoUpdate = () => {
                 onChange={handleInputChange}
                 className={style.input}
               />
-              <span className={style.emailDomain}>@email.com</span>
             </div>
 
             <div className={style.formGroup}>
               <label className={style.label}>SMS 수신</label>
-              <div className={style.radioGroup}>
-                <label className={style.radioLabel}>
+              <div className={style.RadioGroup}>
+                <div className={style.RadioItem}>
                   <input
                     type="radio"
+                    id="smsReceive"
                     name="smsReceive"
-                    value={true}
-                    checked={formData.smsReceive === true}
-                    onChange={handleInputChange}
+                    value="수신함"
+                    defaultChecked
                   />
-                  수신함
-                </label>
-                <label className={style.radioLabel}>
+                  <label htmlFor="smsReceive">수신함</label>
+                </div>
+                <div className={style.RadioItem}>
                   <input
                     type="radio"
+                    id="smsReceive"
                     name="smsReceive"
-                    value={false}
-                    checked={formData.smsReceive === false}
-                    onChange={handleInputChange}
+                    value="수신 안 함"
                   />
-                  수신 안 함
-                </label>
+                  <label htmlFor="smsReceive">수신 안 함</label>
+                </div>
               </div>
               <p className={style.receiveText}>
-                *코키티에서 제공되는 소식을 SMS로 받으실 수 있습니다.
+                * 코키티에서 제공되는 소식을 SMS로 받으실 수 있습니다.
               </p>
             </div>
             <div className={style.formGroup}>
               <label className={style.label}>이메일 수신</label>
-              <div className={style.radioGroup}>
-                <label className={style.radioLabel}>
+              <div className={style.RadioGroup}>
+                <div className={style.RadioItem}>
                   <input
                     type="radio"
+                    id="emailReceive"
                     name="emailReceive"
-                    value={true}
-                    checked={formData.emailReceive === true}
-                    onChange={handleInputChange}
+                    value="수신함"
+                    defaultChecked
                   />
-                  수신함
-                </label>
-                <label className={style.radioLabel}>
+                  <label htmlFor="emailReceive">수신함</label>
+                </div>
+                <div className={style.RadioItem}>
                   <input
                     type="radio"
+                    id="emailReceive"
                     name="emailReceive"
-                    value={false}
-                    checked={formData.emailReceive === false}
-                    onChange={handleInputChange}
+                    value="수신 안 함"
                   />
-                  수신 안 함
-                </label>
+                  <label htmlFor="emailReceive">수신 안 함</label>
+                </div>
               </div>
               <p className={style.receiveText}>
-                *코키티에서 제공되는 소식을 이메일로 받으실 수 있습니다.
+                * 코키티에서 제공되는 소식을 이메일로 받으실 수 있습니다.
               </p>
             </div>
           </div>
           <div className={style.formActions}>
             <button
               type="submit"
-              className={style.confirmBtn}
+              className={style.confirmButton}
               onClick={handleSubmit}
             >
               확인
             </button>
-            <button type="button" className={style.cancelBtn}>
+            <button type="button" className={style.cancelButton}>
               취소
             </button>
           </div>

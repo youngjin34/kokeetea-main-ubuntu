@@ -9,12 +9,13 @@
 .title {
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   text-align: center;
   display: flex;
-
+  align-items: center;
   justify-content: center;
   gap: 12px;
+  margin-top: 0;
 }
 
 .title::before {
@@ -26,10 +27,11 @@
 }
 
 .content {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  margin-top: 40px;
 }
 
 .formContainer {
@@ -41,29 +43,32 @@
 .sideNav {
   width: 200px;
   margin-left: 20px;
-  padding-top: 100px;
+  border-top: 2px solid #cccccc;
+  height: 100%;
 }
 
 .sideNavItem {
   padding: 15px 20px;
-  background-color: #f9f9f9;
-  margin-bottom: 8px;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
+  font-size: 16px;
   transition: all 0.2s ease;
+  border-bottom: 1px solid #cccccc;
+  font-weight: 600;
+}
+
+.sideNavItem:last-child {
+  border-bottom: 2px solid #cccccc;
 }
 
 .sideNavItem:hover {
-  background-color: #ba274a;
-  color: white;
+  color: #ba274a;
 }
 
 .formGroup {
-  margin-bottom: 30px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .label {
@@ -71,28 +76,56 @@
   font-size: 14px;
   color: #333;
   flex-shrink: 0;
-  padding-top: 8px;
   font-weight: normal;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-weight: 600;
+  margin-bottom: 0;
 }
 
 .input {
   width: 300px;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   font-size: 14px;
   background-color: #fff;
+  margin-bottom: 0;
+}
+
+.input:not([type="password"]) {
+  margin-bottom: 0;
 }
 
 .confirmButton {
-  padding: 6px 16px;
+  padding: 10px 10px;
   background-color: #ba274a;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   margin-left: 10px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancelButton {
+  padding: 10px 10px;
+  background-color: #fff;
+  color: #808080;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .emailInput {
@@ -119,7 +152,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #666;
+  color: #cccccc;
   font-size: 14px;
 }
 
@@ -131,9 +164,9 @@
 }
 
 .receiveText {
-  color: #999;
+  color: #BA274A;
   font-size: 12px;
-  margin-left: 120px;
+  margin-left: 150px;
 }
 
 .formActions {
@@ -144,19 +177,22 @@
 }
 
 .sectionTitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 .basicInfo {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   padding-top: 20px;
-  border-top: 1px solid #e6e6e6;
+  border-top: 2px solid #cccccc;
 }
 
 .additionalInfo {
   margin-bottom: 20px;
+  border-top: 2px solid #cccccc;
+  border-bottom: 2px solid #cccccc;
+  padding-top: 20px;
 }
 
 .passwordRequirements {
@@ -167,29 +203,11 @@
 
 .emailDomain {
   padding: 10px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #cccccc;
   border-left: 0px;
   border-radius: 0 5px 5px 0;
   font-size: 14px;
   background-color: #e6e6e6;
-}
-
-.confirmBtn, .cancelBtn {
-  padding: 10px 15px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.confirmBtn {
-  background-color: #cf3d3f;
-  color: white;
-}
-
-.confirmBtn:hover {
-  background-color: #b73033;
 }
 
 .cancelBtn {
@@ -223,4 +241,70 @@
     margin-left: 0;
     width: 100%;
   }
+}
+
+.nameInput,
+.idInput {
+  border: none;
+  padding: 10px 0 10px 0;
+  margin-bottom: 0;
+}
+
+.readOnlyInput {
+  outline: none;
+  cursor: default;
+}
+
+.readOnlyInput:focus {
+  outline: none;
+  border-color: inherit;
+}
+
+.guideMessage {
+  display: block;
+  font-size: 12px;
+  color: #666;
+}
+
+.errorMessage {
+  color: #ba274a;
+}
+
+.RadioGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.RadioItem input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: #BA274A; 
+  width: 14px;
+  height: 14px;
+  position: relative;
+  top: 0;
+}
+
+.RadioItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #000; 
+  font-weight: 500;
+  height: 36px;
+  margin-right: 20px;
+}
+
+.RadioItem label {
+  cursor: pointer;
+  margin-left: 0;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.RadioItem input[type="radio"] + label {
+  font-size: 14px;
 }

@@ -70,6 +70,7 @@
   transition: all 0.2s ease;
   border-radius: 0;
   font-family: "Pretendard-Regular";
+  border-bottom: none;
 }
 
 .menu:first-child {

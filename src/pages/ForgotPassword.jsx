@@ -77,7 +77,7 @@ const ForgotPassword = () => {
             <div className={style.inputGroup}>
               <input
                 type="text"
-                placeholder="이메일을 입력해주세요."
+                placeholder="아이디를 입력해주세요."
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 required
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
             <div className={style.inputGroup}>
               <input
                 type="email"
-                placeholder="이메일을 다시 입력해주세요."
+                placeholder="이메일을 입력해주세요."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

@@ -24,10 +24,6 @@
 }
 
 .title::before {
-  justify-content: center;
-}
-
-.title::before {
   content: "";
   width: 6px;
   height: 32px;
@@ -38,8 +34,8 @@
 .menuGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
-  gap: 40px;
-  margin: 20px auto;
+  row-gap: 20px;
+  margin: 40px auto;
   justify-content: center;
   align-items: stretch;
   width: 100%;
@@ -50,9 +46,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 15px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 25px;
 }
 
 .iconWrapper img {
@@ -73,13 +69,15 @@
 }
 
 .menuItem h3 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #333;
+  margin-bottom: 15px;
 }
 
 .menuItem p {
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.6;
   color: #666;
   text-align: center;
   margin: 0;
@@ -87,21 +85,15 @@
 
 .menuItem {
   text-align: center;
-  padding: 20px;
+  padding: 40px;
   border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: transform 0.3s ease;
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
 }
 
 .menuItem:hover {
   transform: translateY(-10px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.formContainer {
-  text-align: left;
-  margin: 0;
-  padding: 20px;
 }
