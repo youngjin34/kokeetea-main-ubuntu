@@ -140,13 +140,16 @@ function Order() {
               </div>
             ))}
 
-            <h2>주문 매장</h2>
+            <h3 className={style.branch}>주문 매장</h3>
             <div className={style.checkout_order_title}>
               <span className={style.store_button}>구로점</span>
-              <button>변경</button>
+              <button className={style.branch_change}>변경</button>
             </div>
 
-            <h2 className={style.checkout_pickup}>픽업 방법</h2>
+<div className={style.checkout_pickup}>
+            <h2 className={style.checkout_choice}>픽업 방법</h2>
+            <span className={style.checkout_message}>* 주문 완료 후 컵 변경이 불가합니다.</span>
+</div>
             <div className={style.pickup_method}>
               {pickupMethods.map((method) => (
                 <button
