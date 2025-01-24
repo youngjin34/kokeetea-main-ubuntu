@@ -168,8 +168,9 @@
 }
 
 .pickup_button {
-  background-color: #f2f2f2;
-  border: none;
+  background-color: white;
+  color: gray;
+  border: 1px solid gray;
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
@@ -179,8 +180,8 @@
 }
 
 .pickup_button.active {
-  background-color: #ba274a;
-  color: white;
+  border: 1px solid #ba274a;
+  color: #ba274a;
 }
 
 .checkout_coupon {
@@ -195,6 +196,16 @@
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 5px;
+  width: 768px;
+}
+
+.coupon_img{
+  width: 20px;
+  height: 20px;
+}
+
+.coupon {
+  align-items: center;
 }
 
 .discount_price {

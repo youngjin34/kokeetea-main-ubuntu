@@ -12,7 +12,7 @@ function Order() {
     "테이크아웃(일회용컵)",
     "딜리버리(직원에게 전달)",
   ];
-  const coupons = ["사용 안 함", "10% 할인", "20% 할인"];
+  const coupons = ["적용할 쿠폰을 선택하세요.", "10% 할인", "20% 할인"];
   const tableData = [
     {
       id: 1,
@@ -146,10 +146,12 @@ function Order() {
               <button className={style.branch_change}>변경</button>
             </div>
 
-<div className={style.checkout_pickup}>
-            <h2 className={style.checkout_choice}>픽업 방법</h2>
-            <span className={style.checkout_message}>* 주문 완료 후 컵 변경이 불가합니다.</span>
-</div>
+            <div className={style.checkout_pickup}>
+              <h2 className={style.checkout_choice}>픽업 방법</h2>
+              <span className={style.checkout_message}>
+                * 주문 완료 후 컵 변경이 불가합니다.
+              </span>
+            </div>
             <div className={style.pickup_method}>
               {pickupMethods.map((method) => (
                 <button
@@ -175,7 +177,14 @@ function Order() {
               </select>
             </div>
             <div className={style.discount_price}>
-              쿠폰 할인 금액
+              <div className={style}>
+                <img
+                  className={style.coupon_img}
+                  src="/public/img/coupon.png"
+                  alt="쿠폰이미지"
+                />
+                쿠폰 할인 금액
+              </div>
               <span className={style.discount_price_money}>
                 - {calculateDiscount().toLocaleString()}원
               </span>
