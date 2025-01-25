@@ -14,55 +14,72 @@ const ForgotPassword = () => {
   const handleSendVerification = async (e) => {
     e.preventDefault();
     try {
+      setMessage('');
       const response = await axios.post('http://localhost:8080/kokee/password/request', {
         userId: userId,
         email: email
       });
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         setMessage('인증번호가 이메일로 전송되었습니다.');
         setStep(2);
+      } else {
+        setMessage(response.data.message || '인증번호 전송에 실패했습니다.');
       }
     } catch (error) {
-      setMessage('사용자 정보를 찾을 수 없습니다.');
+      setMessage(error.response?.data?.message || '사용자 정보를 찾을 수 없습니다.');
     }
   };
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
     try {
+      setMessage('');
       const response = await axios.post('http://localhost:8080/kokee/password/verify', {
         userId: userId,
         code: verificationCode
       });
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         setStep(3);
-        setMessage('');
+        setMessage('인증이 완료되었습니다.');
+      } else {
+        setMessage(response.data.message || '인증번호 확인에 실패했습니다.');
       }
     } catch (error) {
-      setMessage('잘못된 인증번호입니다.');
+      setMessage(error.response?.data?.message || '잘못된 인증번호입니다.');
     }
   };
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
+    if (!newPassword || !confirmPassword) {
+      setMessage('비밀번호를 입력해주세요.');
+      return;
+    }
     if (newPassword !== confirmPassword) {
       setMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
+    if (newPassword.length < 8) {
+      setMessage('비밀번호는 8자 이상이어야 합니다.');
+      return;
+    }
     try {
+      setMessage('');
       const response = await axios.post('http://localhost:8080/kokee/password/reset', {
         userId: userId,
-        newPassword: newPassword
+        newPassword: newPassword,
+        code: verificationCode
       });
-      if (response.data.success) {
-        setMessage('비밀번호가 성공적으로 변경되었습니다.');
-        // 3초 후 로그인 페이지로 이동
+      if (response.data && response.data.success) {
+        setMessage('비밀번호가 성공적으로 변경되었습니다. 잠시 후 로그인 페이지로 이동합니다.');
         setTimeout(() => {
           window.location.href = '/login';
         }, 3000);
+      } else {
+        setMessage(response.data.message || '비밀번호 변경에 실패했습니다.');
       }
     } catch (error) {
-      setMessage('비밀번호 변경에 실패했습니다.');
+      setMessage(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
     }
   };
 

@@ -31,33 +31,17 @@ const CouponStamp = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [activeTab, setActiveTab] = useState("membership");
-  const [stamps, setStamps] = useState(7); // 서버에서 받아올 스탬프 수
-  const [coupons, setCoupons] = useState([
-    {
-      id: 1,
-      couponNumber: "c00000001",
-      type: "아메리카노 R 무료 증정",
-      expireDate: "2025.12.31",
-    },
-    {
-      id: 2,
-      couponNumber: "c00000002",
-      type: "아메리카노 R 무료 증정",
-      expireDate: "2025.12.31",
-    },
-    {
-      id: 3,
-      couponNumber: "c00000003",
-      type: "아메리카노 R 무료 증정",
-      expireDate: "2025.12.31",
-    },
-    {
-      id: 4,
-      couponNumber: "c00000004",
-      type: "아메리카노 R 무료 증정",
-      expireDate: "2025.12.31",
-    },
-  ]);
+  const [userData, setUserData] = useState({
+    realName: '',
+    memberLevel: 'silver',
+    nextLevelAmount: 0,
+    nextLevel: '',
+    points: 0,
+    orderCount: 0,
+    totalOrderAmount: 0,
+    stamps: 0,
+    coupons: []
+  });
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -70,9 +54,9 @@ const CouponStamp = () => {
       .map((_, index) => (
         <div
           key={index}
-          className={`${style.stamp} ${index < stamps ? style.active : ""}`}
+          className={`${style.stamp} ${index < userData.stamps ? style.active : ""}`}
         >
-          {index < stamps ? (
+          {index < userData.stamps ? (
             <img src="/public/img/coupon.png" alt="Active stamp" />
           ) : (
             <img src="/public/img/coupon.png" alt="Inactive stamp" />
@@ -81,8 +65,60 @@ const CouponStamp = () => {
       ));
   };
 
+  const getLevelInfo = (level) => {
+    switch (level.toLowerCase()) {
+      case 'silver':
+        return { class: style.silver, letter: 'S' };
+      case 'gold':
+        return { class: style.gold, letter: 'G' };
+      case 'red':
+        return { class: style.red, letter: 'R' };
+      case 'diamond':
+        return { class: style.diamond, letter: 'D' };
+      default:
+        return { class: style.silver, letter: 'S' };
+    }
+  };
+
+  const levelInfo = getLevelInfo(userData.memberLevel);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/kokee/member/dashboard');
+        const data = await response.json();
+        
+        setUserData({
+          realName: data.realName || '고객',
+          memberLevel: data.memberLevel || 'silver',
+          nextLevelAmount: data.nextLevelAmount || 0,
+          nextLevel: data.nextLevel || 'GOLD',
+          points: data.points || 0,
+          orderCount: data.orderCount || 0,
+          totalOrderAmount: data.totalOrderAmount || 0,
+          stamps: data.stamps || 0,
+          coupons: data.coupons || []
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        // Set default values in case of error
+        setUserData({
+          realName: '고객',
+          memberLevel: 'silver',
+          nextLevelAmount: 0,
+          nextLevel: 'GOLD',
+          points: 0,
+          orderCount: 0,
+          totalOrderAmount: 0,
+          stamps: 0,
+          coupons: []
+        });
+      }
+    };
+    
+    fetchUserData();
   }, []);
 
   return (
@@ -93,16 +129,20 @@ const CouponStamp = () => {
           <div className={style.membershipInfo}>
             <div className={style.topSection}>
               <div className={style.membershipLevel}>
-                <div className={style.levelIcon}>S</div>
+                <div className={`${style.levelIcon} ${levelInfo.class}`}>
+                  {levelInfo.letter}
+                </div>
                 <div className={style.levelDetails}>
-                  <div className={style.levelTitle}>홍길동님의 등급</div>
-                  <div className={style.levelName}>SILVER</div>
+                  <div className={style.levelTitle}>
+                    {userData.realName}님의 등급
+                  </div>
+                  <div className={style.levelName}>{userData.memberLevel.toUpperCase()}</div>
                 </div>
               </div>
               <div className={style.levelProgress}>
                 <div className={style.progressText}>
-                  <span className={style.progressAmount}>32,000원</span> 추가 결제 시<br />
-                  <span className={style.nextLevel}>GOLD</span> 등급이 될 수 있어요.
+                  <span className={style.progressAmount}>{userData.nextLevelAmount.toLocaleString()}원</span> 추가 결제 시<br />
+                  <span className={style.nextLevel}>{userData.nextLevel}</span> 등급이 될 수 있어요.
                 </div>
                 <ProgressBar progress={30} />
               </div>
@@ -110,21 +150,21 @@ const CouponStamp = () => {
             <div className={style.membershipStats}>
               <div className={style.stat}>
                 <div className={style.statLabel}>적립금</div>
-                <div className={style.statValue}>1,230원</div>
+                <div className={style.statValue}>{userData.points.toLocaleString()}원</div>
               </div>
               <div className={style.stat}>
                 <div className={style.statLabel}>주문 횟수</div>
-                <div className={style.statValue}>3회</div>
+                <div className={style.statValue}>{userData.orderCount}회</div>
               </div>
               <div className={style.stat}>
                 <div className={style.statLabel}>누적 주문 금액</div>
-                <div className={style.statValue}>12,340원</div>
+                <div className={style.statValue}>{userData.totalOrderAmount.toLocaleString()}원</div>
               </div>
             </div>
           </div>
 
           <div className={style.stampSection}>
-            <h3>스탬프 <span className={style.countHighlight}>1</span></h3>
+            <h3>스탬프 <span className={style.countHighlight}>{userData.stamps}</span></h3>
             <div className={style.stampGrid}>{renderStamps()}</div>
             <div className={style.stampNote}>
               * 스탬프 10개 적립시 등급별 무료 쿠폰 증정 주문 제품 증정
@@ -132,7 +172,7 @@ const CouponStamp = () => {
           </div>
 
           <div className={style.couponSection}>
-            <h3>쿠폰 <span className={style.countHighlight}>1</span></h3>
+            <h3>쿠폰 <span className={style.countHighlight}>{userData.coupons.length}</span></h3>
             <div className={style.couponList}>
               <table>
                 <thead>
@@ -143,7 +183,7 @@ const CouponStamp = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {coupons.map((coupon) => (
+                  {userData.coupons.map((coupon) => (
                     <tr key={coupon.id}>
                       <td>{coupon.couponNumber}</td>
                       <td>{coupon.type}</td>

@@ -53,21 +53,33 @@ const OrderHistory = () => {
     });
   };
 
-  const fetchOrders = () => {
-    const dummyData = [
-      { id: 'k00000001', userId: 'tlagkwls', date: '2024.03.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-      { id: 'k00000002', userId: 'tlagkwls', date: '2024.02.15', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-      { id: 'k00000003', userId: 'tlagkwls', date: '2024.01.10', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-      { id: 'k00000004', userId: 'tlagkwls', date: '2023.12.25', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-    ];
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/${currentUser?.id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${currentUser?.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-    const userOrders = dummyData.filter(order => order.userId === currentUser?.id);
-    const filteredOrders = filterOrdersByPeriod(userOrders, period, startDate, endDate);
-    setOrders(filteredOrders);
+      if (!response.ok) {
+        throw new Error('주문 내역을 불러오는데 실패했습니다.');
+      }
+
+      const data = await response.json();
+      const filteredOrders = filterOrdersByPeriod(data, period, startDate, endDate);
+      setOrders(filteredOrders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      alert('주문 내역을 불러오는데 실패했습니다.');
+    }
   };
 
   useEffect(() => {
-    fetchOrders();
+    if (currentUser?.id) {
+      fetchOrders();
+    }
   }, [period, startDate, endDate, currentUser]);
 
   const handleNavigation = (path) => {

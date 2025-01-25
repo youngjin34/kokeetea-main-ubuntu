@@ -55,63 +55,47 @@ const InquiryHistory = () => {
   const fetchInquiries = async () => {
     setLoading(true);
     try {
+      // 백엔드 연동 전 테스트용 더미 데이터
       const dummyData = [
         {
           id: 1,
           subject: '상품문의',
-          title: '케이크 커스텀 문의드립니다',
-          date: '2024-03-15',
+          title: '상품 재입고 문의드립니다',
+          date: '2024-03-20',
           status: '답변완료',
-          content: '생일 케이크 문구를 변경하고 싶은데 가능할까요?\n특별한 날이라 예쁘게 꾸며주셨으면 좋겠어요.',
-          reply: '안녕하세요, 고객님\n케이크 문구 변경 가능합니다.\n주문 시 요청사항에 원하시는 문구를 적어주시면 반영해드리도록 하겠습니다.',
-          replyDate: '2024-03-16'
+          content: '언제 재입고 되나요?',
+          reply: '안녕하세요. 다음주 중으로 재입고 예정입니다.',
+          replyDate: '2024-03-21'
         },
         {
           id: 2,
           subject: '배송문의',
-          title: '배송 시간 조정 가능한가요?',
-          date: '2024-03-14',
-          status: '답변대기',
-          content: '오후 2시 이후로 배송 가능할까요?\n그 전에는 집에 아무도 없어서요.',
-        },
-        {
-          id: 3,
-          subject: '기타문의',
-          title: '영수증 발급 문의',
-          date: '2024-03-10',
-          status: '답변완료',
-          content: '지난주 주문건에 대해 영수증 발급이 필요합니다.\n어떻게 발급받을 수 있을까요?',
-          reply: '안녕하세요, 고객님\n영수증 발급은 마이페이지 > 주문내역에서 확인하실 수 있습니다.\n추가 도움이 필요하시다면 언제든 문의해주세요.',
-          replyDate: '2024-03-11'
-        },
-        {
-          id: 4,
-          subject: '상품문의',
-          title: '알레르기 성분 문의',
-          date: '2024-03-05',
-          status: '답변완료',
-          content: '크루아상에 들어가는 견과류 종류가 궁금합니다.\n땅콩 알레르기가 있어서요.',
-          reply: '안녕하세요, 고객님\n저희 크루아상에는 아몬드만 사용되고 있습니다.\n땅콩은 전혀 사용되지 않으니 안심하고 드셔도 됩니다.',
-          replyDate: '2024-03-06'
-        },
-        {
-          id: 5,
-          subject: '기타문의',
-          title: '단체주문 문의',
-          date: '2024-03-01',
-          status: '답변완료',
-          content: '회사 행사용으로 50개 정도 단체주문하고 싶습니다.\n할인 가능할까요?',
-          reply: '안녕하세요, 고객님\n30개 이상 단체주문 시 10% 할인 적용 가능합니다.\n자세한 상담을 위해 매장으로 연락 부탁드립니다.',
-          replyDate: '2024-03-02'
+          title: '배송지 변경 가능한가요?',
+          date: '2024-03-19',
+          status: '접수완료',
+          content: '배송지를 변경하고 싶습니다.',
         }
       ];
 
+      // 실제 API 호출 대신 더미 데이터 사용
+      // const response = await fetch('/api/inquiries', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   credentials: 'include',
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error('문의 내역을 불러오는데 실패했습니다.');
+      // }
+
+      // const data = await response.json();
       const filteredData = filterInquiriesByPeriod(dummyData, period, startDate, endDate);
       setOrders(filteredData);
-      setLoading(false);
-
     } catch (err) {
       setError(err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -155,6 +139,28 @@ const InquiryHistory = () => {
     }
     // 날짜 입력 시 기간별 선택 해제
     setPeriod("");
+  };
+
+  // 삭제 기능도 백엔드 연동으로 수정
+  const handleDelete = async (inquiryId) => {
+    if (window.confirm('문의를 삭제하시겠습니까?')) {
+      try {
+        const response = await fetch(`/api/inquiries/${inquiryId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error('문의 삭제에 실패했습니다.');
+        }
+
+        // 삭제 성공 시 목록 새로고침
+        fetchInquiries();
+        setSelectedInquiry(null);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
   };
 
   return (
@@ -255,11 +261,7 @@ const InquiryHistory = () => {
                                   </button>
                                   <button 
                                     className={style.deleteButton}
-                                    onClick={() => {
-                                      if(window.confirm('문의를 삭제하시겠습니까?')) {
-                                        console.log('삭제 처리:', order.id);
-                                      }
-                                    }}
+                                    onClick={() => handleDelete(order.id)}
                                   >
                                     삭제
                                   </button>

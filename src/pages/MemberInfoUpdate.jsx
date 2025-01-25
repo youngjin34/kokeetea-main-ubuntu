@@ -31,18 +31,9 @@ const MemberInfoUpdate = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           console.error("토큰이 없습니다");
-          // 토큰이 없더라도 로컬스토리지의 데이터는 설정
-          setFormData((prev) => ({
-            ...prev,
-            name: localStorage.getItem("realname") || "",
-            id: localStorage.getItem("userName") || "",
-            email: localStorage.getItem("email") || "",
-            phoneNumber: localStorage.getItem("phoneNumber") || "",
-          }));
           return;
         }
 
-        // 서버 요청 시도
         const response = await fetch(
           "http://localhost:8080/kokee/member_info",
           {
@@ -63,21 +54,13 @@ const MemberInfoUpdate = () => {
         
         setFormData((prev) => ({
           ...prev,
-          name: userData.realName || localStorage.getItem("realname") || "",
-          id: userData.userName || localStorage.getItem("userName") || "",
-          email: userData.email || localStorage.getItem("email") || "",
-          phoneNumber: userData.phoneNumber || localStorage.getItem("phoneNumber") || "",
+          name: userData.realName || "",
+          id: userData.userName || "",
+          email: userData.email || "",
+          phoneNumber: userData.phoneNumber || "",
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다:", error);
-        // 에러 발생 시 로컬스토리지의 데이터로 폴백
-        setFormData((prev) => ({
-          ...prev,
-          name: localStorage.getItem("realname") || "",
-          id: localStorage.getItem("userName") || "",
-          email: localStorage.getItem("email") || "",
-          phoneNumber: localStorage.getItem("phoneNumber") || "",
-        }));
       }
     };
 

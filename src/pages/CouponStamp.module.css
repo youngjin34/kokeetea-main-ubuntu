@@ -106,6 +106,22 @@
   color: #ffffff;
 }
 
+.silver {
+  background: linear-gradient(135deg, #C0C0C0);
+}
+
+.gold {
+  background: linear-gradient(135deg, #FFC000);
+}
+
+.red {
+  background: linear-gradient(135deg, #ba274a);
+}
+
+.diamond {
+  background: linear-gradient(135deg, #00C3FF);
+}
+
 .levelDetails {
   display: flex;
   flex-direction: column;

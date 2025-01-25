@@ -1,10 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import style from "./Affiliated.module.css";
 
 const Affiliated = () => {
+  const [formData, setFormData] = useState({
+    consultationType: "가맹상담",
+    name: "",
+    phoneCarrier: "",
+    phoneNumber: "",
+    desiredLocation: "",
+    inquiryContent: "",
+    agreement: ""
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post('http://your-backend-url/api/inquiries', formData);
+      if (response.status === 200) {
+        alert('문의가 성공적으로 접수되었습니다.');
+        // 폼 초기화
+        setFormData({
+          consultationType: "가맹상담",
+          name: "",
+          phoneCarrier: "",
+          phoneNumber: "",
+          desiredLocation: "",
+          inquiryContent: "",
+          agreement: ""
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('문의 접수 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className={style.Container}>
@@ -20,7 +63,7 @@ const Affiliated = () => {
         <div className={style.FormContainer}>
           <h2 className={style.FormTitle}>기본정보</h2>
 
-          <form className={style.Form}>
+          <form className={style.Form} onSubmit={handleSubmit}>
             <div className={style.FormGroup}>
               <label>상담내용</label>
               <div className={style.RadioGroup}>
@@ -29,7 +72,8 @@ const Affiliated = () => {
                     type="radio"
                     name="consultationType"
                     value="가맹상담"
-                    defaultChecked
+                    checked={formData.consultationType === "가맹상담"}
+                    onChange={handleInputChange}
                   />
                   가맹상담
                 </label>
@@ -38,6 +82,8 @@ const Affiliated = () => {
                     type="radio"
                     name="consultationType"
                     value="입점제안"
+                    checked={formData.consultationType === "입점제안"}
+                    onChange={handleInputChange}
                   />
                   입점제안
                 </label>
@@ -46,6 +92,8 @@ const Affiliated = () => {
                     type="radio"
                     name="consultationType"
                     value="기타문의"
+                    checked={formData.consultationType === "기타문의"}
+                    onChange={handleInputChange}
                   />
                   기타문의
                 </label>
@@ -54,13 +102,24 @@ const Affiliated = () => {
 
             <div className={style.FormGroup}>
               <label>이름</label>
-              <input type="text" placeholder="이름을 입력해주세요." />
+              <input 
+                type="text" 
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="이름을 입력해주세요." 
+              />
             </div>
 
             <div className={style.FormGroup}>
               <label>연락처</label>
               <div className={style.PhoneInputGroup}>
-                <select className={style.PhonePrefix}>
+                <select 
+                  className={style.PhonePrefix}
+                  name="phoneCarrier"
+                  value={formData.phoneCarrier}
+                  onChange={handleInputChange}
+                >
                   <option value="SKT">SKT</option>
                   <option value="KT">KT</option>
                   <option value="LG">LG</option>
@@ -68,23 +127,32 @@ const Affiliated = () => {
                 <span className={style.PhoneSeparator}></span>
                 <input
                   type="text"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
                   maxLength="11"
                   className={style.PhoneInput}
-                  onChange={(e) =>
-                    (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-                  }
                 />
               </div>
             </div>
 
             <div className={style.FormGroup}>
               <label>희망 지역</label>
-              <input type="text" placeholder="희망 지역을 입력해주세요." />
+              <input 
+                type="text" 
+                name="desiredLocation"
+                value={formData.desiredLocation}
+                onChange={handleInputChange}
+                placeholder="희망 지역을 입력해주세요." 
+              />
             </div>
 
             <div className={style.FormGroup}>
               <label>문의 내용</label>
               <textarea
+                name="inquiryContent"
+                value={formData.inquiryContent}
+                onChange={handleInputChange}
                 placeholder="문의 내용을 입력해주세요."
                 rows="6"
               ></textarea>
@@ -105,7 +173,8 @@ const Affiliated = () => {
                       id="agree"
                       name="agreement"
                       value="동의함"
-                      defaultChecked
+                      checked={formData.agreement === "동의함"}
+                      onChange={handleInputChange}
                     />
                     <label htmlFor="agree">동의함</label>
                   </div>
@@ -115,6 +184,8 @@ const Affiliated = () => {
                       id="disagree"
                       name="agreement"
                       value="동의안함"
+                      checked={formData.agreement === "동의안함"}
+                      onChange={handleInputChange}
                     />
                     <label htmlFor="disagree">동의안함</label>
                   </div>

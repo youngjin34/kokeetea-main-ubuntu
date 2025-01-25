@@ -37,7 +37,7 @@ const Inquiry = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const fullEmail =
       formData.emailId && formData.emailDomain
@@ -49,18 +49,35 @@ const Inquiry = () => {
       email: fullEmail,
     };
 
-    console.log(submitData);
+    try {
+      const response = await fetch('http://localhost:8080/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData)
+      });
 
-    const clearForm = {
-      type: "문의",
-      name: "",
-      phone: "",
-      emailId: "",
-      emailDomain: "",
-      title: "",
-      content: "",
-    };
-    setFormData(clearForm);
+      if (!response.ok) {
+        throw new Error('문의 등록에 실패했습니다.');
+      }
+
+      alert('문의가 성공적으로 등록되었습니다.');
+      
+      const clearForm = {
+        type: "문의",
+        name: "",
+        phone: "",
+        emailId: "",
+        emailDomain: "",
+        title: "",
+        content: "",
+      };
+      setFormData(clearForm);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('문의 등록 중 오류가 발생했습니다.');
+    }
   };
 
   const handleChange = (e) => {
