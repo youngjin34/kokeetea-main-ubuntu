@@ -28,9 +28,8 @@
     font-size: 15px;
     outline: none;
     transition: all 0.2s ease;
-    border: 1px solid #e0e0e000;
+    border: 1px solid #eee;
     background: white;
-    border: 1px solid #e0e0e0;
 
     &::placeholder {
       color: #999;

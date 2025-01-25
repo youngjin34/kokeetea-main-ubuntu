@@ -5,8 +5,6 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState("전체선택"); // 카테고리 기능 삭제
 
-  // 샘플 데이터 삭제
-
     const handleAddToCart = async (product) => {
     try {
       const response = await fetch("/kokee/carts", {
@@ -18,7 +16,7 @@ const Cart = () => {
             product_name : product.category,
             mount: product.amount,
             price: parseInt(product.price.replace(/,/g, "").replace("원", "")),
-            email: "test@example.com" // 임시 이메일
+            email: "test@example.com"
         }),
       });
 

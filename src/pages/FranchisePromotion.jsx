@@ -28,7 +28,7 @@ const FranchisePromotion = () => {
             <div className={style.BenefitCard}>
               <img src="https://cdn-icons-png.flaticon.com/512/3281/3281295.png" alt="운영 지원" />
               <h3>운영 관리 지원</h3>
-              <p>매장 운영에 필요한 모든 노하우와 관리 시스템 제공</p>
+              <p>매장 운영에 필요한 모든 노하우와<br/>관리 시스템 제공</p>
             </div>
             <div className={style.BenefitCard}>
               <img src="https://cdn-icons-png.flaticon.com/512/1998/1998087.png" alt="마케팅 지원" />

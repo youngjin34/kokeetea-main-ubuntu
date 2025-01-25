@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./Register.module.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const IdInput = ({ value, onChangeUserId, validId }) => (
   <div className={style.FormGroup}>
@@ -17,15 +17,25 @@ const IdInput = ({ value, onChangeUserId, validId }) => (
           onChange={onChangeUserId}
           placeholder="아이디를 입력해주세요."
         />
-        <span className={`${style.guideMessage} ${validId ? style.errorMessage : ''}`}>
-        아이디는 영문과 숫자로 이루어진 4자 이상 16자 이하여야 합니다.
+        <span
+          className={`${style.guideMessage} ${
+            validId ? style.errorMessage : ""
+          }`}
+        >
+          아이디는 영문과 숫자로 이루어진 4자 이상 16자 이하여야 합니다.
         </span>
       </div>
     </div>
   </div>
 );
 
-const PasswordInput = ({ value, confirmValue, onChangeUserPw, onConfirmChange, validPw }) => (
+const PasswordInput = ({
+  value,
+  confirmValue,
+  onChangeUserPw,
+  onConfirmChange,
+  validPw,
+}) => (
   <>
     <div className={style.FormGroup}>
       <label>
@@ -40,8 +50,13 @@ const PasswordInput = ({ value, confirmValue, onChangeUserPw, onConfirmChange, v
             onChange={onChangeUserPw}
             placeholder="비밀번호를 입력해주세요."
           />
-          <span className={`${style.guideMessage} ${validPw ? style.errorMessage : ''}`}>
-          비밀번호는 영문, 숫자, 특수 문자를 포함하며, 8자 이상 16자 이하여야 합니다.
+          <span
+            className={`${style.guideMessage} ${
+              validPw ? style.errorMessage : ""
+            }`}
+          >
+            비밀번호는 영문, 숫자, 특수 문자를 포함하며, 8자 이상 16자 이하여야
+            합니다.
           </span>
         </div>
       </div>
@@ -80,46 +95,43 @@ const NameInput = ({ value, onChange }) => (
   </div>
 );
 
-const PhoneInput = ({ prefix, middle, last, onChange }) => (
-  <div className={style.FormGroup}>
-    <label>
-      휴대폰 번호<span className={style.required}>*</span>
-    </label>
-    <div className={style.PhoneInputGroup}>
-      <select
-        className={style.PhonePrefix}
-        name="phonePrefix"
-        value={prefix}
-        onChange={onChange}
-      >
-        <option value="010">010</option>
-        <option value="011">011</option>
-        <option value="016">016</option>
-        <option value="017">017</option>
-        <option value="018">018</option>
-        <option value="019">019</option>
-      </select>
-      <span className={style.PhoneSeparator}>-</span>
-      <input
-        type="text"
-        maxLength="4"
-        name="phoneMiddle"
-        value={middle}
-        onChange={onChange}
-        className={style.PhoneInput}
-      />
-      <span className={style.PhoneSeparator}>-</span>
-      <input
-        type="text"
-        maxLength="4"
-        name="phoneLast"
-        value={last}
-        onChange={onChange}
-        className={style.PhoneInput}
-      />
+const PhoneInput = ({ middle, last, onChange }) => {
+  // 숫자만 입력받도록 하는 핸들러
+  const handleNumberOnly = (e) => {
+    const numberOnly = e.target.value.replace(/[^0-9]/g, "");
+    const event = {
+      target: {
+        name: e.target.name,
+        value: numberOnly,
+      },
+    };
+    onChange(event);
+  };
+
+  return (
+    <div className={style.FormGroup}>
+      <label>
+        휴대폰 번호<span className={style.required}>*</span>
+      </label>
+      <div className={style.PhoneInputGroup}>
+        <select className={style.PhonePrefix}>
+          <option value="SKT">SKT</option>
+          <option value="KT">KT</option>
+          <option value="LG">LG</option>
+        </select>
+        <span className={style.PhoneSeparator}></span>
+        <input
+          type="text"
+          maxLength="11"
+          className={style.PhoneInput}
+          onChange={(e) =>
+            (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+          }
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
   const emailDomains = [
@@ -170,6 +182,7 @@ const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
     userId: "",
     password: "",
@@ -238,56 +251,16 @@ const Register = () => {
     }));
   };
 
-  const onJoin = (event) => {
-    event.preventDefault();
-    if (
-      formData.userId === "" ||
-      formData.password === "" ||
-      formData.passwordConfirm === "" ||
-      formData.name === "" ||
-      formData.phoneMiddle === "" ||
-      formData.phoneLast === "" ||
-      formData.emailId === "" ||
-      formData.emailDomain === ""
-    ) {
-      alert("필수 항목은 빈칸이 없게 모두 입력해 주세요.");
-    } else if (formData.password !== formData.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
-    } else if (!termsChecked || !privacyChecked) {
-      alert("필수 항목에 동의해 주세요.");
-    } else if (validId || validPw) {
-      alert(
-        "사용할 수 없는 아이디 혹은 비밀번호 입니다. \n양식에 맞게 다시 작성해주세요."
-      );
-    } else {
-      axios
-        .post("http://localhost:8080/kokee/join", {
-          userId: formData.userId,
-          userPw: formData.password,
-          userPwCheck: formData.passwordConfirm,
-          userName: formData.name,
-          phone02: formData.phoneMiddle,
-          phone03: formData.phoneLast,
-          email01: formData.emailId,
-          email02: formData.emailDomain,
-          role: "user",
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data === "success") {
-            alert("회원가입을 환영합니다. 메인페이지로 이동합니다.");
-            navigate("/");
-          }
-        })
-        .catch((err) => {
-          if (err.response.data === "failed") {
-            alert(
-              `입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요.`
-            );
-          } else {
-            alert("알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.");
-          }
-        });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await signup(formData);
+      if (result.success) {
+        alert(result.message);
+        navigate("/");
+      }
+    } catch (error) {
+      alert(error.message);
     }
   };
 
@@ -377,7 +350,7 @@ const Register = () => {
 
             <button
               type="submit"
-              onClick={onJoin}
+              onClick={handleSubmit}
               className={style.SubmitButton}
             >
               회원가입

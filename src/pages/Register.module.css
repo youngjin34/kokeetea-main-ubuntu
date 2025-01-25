@@ -2,7 +2,6 @@
   width: 100%;
   min-height: 100vh;
   background: #fff;
-  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
@@ -105,7 +104,6 @@
   margin: 0;
   border: 1px solid #f5edf0;
   border-radius: 8px;
-  font-family: "Pretendard-Regular";
 }
 
 .FormGroup textarea {
@@ -115,7 +113,6 @@
   flex: 1;
   padding: 8px;
   margin: 0;
-  font-family: "Pretendard-Regular";
 }
 
 .FormGroup:has(textarea) {
@@ -131,7 +128,6 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 1.2rem;
-  font-family: "Pretendard-Regular";
   display: block;
   margin: 0 auto;
 }
@@ -174,12 +170,11 @@
   padding: 0 8px;
   background-color: white;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
   padding-right: 24px;
   cursor: pointer;
-  font-family: "Pretendard-Regular";
 }
 
 .EmailSelect::-ms-expand {
@@ -203,7 +198,6 @@
   margin: 20px 0px 50px 0px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
 .AgreementItem {
@@ -281,20 +275,20 @@
 }
 
 .PhonePrefix {
-  width: 100px;
+  width: 80px;
   flex: none;
   height: 36px;
   padding: 8px;
   border: 1px solid #f5edf0;
   border-radius: 8px;
   box-sizing: border-box;
-  font-family: "Pretendard-Regular";
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 8px center;
-  background-size: 16px;
+  background-size: 14px;
   padding-right: 32px;
+  font-size: 14px;
 }
 
 .PhoneInput {
@@ -304,6 +298,7 @@
   border: 1px solid #f5edf0;
   border-radius: 8px;
   box-sizing: border-box;
+  font-size: 14px;
 }
 
 .PhoneSeparator {
@@ -381,7 +376,6 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  font-family: "Pretendard-Regular";
 }
 
 .modalContent {
@@ -394,7 +388,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-family: "Pretendard-Regular";
 }
 
 .modalContent pre {
@@ -406,7 +399,6 @@
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-wrap;
-  font-family: "Pretendard-Regular";
 }
 
 .modalTitle {
@@ -414,7 +406,6 @@
   font-weight: 500;
   color: #333;
   text-align: center;
-  font-family: "Pretendard-Regular";
   margin: 0;
 }
 
@@ -426,7 +417,6 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  font-family: "Pretendard-Regular";
 }
 
 .modalContent button:hover {
@@ -441,7 +431,6 @@
   text-decoration: none;
   cursor: pointer;
   font-size: 12px;
-  font-family: "Pretendard-Regular";
 }
 
 .ViewTermsButton:hover {
@@ -451,27 +440,19 @@
 .checkbox {
   margin: 0;
   cursor: pointer;
-  accent-color: #BA274A;
-  width: 15px;
-  height: 15px;
+  accent-color: #ba274a;
+  width: 16px;
+  height: 16px;
   position: relative;
   top: 0;
-  border-radius: 50%;
-  appearance: none;
-  border: 1.5px solid #999999;
+  border: 1px solid #ddd;
+  padding: 0;
 }
 
 .checkbox:checked {
-  background-color: #BA274A;
-  border-color: #BA274A;
-}
-
-.checkbox:checked::after {
-  content: '✓';
-  position: absolute;
-  color: white;
-  font-size: 12px;
-  transform: translate(-50%, -50%);
+  background-color: #ba274a;
+  border-color: #ba274a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
 .AgreementTitle {

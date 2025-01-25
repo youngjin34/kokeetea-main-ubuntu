@@ -2,7 +2,6 @@
     width: 100%;
     min-height: 100vh;
     background: #fff;
-    font-family: "Pretendard-Regular";
   }
   
   .MainContent {
@@ -15,7 +14,6 @@
   }
   
   .menu_introduce {
-    font-family: "Pretendard-Regular";
     max-width: 800px;
     text-align: center;
     margin: 0 auto;
@@ -90,13 +88,11 @@
     border: 1px solid #F5EDF0;
     border-radius: 8px;
     padding: 8px;
-    font-family: "Pretendard-Regular";
     font-size: 14px;
   }
   
   .FormGroup textarea {
     height: 200px;
-    font-family: "Pretendard-Regular";
   }
   
   .FormGroup:has(textarea) {
@@ -149,7 +145,6 @@
     font-size: 1.2rem;
     margin-top: 20px;
     max-width: 800px;
-    font-family: "Pretendard-Regular";
   }
   
   .SubmitButton:hover {
@@ -182,12 +177,11 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
     padding-right: 24px;
     cursor: pointer;
-    font-family: "Pretendard-Regular";
   }
   
   .EmailSelect::-ms-expand {
@@ -197,7 +191,6 @@
   .FormContainer_content {
     font-size: 14px;
     color: #4d4d4d;
-    font-family: "Pretendard-Regular";
     text-align: left;
   }
   
@@ -217,13 +210,13 @@
     border: 1px solid #F5EDF0;
     border-radius: 8px;
     box-sizing: border-box;
-    font-family: "Pretendard-Regular";
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 8px center;
-    background-size: 16px;
+    background-size: 14px;
     padding-right: 32px;
+    font-size: 14px;
   }
   
   .PhoneInput {
@@ -233,9 +226,11 @@
     border: 1px solid #F5EDF0;
     border-radius: 8px;
     box-sizing: border-box;
+    font-size: 14px;
   }
   
   .PhoneSeparator {
     color: #666;
     font-weight: 500;
   }
+  

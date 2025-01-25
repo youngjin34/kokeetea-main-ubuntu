@@ -7,19 +7,14 @@ const Inquiry = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [formData, setFormData] = useState(() => {
-    const savedData = localStorage.getItem("inquiryFormData");
-    return savedData
-      ? JSON.parse(savedData)
-      : {
-          type: "문의",
-          name: "",
-          phone: "",
-          emailId: "",
-          emailDomain: "",
-          title: "",
-          content: "",
-        };
+  const [formData, setFormData] = useState({
+    type: "문의",
+    name: "",
+    phone: "",
+    emailId: "",
+    emailDomain: "",
+    title: "",
+    content: "",
   });
 
   const emailDomains = [
@@ -66,7 +61,6 @@ const Inquiry = () => {
       content: "",
     };
     setFormData(clearForm);
-    localStorage.removeItem("inquiryFormData");
   };
 
   const handleChange = (e) => {
@@ -129,17 +123,19 @@ const Inquiry = () => {
               <label>연락처</label>
               <div className={style.PhoneInputGroup}>
                 <select className={style.PhonePrefix}>
-                  <option value="010">010</option>
-                  <option value="011">011</option>
-                  <option value="016">016</option>
-                  <option value="017">017</option>
-                  <option value="018">018</option>
-                  <option value="019">019</option>
+                  <option value="SKT">SKT</option>
+                  <option value="KT">KT</option>
+                  <option value="LG">LG</option>
                 </select>
-                <span className={style.PhoneSeparator}>-</span>
-                <input type="text" maxLength="4" className={style.PhoneInput} />
-                <span className={style.PhoneSeparator}>-</span>
-                <input type="text" maxLength="4" className={style.PhoneInput} />
+                <span className={style.PhoneSeparator}></span>
+                <input
+                  type="text"
+                  maxLength="11"
+                  className={style.PhoneInput}
+                  onChange={(e) =>
+                    (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+                  }
+                />
               </div>
             </div>
 

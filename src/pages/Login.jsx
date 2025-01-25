@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import style from './Login.module.css';
 import axios from 'axios';
-import { Slide, toast } from 'react-toastify';
+import { useAuth } from '../components/AuthContext';
 
 
 const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -33,47 +34,12 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post("http://localhost:8080/kokee/login", {
-        userName: userName,
-        password: password,
-      });
-
-      if (result.status === 200) {
-        localStorage.setItem("userName", userName);
-        localStorage.setItem("realname", result.data.name);
-        localStorage.setItem("email", result.data.email);
-        localStorage.setItem("token", result.data.token);
-        
-        await checkAdminStatus();
-        
-        toast(`${result.data.name}님 환영합니다!`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Slide,
-        });
-        
-        setIsLogined(true);
-        setHeaderLogined(true);
-        onClose();
-      }
+      await login(userName, password);
+      setIsLogined(true);
+      setHeaderLogined(true);
+      onClose();
     } catch (error) {
-      toast("아이디와 비밀번호를 확인해주세요", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Slide,
-      });
+      console.error('Login failed:', error);
     }
   };
 

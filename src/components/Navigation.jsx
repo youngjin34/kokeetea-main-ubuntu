@@ -79,10 +79,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   }, [isModalOpen]);
 
   function logoutFunction() {
-    toast.success(`${localStorage.getItem("realname")}님 안녕히 가세요.`, {
-      position: "top-center",
-      autoClose: 3000,
-    });
     localStorage.clear();
     setIsLogined(!isLogined);
     navigate("/");

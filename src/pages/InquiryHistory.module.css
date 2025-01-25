@@ -2,7 +2,6 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  font-family: "Pretendard-Regular";
   min-height: calc(100vh - 120px); 
 }
 
@@ -170,9 +169,9 @@
 }
 
 .backButton {
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  color: #333;
+  background-color: #ffffff;
+  border: 1px solid #808080;
+  color: #808080;
 }
 
 .backButton:hover {

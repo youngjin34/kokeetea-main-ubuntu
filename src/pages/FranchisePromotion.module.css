@@ -10,7 +10,6 @@
   width: 100%;
   min-height: 100vh;
   background: #fff;
-  font-family: "Pretendard-Regular";
 }
 
 .MainContent {
@@ -23,8 +22,6 @@
 }
 
 .menu_introduce {
-  font-family: "Pretendard-Regular";
-
   width: 40%;
   text-align: center;
   margin: 0 auto;
@@ -198,7 +195,6 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-family: "Pretendard-Regular";
 }
 
 .ConsultButton:hover {

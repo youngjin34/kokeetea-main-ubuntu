@@ -1,21 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./OrderHistory.module.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const OrderHistory = () => {
-  const navigate = useNavigate();
-  const [period, setPeriod] = useState("1개월");
-  const currentPath = window.location.pathname;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const [orders] = useState([
-    { id: 'k00000001', date: '2025.01.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-    { id: 'k00000002', date: '2025.01.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-    { id: 'k00000003', date: '2025.01.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-    { id: 'k00000004', date: '2025.01.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
-  ]);
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [period, setPeriod] = useState("1개월");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const currentPath = window.location.pathname;
+  const [orders, setOrders] = useState([]);
+
+  const filterOrdersByPeriod = (orders, selectedPeriod, start, end) => {
+    // 날짜 입력으로 필터링하는 경우
+    if (start && end) {
+      const startDateTime = new Date(start);
+      const endDateTime = new Date(end);
+      endDateTime.setHours(23, 59, 59);
+
+      return orders.filter(order => {
+        const orderDate = new Date(order.date.replace(/\./g, '-'));
+        return orderDate >= startDateTime && orderDate <= endDateTime;
+      });
+    }
+
+    // 기간별 필터링 로직
+    const today = new Date();
+    let filterDate = new Date();
+    
+    switch (selectedPeriod) {
+      case "1개월":
+        filterDate.setMonth(today.getMonth() - 1);
+        break;
+      case "3개월":
+        filterDate.setMonth(today.getMonth() - 3);
+        break;
+      case "1년":
+        filterDate.setFullYear(today.getFullYear() - 1);
+        break;
+      default:
+        return orders;
+    }
+
+    return orders.filter(order => {
+      const orderDate = new Date(order.date.replace(/\./g, '-'));
+      return orderDate >= filterDate && orderDate <= today;
+    });
+  };
+
+  const fetchOrders = () => {
+    const dummyData = [
+      { id: 'k00000001', userId: 'tlagkwls', date: '2024.03.19', status: '구로점', details: '브라운슈가밀크티 외 1개' },
+      { id: 'k00000002', userId: 'tlagkwls', date: '2024.02.15', status: '구로점', details: '브라운슈가밀크티 외 1개' },
+      { id: 'k00000003', userId: 'tlagkwls', date: '2024.01.10', status: '구로점', details: '브라운슈가밀크티 외 1개' },
+      { id: 'k00000004', userId: 'tlagkwls', date: '2023.12.25', status: '구로점', details: '브라운슈가밀크티 외 1개' },
+    ];
+
+    const userOrders = dummyData.filter(order => order.userId === currentUser?.id);
+    const filteredOrders = filterOrdersByPeriod(userOrders, period, startDate, endDate);
+    setOrders(filteredOrders);
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [period, startDate, endDate, currentUser]);
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleDateSearch = () => {
+    if (!startDate || !endDate) {
+      alert("시작일과 종료일을 모두 선택해주세요.");
+      return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+      alert("시작일이 종료일보다 늦을 수 없습니다.");
+      return;
+    }
+    fetchOrders();
+  };
+
+  const handlePeriodClick = (newPeriod) => {
+    setPeriod(newPeriod);
+    setStartDate("");
+    setEndDate("");
+  };
+
+  const handleDateInput = (e, type) => {
+    if (type === 'start') {
+      setStartDate(e.target.value);
+    } else {
+      setEndDate(e.target.value);
+    }
+    setPeriod("");
   };
 
   return (
@@ -24,22 +107,36 @@ const OrderHistory = () => {
       <div className={style.content}>
         <div className={style.formContainer}>
           <div className={style.orderHistory}>
-            
             <div className={style.periodFilter}>
               <span>기간별</span>
               {["1개월", "3개월", "1년"].map((p) => (
                 <button
                   key={p}
                   className={`${style.periodButton} ${period === p ? style.active : ''}`}
-                  onClick={() => setPeriod(p)}
+                  onClick={() => handlePeriodClick(p)}
                 >
                   {p}
                 </button>
               ))}
               <span style={{marginLeft: '70px'}}>일자별</span>
-              <input type="date" className={style.dateInput} /> -
-              <input type="date" className={style.dateInput} />
-              <button className={style.searchButton}>조회</button>
+              <input 
+                type="date" 
+                className={style.dateInput} 
+                value={startDate}
+                onChange={(e) => handleDateInput(e, 'start')}
+              /> -
+              <input 
+                type="date" 
+                className={style.dateInput} 
+                value={endDate}
+                onChange={(e) => handleDateInput(e, 'end')}
+              />
+              <button 
+                className={style.searchButton}
+                onClick={handleDateSearch}
+              >
+                조회
+              </button>
             </div>
 
             <table className={style.orderTable}>

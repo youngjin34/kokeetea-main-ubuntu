@@ -173,35 +173,32 @@
 }
 .stamp_buttons {
   display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
+  justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-top: 10px;
-  /* flex-wrap: wrap; 삭제 */
-  flex-direction: column; /* 추가 */
-  width: 764px; /* Set the desired width */
-  height: 200px;  /* Set the desired height */
-  background-color: #999; /* Set the desired background color */
+  flex-direction: column;
+  width: 764px;
+  height: 200px;
+  background-color: #999;
 }
 
 .stamp_buttons_top {
   display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
+  justify-content: center;
+  align-items: center;
   gap: 20px;
-  /* flex-wrap: wrap; 삭제 */
-  background-color: #999; /* Set the desired background color */
+  background-color: #999;
   width: 364px;
   height: 60px;
 }
 
 .stamp_buttons_bottom {
   display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
+  justify-content: center;
+  align-items: center;
   gap: 20px;
-  /* flex-wrap: wrap; 삭제 */
-  background-color: #999; /* Set the desired background color */
+  background-color: #999;
   width: 364px;
   height: 60px;
 }
@@ -227,7 +224,6 @@
   border-color: #ddd;
 }
 
-/* Order Summary Section */
 .checkout_summary {
   display: flex;
   flex-direction: column;
@@ -288,7 +284,7 @@ color: #f75656;
 .payment {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 변경 */
+  justify-content: space-between; 
   gap: 20px;
 }
 

@@ -13,8 +13,6 @@ a {
 }
 
 .Navigation {
-  font-family: "Pretendard-Regular";
-
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease;
@@ -163,7 +161,6 @@ ul {
 .logo_text {
   font-size: 2.5rem;
   font-weight: bold;
-  font-family: "Pretendard-Regular";
   white-space: nowrap;
 }
 
@@ -401,11 +398,9 @@ ul {
 .main_menu {
   display: flex;
   align-items: center;
-
   position: relative;
   height: 100%;
   justify-content: center;
-  font-family: "Pretendard-Regular";
 }
 
 .main_menu ul {

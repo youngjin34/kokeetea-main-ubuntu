@@ -7,8 +7,18 @@
   font-style: normal;
 }
 
-body {
+* {
   font-family: "Pretendard-Regular";
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: "Pretendard-Regular";
+}
+
+body {
   margin: 0;
 }
 
@@ -25,18 +35,6 @@ body {
   border-radius: 12px;
   padding: 16px 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: white;
-  color: #333;
-  border-left: 4px solid #BA274A;
-}
-
-:global(.Toastify__toast--success) {
-  background: white;
-  color: #333;
-  border-left: 4px solid #BA274A;
-}
-
-:global(.Toastify__toast--error) {
   background: white;
   color: #333;
   border-left: 4px solid #BA274A;

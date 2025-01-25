@@ -61,17 +61,19 @@ const Affiliated = () => {
               <label>연락처</label>
               <div className={style.PhoneInputGroup}>
                 <select className={style.PhonePrefix}>
-                  <option value="010">010</option>
-                  <option value="011">011</option>
-                  <option value="016">016</option>
-                  <option value="017">017</option>
-                  <option value="018">018</option>
-                  <option value="019">019</option>
+                  <option value="SKT">SKT</option>
+                  <option value="KT">KT</option>
+                  <option value="LG">LG</option>
                 </select>
-                <span className={style.PhoneSeparator}>-</span>
-                <input type="text" maxLength="4" className={style.PhoneInput} />
-                <span className={style.PhoneSeparator}>-</span>
-                <input type="text" maxLength="4" className={style.PhoneInput} />
+                <span className={style.PhoneSeparator}></span>
+                <input
+                  type="text"
+                  maxLength="11"
+                  className={style.PhoneInput}
+                  onChange={(e) =>
+                    (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+                  }
+                />
               </div>
             </div>
 
@@ -121,9 +123,13 @@ const Affiliated = () => {
             </div>
             <div className={style.TermsContainer}>
               <div className={style.TermsContent}>
-                제1조 (목적) 본 약관은 [회사명]이 제공하는 서비스의 이용조건 및
-                절차, 이용자와 당사의 권리, 의무, 책임사항과 기타 필요한 사항을
-                규정함을 목적으로 합니다. 제2조 (용어의 정의)
+                제1조 (목적) 이 약관은 KOKEE TEA(이하 "회사"라 함)가 제공하는
+                서비스의 이용조건 및 절차, 회사와 회원 간의 권리, 의무 및
+                책임사항 등을 규정함을 목적으로 합니다.<br/>제2조 (약관의 효력과
+                변경) 1. 이 약관은 서비스를 통하여 이를 공지하거나 전자메일 등의
+                방법으로 회원에게 통지함으로써 효력이 발생합니다. 2. 회사는
+                필요한 경우 이 약관을 변경할 수 있으며, 변경된 약관은 제1항과
+                같은 방법으로 공지 또는 통지함으로써 효력이 발생합니다.
               </div>
             </div>
 

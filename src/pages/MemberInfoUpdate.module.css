@@ -2,7 +2,6 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  font-family: "Pretendard-Regular";
   min-height: calc(100vh - 120px);
 }
 
@@ -105,26 +104,34 @@
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
-  margin: 10px 10px 10px 10px;
+  margin-left: 10px;
   width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.confirmButton:hover {
+  background-color: #a32242;
+}
+
 .cancelButton {
   padding: 10px 10px;
-  background-color: #fff;
+  background-color: #ffffff;
   color: #808080;
-  border: 1px solid #cccccc;
+  border: 1px solid #808080;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
-  margin: 10px 10px 10px 10px;
+  margin-left: 10px;
   width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.cancelButton:hover {
+  background-color: #eee;
 }
 
 .emailInput {

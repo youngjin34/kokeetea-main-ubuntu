@@ -3,6 +3,10 @@ import style from "./InquiryHistory.module.css";
 import { useNavigate } from "react-router-dom";
 
 const InquiryHistory = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const navigate = useNavigate();
   const [period, setPeriod] = useState("1개월");
   const [selectedInquiry, setSelectedInquiry] = useState(null);
@@ -10,6 +14,43 @@ const InquiryHistory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const currentPath = window.location.pathname;
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const filterInquiriesByPeriod = (inquiries, selectedPeriod, start, end) => {
+    if (start && end) {
+      const startDateTime = new Date(start);
+      const endDateTime = new Date(end);
+      endDateTime.setHours(23, 59, 59);
+
+      return inquiries.filter(inquiry => {
+        const inquiryDate = new Date(inquiry.date);
+        return inquiryDate >= startDateTime && inquiryDate <= endDateTime;
+      });
+    }
+
+    const today = new Date();
+    let filterDate = new Date();
+    
+    switch (selectedPeriod) {
+      case "1개월":
+        filterDate.setMonth(today.getMonth() - 1);
+        break;
+      case "3개월":
+        filterDate.setMonth(today.getMonth() - 3);
+        break;
+      case "1년":
+        filterDate.setFullYear(today.getFullYear() - 1);
+        break;
+      default:
+        return inquiries;
+    }
+
+    return inquiries.filter(inquiry => {
+      const inquiryDate = new Date(inquiry.date);
+      return inquiryDate >= filterDate && inquiryDate <= today;
+    });
+  };
 
   const fetchInquiries = async () => {
     setLoading(true);
@@ -65,7 +106,8 @@ const InquiryHistory = () => {
         }
       ];
 
-      setOrders(dummyData);
+      const filteredData = filterInquiriesByPeriod(dummyData, period, startDate, endDate);
+      setOrders(filteredData);
       setLoading(false);
 
     } catch (err) {
@@ -76,7 +118,7 @@ const InquiryHistory = () => {
 
   useEffect(() => {
     fetchInquiries();
-  }, []);
+  }, [period, startDate, endDate]);
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -84,6 +126,35 @@ const InquiryHistory = () => {
 
   const handleTitleClick = (order) => {
     setSelectedInquiry(selectedInquiry?.id === order.id ? null : order);
+  };
+
+  const handleDateSearch = () => {
+    if (!startDate || !endDate) {
+      alert("시작일과 종료일을 모두 선택해주세요.");
+      return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+      alert("시작일이 종료일보다 늦을 수 없습니다.");
+      return;
+    }
+    fetchInquiries();
+  };
+
+  const handlePeriodClick = (newPeriod) => {
+    setPeriod(newPeriod);
+    setStartDate("");
+    setEndDate("");
+  };
+
+  // 날짜 입력 시 기간별 선택 해제
+  const handleDateInput = (e, type) => {
+    if (type === 'start') {
+      setStartDate(e.target.value);
+    } else {
+      setEndDate(e.target.value);
+    }
+    // 날짜 입력 시 기간별 선택 해제
+    setPeriod("");
   };
 
   return (
@@ -103,15 +174,30 @@ const InquiryHistory = () => {
                       <button
                         key={p}
                         className={`${style.periodButton} ${period === p ? style.active : ''}`}
-                        onClick={() => setPeriod(p)}
+                        onClick={() => handlePeriodClick(p)}
                       >
                         {p}
                       </button>
                     ))}
                     <span style={{marginLeft: '70px'}}>일자별</span>
-                    <input type="date" className={style.dateInput} /> -
-                    <input type="date" className={style.dateInput} />
-                    <button className={style.searchButton}>조회</button>
+                    <input 
+                      type="date" 
+                      className={style.dateInput} 
+                      value={startDate}
+                      onChange={(e) => handleDateInput(e, 'start')}
+                    /> -
+                    <input 
+                      type="date" 
+                      className={style.dateInput} 
+                      value={endDate}
+                      onChange={(e) => handleDateInput(e, 'end')}
+                    />
+                    <button 
+                      className={style.searchButton}
+                      onClick={handleDateSearch}
+                    >
+                      조회
+                    </button>
                   </div>
                 )}
 

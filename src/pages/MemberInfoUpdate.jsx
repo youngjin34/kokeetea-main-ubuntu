@@ -1,28 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./MemberInfoUpdate.module.css";
 import { useNavigate } from "react-router-dom";
 
 const MemberInfoUpdate = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
   const [formData, setFormData] = useState({
-    name: "홍길동",
-    id: "test123@email.com",
+    name: "",
+    id: "",
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
-    phoneNumber: "010-1234-5678",
-    email: "test123@email.com",
+    phoneNumber: "",
+    email: "",
     smsReceive: true,
     emailReceive: true,
   });
   const [validPw, setValidPw] = useState(false);
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [phoneNumbers, setPhoneNumbers] = useState({
+    phone01: "",
+    phone02: "",
+    phone03: ""
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("토큰이 없습니다");
+          return;
+        }
+
+        const response = await fetch(
+          "http://localhost:8080/kokee/member_info",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        const userData = await response.json();
+
+        const phoneNumber = userData.phoneNumber || localStorage.getItem("phoneNumber") || "";
+        const [phone01, phone02, phone03] = phoneNumber.split("-");
+        
+        setPhoneNumbers({
+          phone01: phone01 || "",
+          phone02: phone02 || "",
+          phone03: phone03 || ""
+        });
+
+        setFormData((prev) => ({
+          ...prev,
+          name: userData.realName || localStorage.getItem("realname") || "",
+          id: userData.userName || localStorage.getItem("userName") || "",
+          email: userData.email || localStorage.getItem("email") || "",
+          phoneNumber: phoneNumber || localStorage.getItem("phoneNumber") || "",
+        }));
+      } catch (error) {
+        console.error("사용자 정보를 불러오는데 실패했습니다:", error);
+        setFormData((prev) => ({
+          ...prev,
+          name: localStorage.getItem("realname") || "",
+          id: localStorage.getItem("userName") || "",
+          email: localStorage.getItem("email") || "",
+          phoneNumber: localStorage.getItem("phoneNumber") || "",
+        }));
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : type === "radio"
+          ? value === "true"
+          : value,
     }));
 
     if (name === "newPassword") {
@@ -32,8 +103,93 @@ const MemberInfoUpdate = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const verifyCurrentPassword = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("토큰이 없습니다");
+        return;
+      }
+
+      const response = await fetch(
+        "http://localhost:8080/kokee/verify-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            currentPassword: formData.currentPassword,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        alert("현재 비밀번호가 확인되었습니다.");
+        setIsPasswordVerified(true);
+      } else {
+        alert("현재 비밀번호가 일치하지 않습니다.");
+        setIsPasswordVerified(false);
+        setFormData(prev => ({
+          ...prev,
+          currentPassword: "",
+        }));
+      }
+    } catch (error) {
+      console.error("비밀번호 확인 중 오류 발생:", error);
+      alert("비밀번호 확인 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 비밀번호 변경 시 유효성 검사
+    if (formData.newPassword || formData.confirmNewPassword) {
+      if (!isPasswordVerified) {
+        alert("현재 비밀번호를 먼저 확인해주세요.");
+        return;
+      }
+
+      if (validPw) {
+        alert("새 비밀번호가 형식에 맞지 않습니다.");
+        return;
+      }
+
+      if (formData.newPassword !== formData.confirmNewPassword) {
+        alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+        return;
+      }
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8080/kokee/update-member", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          ...formData,
+          password: formData.newPassword || undefined,
+        }),
+      });
+
+      if (response.ok) {
+        alert("회원정보가 성공적으로 수정되었습니다.");
+        navigate("/memberinfoupdate");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "회원정보 수정에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("회원정보 수정 중 오류 발생:", error);
+      alert("회원정보 수정 중 오류가 발생했습니다.");
+    }
   };
 
   const handleNavigation = (path) => {
@@ -86,8 +242,15 @@ const MemberInfoUpdate = () => {
                 value={formData.currentPassword}
                 onChange={handleInputChange}
                 className={style.input}
+                disabled={isPasswordVerified}
               />
-              <button className={style.confirmButton}>확인</button>
+              <button
+                className={style.confirmButton}
+                onClick={verifyCurrentPassword}
+                disabled={isPasswordVerified}
+              >
+                확인
+              </button>
             </div>
             <div className={style.formGroup}>
               <label htmlFor="newPassword" className={style.label}>
@@ -101,12 +264,9 @@ const MemberInfoUpdate = () => {
                   value={formData.newPassword}
                   onChange={handleInputChange}
                   className={style.input}
+                  disabled={!isPasswordVerified}
                 />
-                <span
-                  className={`${style.guideMessage} ${
-                    validPw ? style.errorMessage : ""
-                  }`}
-                >
+                <span className={`${style.guideMessage} ${validPw ? style.errorMessage : ""}`}>
                   * 영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자
                 </span>
               </div>
@@ -122,6 +282,7 @@ const MemberInfoUpdate = () => {
                 value={formData.confirmNewPassword}
                 onChange={handleInputChange}
                 className={style.input}
+                disabled={!isPasswordVerified}
               />
             </div>
           </div>
@@ -155,52 +316,60 @@ const MemberInfoUpdate = () => {
               />
             </div>
 
-            <div className={style.formGroup}>
+            <div className={style.formGroup} style={{ marginBottom: "0" }}>
               <label className={style.label}>SMS 수신</label>
               <div className={style.RadioGroup}>
                 <div className={style.RadioItem}>
                   <input
                     type="radio"
-                    id="smsReceive"
+                    id="smsReceiveYes"
                     name="smsReceive"
-                    value="수신함"
+                    checked={formData.smsReceive}
+                    onChange={handleInputChange}
+                    value="true"
                   />
-                  <label htmlFor="smsReceive">수신함</label>
+                  <label htmlFor="smsReceiveYes">수신함</label>
                 </div>
                 <div className={style.RadioItem}>
                   <input
                     type="radio"
-                    id="smsReceive"
+                    id="smsReceiveNo"
                     name="smsReceive"
-                    value="수신 안 함"
+                    checked={!formData.smsReceive}
+                    onChange={handleInputChange}
+                    value="false"
                   />
-                  <label htmlFor="smsReceive">수신 안 함</label>
+                  <label htmlFor="smsReceiveNo">수신 안 함</label>
                 </div>
               </div>
               <p className={style.receiveText}>
                 * 코키티에서 제공되는 소식을 SMS로 받으실 수 있습니다.
               </p>
             </div>
-            <div className={style.formGroup}>
+            <div className={style.formGroup} style={{ marginBottom: "0" }}>
               <label className={style.label}>이메일 수신</label>
               <div className={style.RadioGroup}>
                 <div className={style.RadioItem}>
                   <input
                     type="radio"
-                    id="emailReceive"
+                    id="emailReceiveYes"
                     name="emailReceive"
-                    value="수신함"
+                    checked={formData.emailReceive}
+                    onChange={handleInputChange}
+                    value="true"
                   />
-                  <label htmlFor="emailReceive">수신함</label>
+                  <label htmlFor="emailReceiveYes">수신함</label>
                 </div>
                 <div className={style.RadioItem}>
                   <input
                     type="radio"
-                    id="emailReceive"
+                    id="emailReceiveNo"
                     name="emailReceive"
-                    value="수신 안 함"
+                    checked={!formData.emailReceive}
+                    onChange={handleInputChange}
+                    value="false"
                   />
-                  <label htmlFor="emailReceive">수신 안 함</label>
+                  <label htmlFor="emailReceiveNo">수신 안 함</label>
                 </div>
               </div>
               <p className={style.receiveText}>
@@ -223,27 +392,35 @@ const MemberInfoUpdate = () => {
         </div>
 
         <div className={style.sideNav}>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/memberinfoupdate' ? style.active : ''}`}
-            onClick={() => handleNavigation('/memberinfoupdate')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/memberinfoupdate" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/memberinfoupdate")}
           >
             회원정보 확인 · 수정
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/couponstamp' ? style.active : ''}`}
-            onClick={() => handleNavigation('/couponstamp')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/couponstamp" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/couponstamp")}
           >
             쿠폰 · 스탬프 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/orderhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/orderhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/orderhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/orderhistory")}
           >
             주문내역 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/inquiryhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/inquiryhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/inquiryhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/inquiryhistory")}
           >
             1:1 문의 내역
           </div>
