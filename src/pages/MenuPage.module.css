@@ -119,6 +119,7 @@
   height: auto;
   border-radius: 8px;
   transition: transform 0.3s;
+  margin-top: 20px;
 }
 
 .MenuItem:hover img {
@@ -381,18 +382,17 @@
 
 .now_btn:hover {
   background-color: #a32040;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
 }
 
 .cart_btn {
   border: 1px solid #ba274a;
   color: #ba274a;
   transition: all 0.3s ease;
+  font-size: 18px;
 }
 
 .cart_btn:hover {
-  transform: scale(1.05);
+  background-color: #eee;
 }
 
 /* ------------------ 닫기 버튼 --------------------- */

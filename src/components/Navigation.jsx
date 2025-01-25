@@ -121,6 +121,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     };
   }, [isLoginModalOpen]);
 
+  // 홈으로 이동하는 함수를 단순화
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <div className={`${style.Navigation}`}>
       <div className={style.nav_container}>
@@ -139,6 +144,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             style={{
               color: fontColor,
             }}
+            onClick={handleLogoClick}
           >
             KOKEE TEA
           </Link>

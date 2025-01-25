@@ -169,7 +169,7 @@ function MenuSlide() {
 
   return (
     <div className={style.MenuSlide}>
-      <div className={style.MENU}>MENU</div>
+      <h1 className={`${style.title} ${style.underline}`}>MENU</h1>
       <div className={style.MenuTabs}>
         <span
           className={`${style.menu} ${

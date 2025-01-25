@@ -1,0 +1,314 @@
+.container {
+  padding-top: 180px;
+  width: 70%;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.title::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.mainContent {
+  flex: 1;
+  margin-right: 40px;
+  max-width: 800px;
+}
+
+.formContainer {
+  flex: 1;
+  margin-right: 40px;
+  max-width: 800px;
+}
+
+.sideNav {
+  width: 200px;
+  margin-left: 20px;
+  border-top: 2px solid #cccccc;
+  height: 100%;
+}
+
+.sideNavItem {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #cccccc;
+  font-weight: 600;
+}
+
+.sideNavItem:last-child {
+  border-bottom: 2px solid #cccccc;
+}
+
+.sideNavItem:hover {
+  color: #ba274a;
+}
+
+.sideNavItem.active {
+  color: #ba274a;
+}
+
+.membershipInfo {
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 40px;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.membershipLevel {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.levelIcon {
+  width: 80px;
+  height: 80px;
+  background: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: bold;
+  margin: 20px;
+  color: #ffffff;
+}
+
+.levelDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.levelTitle {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.levelName {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.levelProgress {
+  width: 300px;
+  margin-right: 60px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.progressBar {
+  width: 110%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 8px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.progressFill {
+  height: 100%;
+  background: #ba274a;
+  border-radius: 8px;
+  position: relative;
+}
+
+.progressMarkers {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  bottom: -20px;
+}
+
+.marker {
+  position: relative;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  width: 60px;
+  margin-left: -30px;
+}
+
+.marker::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 2px;
+  height: 8px;
+  background: #666;
+  transform: translateX(-50%);
+}
+
+.marker:first-child {
+  margin-left: 0;
+  text-align: left;
+}
+
+.marker:last-child {
+  margin-left: -60px;
+  text-align: right;
+}
+
+.levelMarkers {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  bottom: -20px;
+}
+
+.levelMarker {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.progressText {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  width: 110%;
+}
+
+.progressAmount {
+  color: #ba274a;
+  font-weight: 600;
+}
+
+.nextLevel {
+  font-weight: 600;
+  color: #000000;
+}
+
+.countHighlight {
+  color: #ba274a;
+}
+
+.membershipStats {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 0 40px 0;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.stat {
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 5px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ba274a;
+  text-align: left;
+}
+
+.stampSection,
+.couponSection {
+  margin-bottom: 40px;
+}
+
+.stampSection h3,
+.couponSection h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #666666;
+}
+
+.stampGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 40px 120px 40px 120px;
+}
+
+.stamp {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #999;
+  position: relative;
+}
+
+.stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stamp:not(.active) img {
+  opacity: 0.1;
+}
+
+.stampNote {
+  font-size: 12px;
+  color: #666;
+}
+
+.couponList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.couponList th,
+.couponList td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.couponList th {
+  font-weight: bold;
+  border-top: 3px solid #ba274a;
+}

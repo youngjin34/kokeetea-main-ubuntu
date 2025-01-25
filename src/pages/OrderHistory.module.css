@@ -2,7 +2,7 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  min-height: calc(100vh - 120px); 
+  min-height: calc(100vh - 140px);
 }
 
 .title {
@@ -130,10 +130,6 @@
 .orderTable th {
   border-top: 2px solid #BA274A;
   font-weight: bold;
-}
-
-.orderTable tr:hover {
-  background-color: #f5f5f5;
 }
 
 .active {

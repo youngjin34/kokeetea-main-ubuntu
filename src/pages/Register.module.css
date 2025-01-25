@@ -1,16 +1,8 @@
 .Container {
-  width: 100%;
-  min-height: 100vh;
-  background: #fff;
-}
-
-.MainContent {
-  padding: 20px;
   padding-top: 180px;
-  padding-bottom: 170px;
   width: 70%;
   margin: 0 auto;
-  text-align: center;
+  min-height: calc(100vh - 140px); 
 }
 
 .menu_introduce {

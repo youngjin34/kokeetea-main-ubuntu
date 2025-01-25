@@ -20,21 +20,18 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (result.status === 200) {
-        // 전화번호 형식 통일
-        const phoneNumber = `${result.data.phone01}-${result.data.phone02}-${result.data.phone03}`;
-
         const userData = {
           userName: userName,
           name: result.data.name,
           email: result.data.email,
-          phoneNumber: phoneNumber,
+          phoneNumber: result.data.phoneNumber,
         };
 
         // localStorage에 저장
         localStorage.setItem("userName", userName);
         localStorage.setItem("realname", result.data.name);
         localStorage.setItem("email", result.data.email);
-        localStorage.setItem("phoneNumber", phoneNumber);
+        localStorage.setItem("phoneNumber", result.data.phoneNumber);
         localStorage.setItem("token", result.data.token);
 
         setCurrentUser(userData);
@@ -95,9 +92,7 @@ export const AuthProvider = ({ children }) => {
         userPw: formData.password,
         userPwCheck: formData.passwordConfirm,
         userName: formData.name,
-        phone01: formData.phone01,
-        phone02: formData.phone02,
-        phone03: formData.phone03,
+        phoneNumber: formData.phoneNumber,
         email01: formData.emailId,
         email02: formData.emailDomain,
         role: "user",

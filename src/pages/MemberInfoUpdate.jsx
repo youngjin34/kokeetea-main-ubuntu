@@ -24,11 +24,6 @@ const MemberInfoUpdate = () => {
   });
   const [validPw, setValidPw] = useState(false);
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-  const [phoneNumbers, setPhoneNumbers] = useState({
-    phone01: "",
-    phone02: "",
-    phone03: ""
-  });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -36,9 +31,18 @@ const MemberInfoUpdate = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           console.error("토큰이 없습니다");
+          // 토큰이 없더라도 로컬스토리지의 데이터는 설정
+          setFormData((prev) => ({
+            ...prev,
+            name: localStorage.getItem("realname") || "",
+            id: localStorage.getItem("userName") || "",
+            email: localStorage.getItem("email") || "",
+            phoneNumber: localStorage.getItem("phoneNumber") || "",
+          }));
           return;
         }
 
+        // 서버 요청 시도
         const response = await fetch(
           "http://localhost:8080/kokee/member_info",
           {
@@ -51,26 +55,22 @@ const MemberInfoUpdate = () => {
           }
         );
 
+        if (!response.ok) {
+          throw new Error("서버 응답 실패");
+        }
+
         const userData = await response.json();
-
-        const phoneNumber = userData.phoneNumber || localStorage.getItem("phoneNumber") || "";
-        const [phone01, phone02, phone03] = phoneNumber.split("-");
         
-        setPhoneNumbers({
-          phone01: phone01 || "",
-          phone02: phone02 || "",
-          phone03: phone03 || ""
-        });
-
         setFormData((prev) => ({
           ...prev,
           name: userData.realName || localStorage.getItem("realname") || "",
           id: userData.userName || localStorage.getItem("userName") || "",
           email: userData.email || localStorage.getItem("email") || "",
-          phoneNumber: phoneNumber || localStorage.getItem("phoneNumber") || "",
+          phoneNumber: userData.phoneNumber || localStorage.getItem("phoneNumber") || "",
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다:", error);
+        // 에러 발생 시 로컬스토리지의 데이터로 폴백
         setFormData((prev) => ({
           ...prev,
           name: localStorage.getItem("realname") || "",
@@ -196,6 +196,19 @@ const MemberInfoUpdate = () => {
     navigate(path);
   };
 
+  const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return "";
+    
+    // 숫자만 추출
+    const numbers = phoneNumber.replace(/[^0-9]/g, "");
+    
+    // 11자리 번호인 경우
+    if (numbers.length === 11) {
+      return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+    }
+    return numbers;
+  };
+
   return (
     <div className={style.container}>
       <div className={style.title}>회원정보 확인·수정</div>
@@ -271,7 +284,7 @@ const MemberInfoUpdate = () => {
                 </span>
               </div>
             </div>
-            <div className={style.formGroup}>
+            <div className={style.formGroup} style={{ marginBottom: "0" }}>
               <label htmlFor="confirmNewPassword" className={style.label}>
                 비밀번호 확인
               </label>
@@ -297,9 +310,16 @@ const MemberInfoUpdate = () => {
                 type="tel"
                 id="phoneNumber"
                 name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
+                value={formatPhoneNumber(formData.phoneNumber)}
+                onChange={(e) => {
+                  const numbers = e.target.value.replace(/[^0-9]/g, "");
+                  setFormData(prev => ({
+                    ...prev,
+                    phoneNumber: numbers
+                  }));
+                }}
                 className={style.input}
+                maxLength="13"
               />
             </div>
             <div className={style.formGroup}>

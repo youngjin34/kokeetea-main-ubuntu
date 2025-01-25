@@ -13,6 +13,23 @@ const MyPage = () => {
       <div className={style.content}>
         <h1 className={style.title}>마이 페이지</h1>
         
+        <div className={style.summarySection}>
+          <div className={style.summaryItem}>
+            <span className={style.label}>멤버십 등급</span>
+            <span className={style.value}>GOLD</span>
+          </div>
+          <div className={style.divider}></div>
+          <div className={style.summaryItem}>
+            <span className={style.label}>보유 쿠폰</span>
+            <span className={style.value}>3장</span>
+          </div>
+          <div className={style.divider}></div>
+          <div className={style.summaryItem}>
+            <span className={style.label}>적립 스탬프</span>
+            <span className={style.value}>7개</span>
+          </div>
+        </div>
+
         <div className={style.menuGrid}>
           <Link to="/memberinfoupdate" className={style.menuItem}>
             <div className={style.iconWrapper}>
@@ -28,7 +45,7 @@ const MyPage = () => {
             <p>회원정보를 확인하거나 수정할 수 있습니다.</p>
           </Link>
 
-          <Link to="/mypage" className={style.menuItem}>
+          <Link to="/couponstamp" className={style.menuItem}>
             <div className={style.iconWrapper}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

@@ -95,13 +95,12 @@ const NameInput = ({ value, onChange }) => (
   </div>
 );
 
-const PhoneInput = ({ middle, last, onChange }) => {
-  // 숫자만 입력받도록 하는 핸들러
+const PhoneInput = ({ value, onChange }) => {
   const handleNumberOnly = (e) => {
     const numberOnly = e.target.value.replace(/[^0-9]/g, "");
     const event = {
       target: {
-        name: e.target.name,
+        name: "phoneNumber",
         value: numberOnly,
       },
     };
@@ -124,9 +123,9 @@ const PhoneInput = ({ middle, last, onChange }) => {
           type="text"
           maxLength="11"
           className={style.PhoneInput}
-          onChange={(e) =>
-            (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-          }
+          value={value}
+          onChange={handleNumberOnly}
+          placeholder="'-' 없이 번호만 입력해주세요."
         />
       </div>
     </div>
@@ -188,9 +187,7 @@ const Register = () => {
     password: "",
     passwordConfirm: "",
     name: "",
-    phonePrefix: "010",
-    phoneMiddle: "",
-    phoneLast: "",
+    phoneNumber: "",
     emailId: "",
     emailDomain: "",
     agree1: "",
@@ -256,6 +253,7 @@ const Register = () => {
     try {
       const result = await signup(formData);
       if (result.success) {
+        localStorage.setItem("phoneNumber", formData.phoneNumber);
         alert(result.message);
         navigate("/");
       }
@@ -266,7 +264,6 @@ const Register = () => {
 
   return (
     <div className={style.Container}>
-      <div className={style.MainContent}>
         <div className={style.FormContainer}>
           <h2 className={style.FormTitle}>회원가입</h2>
 
@@ -292,12 +289,7 @@ const Register = () => {
 
             <NameInput value={formData.name} onChange={handleChange} />
 
-            <PhoneInput
-              prefix={formData.phonePrefix}
-              middle={formData.phoneMiddle}
-              last={formData.phoneLast}
-              onChange={handleChange}
-            />
+            <PhoneInput value={formData.phoneNumber} onChange={handleChange} />
 
             <EmailInput
               emailId={formData.emailId}
@@ -357,7 +349,6 @@ const Register = () => {
             </button>
           </form>
         </div>
-      </div>
 
       {isTermsModalOpen && (
         <div className={style.modalOverlay}>
