@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import style from "./Cart.module.css";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState("전체선택"); // 카테고리 기능 삭제
+
+  // 샘플 데이터 삭제
 
     const handleAddToCart = async (product) => {
     try {
@@ -16,7 +18,7 @@ const Cart = () => {
             product_name : product.category,
             mount: product.amount,
             price: parseInt(product.price.replace(/,/g, "").replace("원", "")),
-            email: "test@example.com"
+            email: "test@example.com" // 임시 이메일
         }),
       });
 
@@ -101,11 +103,24 @@ const Cart = () => {
         <h1 className={style.cart_title}>장바구니</h1>
         <div className={style.cart_menu_container}>
           <div className={style.cart_items}>
-            <div className={style.total_select}>
-              <span className={style.checkbox_round}>
-                <input type="checkbox" />
-              </span>
-              <span className={style.total_select_text}>전체선택</span>
+            <div>
+              <div className={style.total_select}>
+                <div>
+                  <span className={style.checkbox_round}>
+                    <input
+                      className={style.checkbox_round_input}
+                      type="checkbox"
+                      onChange={handleAllCheck}
+                      checked={selectedItems.length === tableData.length}
+                    />
+                    <label htmlFor="custom-checkbox" className="checkbox-label"></label>
+                  </span>
+                  <span className={style.total_select_text}>전체선택</span>
+                </div>
+                <button className={style.remove_button} onClick={handleRemove}>
+                  삭제
+                </button>
+              </div>
             </div>
             <hr className={style.hr} />
             <div className={style.cart_items_scrollable}>
@@ -113,7 +128,12 @@ const Cart = () => {
                 <div key={row.id} className={style.cart_item}>
                   <div className={style.checkbox_item}>
                     <span className={style.checkbox_round}>
-                      <input type="checkbox" />
+                      <input
+                      className={style.checkbox_round_input}
+                        type="checkbox"
+                        checked={selectedItems.includes(row.id)}
+                        onChange={() => handleCheck(row.id)}
+                      />
                     </span>
                   </div>
                   <div className={style.cart_item_image}>
@@ -129,30 +149,57 @@ const Cart = () => {
                       />
                     )}
                   </div>
-                  <div className={style.cart_item_description}>
-                    <div className={style.cart_item_header}>
-                      <span className={style.cart_item_name}>{row.category}</span>
+                  <div className={style.cart_item_}>
+                    <div className={style.cart_item_top}>
+                      <div className={style.cart_item_header}>
+                        <span className={style.cart_item_name}>
+                          {row.category}
+                        </span>
+                      </div>
+                      <div>
+                        <div className={style.cart_item_count}>
+                          <button
+                            className={style.minus_button}
+                            onClick={() => handleDecrement(row.id)}
+                          >
+                            -
+                          </button>
+                          <input
+                            type="text"
+                            value={amounts[row.id] || row.amount}
+                            className={style.amount_input}
+                            readOnly
+                          />
+                          <button
+                            className={style.plus_button}
+                            onClick={() => handleIncrement(row.id)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div className={style.cart_item_price}>{row.price}</div>
-                    <div className={style.cart_item_options}>{row.options}</div>
-                    <div className={style.cart_item_count}>
-                      <button className={style.minus_button}>-</button>
-                      <span className={style.amount}>{row.amount}</span>
-                      <button className={style.plus_button}>+</button>
+                    <div className={style.cart_item_bottom}>
+                      <div className={style.cart_item_options}>
+                        옵션 {row.options}
+                        <button>옵션 변경</button>
+                      </div>
+                      <div className={style.cart_item_totalPrice}>
+                        총 금액{" "}
+                        <span className={style.cart_item_totalPrice_money}>
+                          {calculateTotalPrice(
+                            amounts[row.id] || row.amount,
+                            row.price
+                          ).toLocaleString()}
+                        </span>
+                        원
+                      </div>
                     </div>
-                    <div className={style.cart_item_totalPrice}>
-                      종금액{" "}
-                      <span className={style.cart_item_totalPrice_money}>
-                        {calculateTotalPrice(row.amount, row.price).toLocaleString()}
-                      </span>
-                      원
-                    </div>
-                    <button className={style.add_cart_button} onClick={() => handleAddToCart(row)}>장바구니 추가</button>
                   </div>
                 </div>
               ))}
             </div>
-            <button className={style.remove_button}>삭제</button>
           </div>
 
           <div className={style.order_summary}>
@@ -161,16 +208,16 @@ const Cart = () => {
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문수량</span>
                 <span className={style.order_summary_count}>
-                  {calculateTotalCartAmount()}개
+                  {calculateTotalSelectedAmount()}개
                 </span>
               </div>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>결제예정금액</span>
                 <span className={style.order_summary_price}>
-                  {calculateTotalCartPrice().toLocaleString()}원
+                  {calculateTotalSelectedPrice().toLocaleString()}원
                 </span>
               </div>
-              <hr />
+              <hr className={style.hr} />
               <div className={style.order_summary_text}>
                 *최종금액은 결제화면에서 확인 가능합니다.
               </div>
