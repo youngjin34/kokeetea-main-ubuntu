@@ -87,7 +87,7 @@ const CouponStamp = () => {
     
     const fetchUserData = async () => {
       try {
-        const response = await fetch('/kokee/member/dashboard');
+        const response = await fetch('http://localhost:8080/kokee/member/dashboard');
         const data = await response.json();
         
         setUserData({

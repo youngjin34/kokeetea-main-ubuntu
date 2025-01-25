@@ -29,7 +29,7 @@ const Affiliated = () => {
     e.preventDefault();
     
     try {
-      const response = await axios.post('http://your-backend-url/api/inquiries', formData);
+      const response = await axios.post('http://localhost:8080/kokee/affiliated/request', formData);
       if (response.status === 200) {
         alert('문의가 성공적으로 접수되었습니다.');
         // 폼 초기화
