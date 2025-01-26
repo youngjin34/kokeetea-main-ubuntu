@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast, Slide } from 'react-toastify';
 
-// AuthContext 생성
+// AuthContext 생성 
 const AuthContext = createContext();
 
 // AuthContext Provider 컴포넌트

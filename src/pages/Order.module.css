@@ -25,7 +25,7 @@
 
 .title {
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 40px;
   text-align: center;
   display: flex;
@@ -46,20 +46,26 @@
 .checkout_menu_container {
   display: flex;
   justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
 }
+
 .checkout_items {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin-right: 20px;
-  width: 771px;
+  width: 70%;
 }
 
 .checkout_order_title {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 10px;
   align-items: center;
+  display: flex;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+  color: #000000;
 }
 
 .checkout_order_title_span {
@@ -67,32 +73,40 @@
 }
 
 .branch {
-  font-weight: normal;
+  font-weight: 600;
   color: #666;
   font-size: 18px;
+  margin-top: 0;
+  padding-top: 50px;
+  border-top: 1px solid #ccc;
 }
 
 .branch_change {
   background-color: white;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid #ba274a;
   height: 30px;
   width: 50px;
+  color: #ba274a;
 }
 
 .store_button {
   font-size: 24px;
-  margin-left: 10px;
-  margin-right: 20px;
-  cursor: pointer;
-  padding: 3px;
+  margin-right: 10px;
 }
+
+.checkout_store_title {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 50px;
+  font-weight: 600;
+}
+
 .checkout_item {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
+  padding: 10px 0 10px 0;
+  border-bottom: 1px solid #ccc;
   height: 120px;
 }
 
@@ -118,7 +132,7 @@
 }
 
 .checkout_item_name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -128,15 +142,14 @@
   margin-bottom: 10px;
 }
 .checkout_item_options {
-  font-size: 13px;
-  color: black;
-  margin-bottom: 5px;
+  font-size: 14px;
+  color: #666666;
 }
 
 .order_content_bottom {
   display: flex;
   justify-content: space-between;
-  background-color: #eee;
+  background-color: #f8f9fa;
   height: 50px;
   align-items: center;
   border-radius: 5px;
@@ -145,11 +158,11 @@
 }
 
 .checkout_item_totalPrice {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .checkout_item_totalPrice_money {
-  font-size: 16px;
+  font-size: 14px;
   color: #ba274a;
   margin-left: 5px;
   margin-right: 5px;
@@ -158,53 +171,78 @@
 .checkout_pickup {
   display: flex;
   justify-content: space-between;
+  margin-top: 0;
+  border-top: 2px solid #ccc;
+  padding-top: 50px;
 }
+
 .checkout_choice {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
-  font-weight: normal;
+  color: #666666;
+  margin-top: 0;
 }
+
 .checkout_message {
   color: #ba274a;
-  font-size: 14px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .pickup_method {
   display: flex;
   gap: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 50px;
 }
 
 .pickup_button {
   background-color: white;
-  color: gray;
-  border: 1px solid gray;
+  color: #808080;
+  border: 1px solid #808080;
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 20px;
-  width: 252px;
-  height: 58px;
+  font-size: 16px;
+  width: 100%;
+  height: 50px;
+  font-weight: 600;
 }
 
 .pickup_button.active {
-  border: 1px solid #ba274a;
+  background-color: #ffffff;
   color: #ba274a;
+  border: 2px solid #ba274a;
 }
 
 .checkout_coupon {
   font-size: 18px;
   font-weight: 600;
+  border-top: 2px solid #ccc;
+  padding-top: 50px;
+  color: #666666;
+  margin-top: 0;
   margin-bottom: 10px;
 }
+
 .select_coupon {
   margin-bottom: 15px;
 }
+
 .select_coupon select {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 5px;
-  width: 768px;
+  width: 100%;
+  border: 1px solid #666666;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  appearance: none;
+  color: #666666;
 }
 
 .coupon_img {
@@ -220,8 +258,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 15px;
+  margin-bottom: 50px;
 }
 .discount_price_money {
   color: #ba274a;
@@ -229,192 +266,179 @@
 
 .checkout_stamp {
   font-size: 18px;
-  font-weight: 600;
   margin-bottom: 10px;
-}
-.stamp_container {
-  margin-bottom: 15px;
-}
-.stamp_text {
-  font-size: 16px;
+  color: #666666;
+  border-top: 2px solid #ccc;
+  margin-top: 0;
+  padding-top: 50px;
   font-weight: 600;
-}
-.stamp_text_sub {
-  font-size: 13px;
-  color: #999;
-  margin-top: 5px;
-}
-.stamp_buttons {
-  display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
-  gap: 10px;
-  margin-top: 10px;
-  /* flex-wrap: wrap; 삭제 */
-  flex-direction: column; /* 추가 */
-  width: 764px; /* Set the desired width */
-  height: 200px; /* Set the desired height */
-  background-color: #999; /* Set the desired background color */
-}
-
-.stamp_buttons_top {
-  display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
-  gap: 20px;
-  /* flex-wrap: wrap; 삭제 */
-  background-color: #999; /* Set the desired background color */
-  width: 364px;
-  height: 60px;
-}
-
-.stamp_buttons_bottom {
-  display: flex;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
-  gap: 20px;
-  /* flex-wrap: wrap; 삭제 */
-  background-color: #999; /* Set the desired background color */
-  width: 364px;
-  height: 60px;
-}
-
-.stamp_button {
-  border: 1px solid #ddd;
-  padding: 10px 15px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-}
-
-.stamp_button > img {
-  width: 25px;
-}
-
-.stamp_button.active {
-  background-color: #eee;
-  border-color: #ddd;
 }
 
 /* Order Summary Section */
 .checkout_summary {
   display: flex;
   flex-direction: column;
-  width: 326px;
-  height: 336px;
-  padding: 15px;
-  gap: 20px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  width: 240px;
+
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
 }
 
 .order_summary_title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  color: #212529;
+  margin-bottom: 24px;
+  text-align: center;
+  margin-left: 0;
+  margin-top: 0;
 }
 
 .order_summary_detail {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-bottom: 12px;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 8px 0;
 }
 
 .order_summary_item {
-  font-size: 14px;
+  font-size: 16px;
+  color: #666666;
 }
+
 .order_summary_count,
 .order_summary_price {
   font-size: 16px;
   font-weight: 600;
+  color: #ba274a;
 }
+
 .order_summary_discount {
   font-size: 16px;
   font-weight: 600;
-  color: #f75656;
+  color: #ba274a;
 }
+
 .order_summary_finalPrice {
-  font-size: 18px;
-  font-weight: 700;
-  color: #f75656;
-}
-.payment_button {
-  background-color: #ba274a;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
+  font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
-  width: 237px;
-  height: 58px;
-  margin-top: 10px;
+  color: #ba274a;
 }
 
 .payment {
   display: flex;
-  align-items: center;
-  justify-content: space-between; /* 변경 */
-  gap: 20px;
+  gap: 10px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
 }
 
-.payment_button:hover {
-  background-color: #b73033;
-}
+.payment_button,
 .payment_cancel_button {
-  margin-top: 5px;
-  font-size: 14px;
-  background: #f2f2f2;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  flex: 1;
+  padding: 15px 0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  width: 80px;
-  height: 58px;
+  transition: all 0.2s ease-in-out;
 }
+
+.payment_cancel_button {
+  background-color: white;
+  border: 1px solid #808080;
+  color: #808080;
+}
+
 .payment_cancel_button:hover {
-  background: #e6e6e6;
+  background-color: #eee;
+  color: #808080;
 }
-.order_summary_line {
-  border-bottom: 1px solid #ddd;
-  margin: 10px 0;
+
+.primary_button {
+  background-color: #ba274a;
+  border: none;
+  color: white;
+}
+
+.primary_button:hover {
+  background-color: #a02242;
 }
 
 .payment_methods_container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
+  border-top: 2px solid #ccc;
+  padding-top: 50px;
 }
+
 .payment_methods_title {
   font-size: 18px;
-  font-weight: 600;
   margin-bottom: 10px;
+  color: #666666;
+  font-weight: 600;
 }
+
 .payment_methods {
   display: flex;
   gap: 10px;
 }
 
 .payment_method_button {
-  border: 1px solid #ddd;
+  border: 1px solid #808080;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   background-color: white;
-  color: #666;
-  width: 252px;
-  height: 58px;
+  color: #808080;
+  width: 100%;
+  height: 50px;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .payment_method_button.active {
-  border-color: #ba274a;
+  background-color: #ffffff;
   color: #ba274a;
-  font-weight: 600;
+  border: 2px solid #ba274a;
+}
+
+.stampGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 40px 120px 40px 120px;
+}
+
+.stamp {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #666666;
+  position: relative;
+}
+
+.stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stamp:not(.active) img {
+  opacity: 0.1;
+}
+
+.stampNote {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 50px;
 }

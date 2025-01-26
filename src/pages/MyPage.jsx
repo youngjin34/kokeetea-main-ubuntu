@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import style from './MyPage.module.css';
 
 const MyPage = () => {
+  const [membershipInfo, setMembershipInfo] = useState({
+    grade: '',
+    couponCount: 0,
+    stampCount: 0
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchMembershipInfo();
+  }, []);
+
+  const fetchMembershipInfo = async () => {
+    try {
+      const response = await fetch('/api/membership/info', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const data = await response.json();
+      setMembershipInfo(data);
+    } catch (error) {
+      console.error('멤버십 정보를 불러오는데 실패했습니다:', error);
+    }
+  };
+
   const userInfo = {
     name: localStorage.getItem("realname") || "고객",
     email: localStorage.getItem("email") || "example@email.com"
@@ -16,17 +41,17 @@ const MyPage = () => {
         <div className={style.summarySection}>
           <div className={style.summaryItem}>
             <span className={style.label}>멤버십 등급</span>
-            <span className={style.value}>GOLD</span>
+            <span className={style.value}>{membershipInfo.grade || '-'}</span>
           </div>
           <div className={style.divider}></div>
           <div className={style.summaryItem}>
             <span className={style.label}>보유 쿠폰</span>
-            <span className={style.value}>3장</span>
+            <span className={style.value}>{membershipInfo.couponCount}장</span>
           </div>
           <div className={style.divider}></div>
           <div className={style.summaryItem}>
             <span className={style.label}>적립 스탬프</span>
-            <span className={style.value}>7개</span>
+            <span className={style.value}>{membershipInfo.stampCount}개</span>
           </div>
         </div>
 

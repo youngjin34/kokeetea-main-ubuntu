@@ -409,3 +409,49 @@
   width: 20px;
   height: 20px;
 }
+
+/* 반응형 태블릿 768px 이하 */
+
+@media (max-width: 768px) {
+  .MenuPage {
+    width: 90%;
+    padding-top: 120px;
+  }
+
+  .menu_introduce {
+    width: 80%;
+  }
+
+  .menu_title {
+    font-size: 48px;
+  }
+
+  .MenuItems {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modalContent {
+    width: 90%;
+    height: 80vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .MenuPage {
+    width: 95%;
+    padding-top: 100px;
+  }
+
+  .menu_title {
+    font-size: 36px;
+  }
+
+  .MenuItems {
+    grid-template-columns: 1fr;
+  }
+
+  .menu {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}

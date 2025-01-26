@@ -1,26 +1,36 @@
 .Container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 115px 0;
+  padding-top: 180px;
+  width: 70%;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px); 
 }
 
 .MainContent {
   display: flex;
   flex-direction: column;
-  width: 1116px;
-  padding: 20px;
-  border-radius: 10px;
+  max-width: 1000px;
   background-color: white;
   margin: 0 auto;
 }
 
 .cart_title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
   text-align: center;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.cart_title::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
 }
 .cart_menu_container {
   display: flex;
@@ -31,45 +41,48 @@
   flex-direction: column;
   flex: 1;
   margin-right: 20px;
-  width: 771px;
 }
 .total_select {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 2px solid #ccc;
 }
 .total_select_text {
   font-size: 14px;
   margin-left: 5px;
+  cursor: pointer;
 }
 
 .remove_button {
-  padding: 5px 10px;
+  padding: 5px 12px;
   font-size: 14px;
   border: none;
   border: 1px solid #ccc;
   cursor: pointer;
   align-self: flex-end;
   background: none;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 .remove_button:hover {
-  background: #e6e6e6;
+  background: #eee;
 }
 
 .cart_items_scrollable {
-  max-height: 450px;
+  max-height: 500px;
   overflow-y: auto;
-  padding-right: 10px;
-  border-radius: 5px; /* 필요에 따라 둥근 모서리 추가 */
+  -ms-overflow-style: auto !important; /* IE and Edge */
+  scrollbar-width: auto !important; /* Firefox */
 }
+
 .cart_item {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  margin: 10px 0;
   height: 150px;
+  padding: 10px 0;
 }
 .checkbox_item {
   margin-right: 10px;
@@ -98,9 +111,10 @@
 .cart_item_bottom {
   display: flex;
   justify-content: space-between;
-  background-color: #eee;
+  background-color: #f8f9fa;
   height: 50px;
   align-items: center;
+  border-radius: 8px;
 }
 
 .cart_item_header {
@@ -109,7 +123,7 @@
 }
 
 .cart_item_name {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -119,8 +133,8 @@
   margin-bottom: 5px;
 }
 .cart_item_options {
-  font-size: 13px;
-  color: #999;
+  font-size: 14px;
+  color: #666666;
   padding-left: 10px;
 }
 .cart_item_options button {
@@ -130,35 +144,46 @@
 
 .cart_item_count {
   display: flex;
-  height: 25px;
-  margin-bottom: 5px;
+  align-items: center;
+  border: 1px solid #ba274a;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 32px;
 }
 
-.minus_button {
-  font-size: 18px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border: 1px solid #cf3d3f;
-}
-/* 수량 입력창 스타일 */
-.amount_input {
-  width: 30px; /* 필요에 따라 조절 */
-  border: 1px solid #ddd;
-  text-align: center;
-  margin-bottom: 0px;
-  border-radius: 0px;
-}
+.minus_button,
 .plus_button {
-  font-size: 18px;
-  background: none;
-  border: none;
+  all: unset;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ba274a;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border: 1px solid #cf3d3f;
+  user-select: none;
+}
+
+.minus_button:hover,
+.plus_button:hover {
+  background-color: #f9ebea;
+}
+
+.amount_input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  text-align: center;
+  margin: 0;
 }
 
 .cart_item_totalPrice {
@@ -166,9 +191,11 @@
   font-weight: 600;
   padding-right: 10px;
 }
+
 .cart_item_totalPrice_money {
   color: #cf3d3f;
   margin-left: 5px;
+  margin-right: 5px;
 }
 
 /* Order Summary Section */
@@ -176,152 +203,106 @@
   display: flex;
   flex-direction: column;
   width: 240px;
-  padding: 15px;
-  border-radius: 5px;
+  height: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
 }
 
 .order_summary_top {
   display: flex;
   flex-direction: column;
-  width: 326px;
-  height: 242px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.hr {
-  margin: 20px;
-  background-color: black;
-  height: 1px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
 .order_summary_title {
-  width: 100%;
-  height: 100%;
-  font-size: 18px;
-  font-weight: 600;
-  margin-top: 20px;
-  margin-left: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 24px;
+  text-align: center;
+  margin-left: 0;
 }
 
 .order_summary_detail {
   display: flex;
   justify-content: space-between;
-  margin-left: 30px;
-  margin-right: 30px;
-  margin-bottom: 20px;
-  height: 30%;
+  margin-bottom: 12px;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 8px 0;
 }
+
 .order_summary_item {
-  font-size: 14px;
+  font-size: 16px;
+  color: #666666;
 }
+
 .order_summary_count,
 .order_summary_price {
   font-size: 16px;
-  font-weight: 600;
-  color: #cf3d3f;
+  font-weight: 700;
+  color: #ba274a;
 }
 
 .order_summary_text {
   font-size: 12px;
-  color: #999;
-  margin-bottom: 10px;
-  height: 20%;
+  color: #666666;
+  margin-top: 10px;
   text-align: center;
+  height: auto;
 }
 
 .checkout_button {
-  background-color: #cf3d3f;
+  background-color: #ba274a;
   color: white;
-  padding: 10px 15px;
+  padding: 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  width: 326px;
+  transition: background-color 0.2s ease;
+  width: 100%;
 }
 
 .checkout_button:hover {
-  background-color: #b73033;
+  background-color: #a32342;
 }
 
 /* Custom Checkbox */
-
 .checkbox_round {
-  display: inline-flex;
-  position: relative;
+  display: flex;
   align-items: center;
-  padding-left: 35px;
-  padding-right: 10px;
   cursor: pointer;
-  font-size: 30px;
+  user-select: none;  /* 텍스트 선택 방지 */
 }
 
 .checkbox_round_input {
-  width: 10px;
-  height: 10px;
-  position: relative;
-  opacity: 1;
-  border-radius: 50%;
-  accent-color: #ba274a;
-  cursor: pointer;
   margin: 0;
-  transform: scale(2);
-}
-
-.checkbox-label {
-  display: inline-block;
-  width: 24px; /* 원 크기 */
-  height: 24px; /* 원 크기 */
-  border-radius: 50%;
-  background-color: #c9457a; /* 배경색 */
   cursor: pointer;
-  transition: background-color 0.3s ease; /* 트랜지션 효과 */
+  accent-color: #ba274a;
+  width: 16px;
+  height: 16px;
   position: relative;
+  border: 1px solid #ddd;
+  padding: 0;
 }
 
-
-
-.checkbox-input:checked + .checkbox-label::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(45deg); /* 중앙 정렬 및 회전 */
-  width: 5px;
-  height: 9px;
-  border-bottom: 2px solid white; /* 체크 표시 색상 */
-  border-right: 2px solid white; /* 체크 표시 색상 */
+.checkbox_round_input:checked {
+  background-color: #ba274a;
+  border-color: #ba274a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
+/* 불필요한 스타일 제거 */
+.checkbox-label,
+.checkbox-input,
+.checkmark,
 .checkbox_round .checkmark {
-  display: none; /* 커스텀 체크마크 숨기기 */
-}
-
-.checkbox_round:hover input ~ .checkmark {
-  border-color: #888;
-}
-.checkbox_round input:checked ~ .checkmark {
-  background-color: #cf3d3f;
-  border-color: #cf3d3f;
-}
-
-/* Style for the check mark */
-.checkmark:after {
-  content: "";
-  position: absolute;
   display: none;
-  left: 6px;
-  top: 3px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.checkbox_round input:checked ~ .checkmark:after {
-  display: block;
 }
 
 @media (max-width: 768px) {
@@ -338,4 +319,201 @@
   .order_summary {
     width: 100%;
   }
+}
+
+/* 반응형 태블릿 768px 이하 */
+@media (max-width: 768px) {
+  .MainContent {
+    width: 90%;
+  }
+
+  .cart_menu_container {
+    flex-direction: column;
+  }
+
+  .cart_items {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .order_summary_top {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .MainContent {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .cart_title {
+    font-size: 20px;
+  }
+
+  .cart_items_scrollable {
+    max-height: 350px;
+  }
+}
+
+.option_change_btn {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+}
+
+.option_change_btn:hover {
+  background-color: #e8e8e8;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.modal_header h2 {
+  font-size: 1.5rem;
+  color: #000000;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.closeButton img {
+  width: 20px;
+  height: 20px;
+}
+
+.options_section {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.option_group {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+}
+
+.option_group h3 {
+  margin-bottom: 15px;
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.option_buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.option_btn {
+  padding: 10px 20px;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.option_btn:hover {
+  border-color: #ba274a;
+  color: #ba274a;
+}
+
+.option_btn.selected {
+  background-color: #ba274a;
+  color: white;
+  border-color: #ba274a;
+}
+
+.modal_footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+}
+
+.confirm_button {
+  width: 100%;
+  padding: 15px 30px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.confirm_button:hover {
+  background-color: #a32342;
+}
+
+/* 스크롤바 스타일링 */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #a32342;
 }

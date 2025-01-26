@@ -11,3 +11,17 @@
   font-size: 100px;
   overflow-y: auto; /* 각 섹션에서 스크롤이 가능하도록 합니다 */
 }
+
+@media (max-width: 768px) {
+  .one_page {
+    font-size: 60px;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .one_page {
+    font-size: 40px;
+    padding: 0 15px;
+  }
+}

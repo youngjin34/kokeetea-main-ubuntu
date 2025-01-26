@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Order.module.css"; // Import the CSS module
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Order() {
+  // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const navigate = useNavigate();
   const [selectedPickupMethod, setSelectedPickupMethod] =
     useState("매장(다회용컵)");
   const [selectedCoupon, setSelectedCoupon] = useState("");
@@ -29,17 +35,60 @@ function Order() {
       amount: 2,
     },
   ];
+
+  // 하드코딩된 데이터 대신 상태 추가
+  const [cartItems, setCartItems] = useState([]);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [membershipInfo, setMembershipInfo] = useState({
+    stamps: 0,
+    level: ''
+  });
+
+  // 데이터 페치 추가
+  useEffect(() => {
+    const fetchOrderData = async () => {
+      try {
+        // 장바구니 데이터 가져오기
+        const cartResponse = await fetch('/api/cart');
+        const cartData = await cartResponse.json();
+        setCartItems(cartData);
+
+        // 사용 가능한 쿠폰 가져오기
+        const couponsResponse = await fetch('/api/coupons');
+        const couponsData = await couponsResponse.json();
+        setAvailableCoupons(['적용할 쿠폰을 선택하세요', ...couponsData]);
+
+        // 멤버십 정보 가져오기
+        const membershipResponse = await fetch('/api/membership');
+        const membershipData = await membershipResponse.json();
+        setMembershipInfo(membershipData);
+      } catch (error) {
+        console.error('데이터 로딩 중 오류 발생:', error);
+      }
+    };
+
+    fetchOrderData();
+  }, []);
+
+  // 기존의 하드코딩된 데이터 제거
+  // const tableData = [...] 삭제
+  // const coupons = [...] 삭제
+
+  // calculateTotalPrice 수정
   const calculateTotalPrice = () => {
-    return tableData.reduce(
+    return cartItems.reduce(
       (acc, curr) =>
         acc +
         curr.amount * parseInt(curr.price.replace(/,/g, "").replace("원", "")),
       0
     );
   };
+
+  // calculateTotalAmount 수정
   const calculateTotalAmount = () => {
-    return tableData.reduce((acc, curr) => acc + curr.amount, 0);
+    return cartItems.reduce((acc, curr) => acc + curr.amount, 0);
   };
+
   const handlePickupMethodClick = (method) => {
     setSelectedPickupMethod(method);
   };
@@ -69,6 +118,115 @@ function Order() {
     setSelectedMethod(method);
   };
 
+  const handlePayment = () => {
+    navigate("/ordercomplete");
+  };
+
+  const handleCancel = () => {
+    navigate("/cart");
+  };
+
+  const OrderMethods = () => {
+    return (
+      <div className={style.order_methods}>
+        {/* 주문 매장 섹션 */}
+        <div>
+          <h3 className={style.branch}>주문 매장</h3>
+          <div className={style.checkout_store_title}>
+            <span className={style.store_button}>구로점</span>
+            <button className={style.branch_change}>변경</button>
+          </div>
+        </div>
+
+        {/* 픽업 방법 섹션 */}
+        <div>
+          <div className={style.checkout_pickup}>
+            <h2 className={style.checkout_choice}>픽업 방법</h2>
+            <span className={style.checkout_message}>
+              * 주문 완료 후 컵 변경이 불가합니다.
+            </span>
+          </div>
+          <div className={style.pickup_method}>
+            {pickupMethods.map((method) => (
+              <button
+                key={method}
+                className={`${style.pickup_button} ${
+                  selectedPickupMethod === method ? style.active : ""
+                }`}
+                onClick={() => handlePickupMethodClick(method)}
+              >
+                {method}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 쿠폰 적용 섹션 */}
+        <div>
+          <h2 className={style.checkout_coupon}>쿠폰 적용</h2>
+          <div className={style.select_coupon}>
+            <select onChange={handleCouponChange} value={selectedCoupon}>
+              {availableCoupons.map((coupon, index) => (
+                <option key={index} value={coupon}>
+                  {coupon}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={style.discount_price}>
+            <div>쿠폰 할인 금액</div>
+            <span className={style.discount_price_money}>
+              - {calculateDiscount().toLocaleString()}원
+            </span>
+          </div>
+        </div>
+
+        {/* 멤버십 적립 섹션 */}
+        <div>
+          <h2 className={style.checkout_stamp}>멤버쉽 적립</h2>
+          <div className={style.stampGrid}>
+            {Array(10)
+              .fill(null)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className={`${style.stamp} ${
+                    index < membershipInfo.stamps ? style.active : ""
+                  }`}
+                >
+                  <img 
+                    src="/public/img/coupon.png" 
+                    alt={index < membershipInfo.stamps ? "Active stamp" : "Inactive stamp"} 
+                  />
+                </div>
+              ))}
+          </div>
+          <div className={style.stampNote}>
+            * 스탬프 10개 적립시 등급별 무료 쿠폰 증정 주문 제품 증정
+          </div>
+        </div>
+
+        {/* 결제수단 섹션 */}
+        <div className={style.payment_methods_container}>
+          <div className={style.payment_methods_title}>결제수단</div>
+          <div className={style.payment_methods}>
+            {paymentMethods.map((method) => (
+              <button
+                key={method}
+                className={`${style.payment_method_button} ${
+                  selectedMethod === method ? style.active : ""
+                }`}
+                onClick={() => handleMethodClick(method)}
+              >
+                {method}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
@@ -78,12 +236,12 @@ function Order() {
             <h2 className={style.checkout_order_title}>
               주문내역
               <span className={style.checkout_order_title_span}>
-                {tableData.length}
+                {cartItems.length}
               </span>
               건
             </h2>
             <hr className={style.hr} />
-            {tableData.map((row) => (
+            {cartItems.map((row) => (
               <div key={row.id} className={style.checkout_item}>
                 <div className={style.checkout_item_image}>
                   {row.category === "브라운슈가밀크티" ? (
@@ -139,76 +297,8 @@ function Order() {
                 </div>
               </div>
             ))}
-
-            <h3 className={style.branch}>주문 매장</h3>
-            <div className={style.checkout_order_title}>
-              <span className={style.store_button}>구로점</span>
-              <button className={style.branch_change}>변경</button>
-            </div>
-
-            <div className={style.checkout_pickup}>
-              <h2 className={style.checkout_choice}>픽업 방법</h2>
-              <span className={style.checkout_message}>
-                * 주문 완료 후 컵 변경이 불가합니다.
-              </span>
-            </div>
-            <div className={style.pickup_method}>
-              {pickupMethods.map((method) => (
-                <button
-                  key={method}
-                  className={`${style.pickup_button} ${
-                    selectedPickupMethod === method ? style.active : ""
-                  }`}
-                  onClick={() => handlePickupMethodClick(method)}
-                >
-                  {method}
-                </button>
-              ))}
-            </div>
-
-            <h2 className={style.checkout_coupon}>쿠폰 적용</h2>
-            <div className={style.select_coupon}>
-              <select onChange={handleCouponChange} value={selectedCoupon}>
-                {coupons.map((coupon, index) => (
-                  <option key={index} value={coupon}>
-                    {coupon}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={style.discount_price}>
-              <div className={style}>
-                <img
-                  className={style.coupon_img}
-                  src="/public/img/coupon.png"
-                  alt="쿠폰이미지"
-                />
-                쿠폰 할인 금액
-              </div>
-              <span className={style.discount_price_money}>
-                - {calculateDiscount().toLocaleString()}원
-              </span>
-            </div>
-
-            <h2 className={style.checkout_stamp}>멤버쉽 적립</h2>
-
+            <OrderMethods />
             <hr />
-            <div className={style.payment_methods_container}>
-              <div className={style.payment_methods_title}>결제수단</div>
-              <div className={style.payment_methods}>
-                {paymentMethods.map((method) => (
-                  <button
-                    key={method}
-                    className={`${style.payment_method_button} ${
-                      selectedMethod === method ? style.active : ""
-                    }`}
-                    onClick={() => handleMethodClick(method)}
-                  >
-                    {method}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
           <div>
             <div className={style.checkout_summary}>
@@ -216,43 +306,51 @@ function Order() {
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문수량</span>
                 <span className={style.order_summary_count}>
-                  {calculateTotalAmount()}
+                  {calculateTotalAmount()}개
                 </span>
               </div>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문금액</span>
                 <span className={style.order_summary_price}>
-                  {calculateTotalPrice().toLocaleString()}
+                  {calculateTotalPrice().toLocaleString()}원
                 </span>
               </div>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>할인 금액</span>
                 <span className={style.order_summary_discount}>
-                  {calculateDiscount().toLocaleString()}
+                  {calculateDiscount().toLocaleString()}원
                 </span>
               </div>
               {selectedCoupon !== "사용 안 함" && ( // 쿠폰을 사용했을 경우에만 쿠폰할인 표시
                 <div className={style.order_summary_detail}>
                   <span className={style.order_summary_item}>쿠폰할인</span>
                   <span className={style.order_summary_discount}>
-                    - {calculateDiscount().toLocaleString()}
+                    - {calculateDiscount().toLocaleString()}원
                   </span>
                 </div>
               )}
-              <div className={style.order_summary_line}></div> {/*구분선 추가*/}
+                <div className={style.order_summary_line}></div> {/*구분선 추가*/}
               <div className={style.order_summary_detail}>
-                <span className={style.order_summary_item}>결제금액</span>
+                <span className={style.order_summary_item}>최종 결제금액</span>
+
                 <span className={style.order_summary_finalPrice}>
-                  {(
-                    calculateTotalPrice() - calculateDiscount()
-                  ).toLocaleString()}
-                  원
+                  {(calculateTotalPrice() - calculateDiscount()).toLocaleString()}원
                 </span>
               </div>
-            </div>
-            <div className={style.payment}>
-              <button className={style.payment_cancel_button}>취소</button>
-              <button className={style.payment_button}>결제하기</button>
+              <div className={style.payment}>
+                <button 
+                  className={style.payment_cancel_button}
+                  onClick={handleCancel}
+                >
+                  취소
+                </button>
+                <button 
+                  className={`${style.payment_button} ${style.primary_button}`}
+                  onClick={handlePayment}
+                >
+                  결제하기
+                </button>
+              </div>
             </div>
           </div>
         </div>

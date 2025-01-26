@@ -17,6 +17,8 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
     if (isHovered || fontColor === "black" || currentPage % 2 === 1) {
@@ -122,6 +124,10 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   // 홈으로 이동하는 함수를 단순화
   const handleLogoClick = () => {
     navigate('/');
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
@@ -425,29 +431,33 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             {headerLogined ? (
               <li onClick={logoutFunction}>
                 <Link to="#" style={{ color: fontColor }} className={style.user_menu_text}>
-                  LOGOUT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+                  LOGOUT
                 </Link>
               </li>
             ) : (
-              <li>
-                <Link onClick={toggleLoginModal} style={{ color: fontColor }} className={style.login_join_text}>
-                  LOGIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
-                </Link>
-              </li>
-            )}
-            {!headerLogined && (
-              <li>
-                <Link to="/register" style={{ color: fontColor }} className={style.login_join_text}>
-                  JOIN
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link onClick={toggleLoginModal} style={{ color: fontColor }} className={style.login_join_text}>
+                    LOGIN
+                  </Link>
+                </li>
+                <li className={style.menu_divider}>|</li>
+                <li>
+                  <Link to="/register" style={{ color: fontColor }} className={style.login_join_text}>
+                    JOIN
+                  </Link>
+                </li>
+              </>
             )}
             {headerLogined && (
-              <li>
-                <Link to="/mypage" style={{ color: fontColor }} className={style.user_menu_text}>
-                  MY PAGE
-                </Link>
-              </li>
+              <>
+                <li className={style.menu_divider}>|</li>
+                <li>
+                  <Link to="/mypage" style={{ color: fontColor }} className={style.user_menu_text}>
+                    MY PAGE
+                  </Link>
+                </li>
+              </>
             )}
             <li>
               <Link to="https://ko-kr.facebook.com/luvkokeetea/">

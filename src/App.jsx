@@ -24,6 +24,8 @@ import OrderHistory from "./pages/OrderHistory";
 import InquiryHistory from "./pages/InquiryHistory";
 import { AuthProvider } from './components/AuthContext';
 import CouponStamp from "./pages/CouponStamp";
+import Cart from "./pages/Cart";
+import OrderComplete from "./pages/OrderComplete";
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -87,6 +89,8 @@ function App() {
             <Route path="/orderhistory" element={<OrderHistory />} />
             <Route path="/inquiryhistory" element={<InquiryHistory />} />
             <Route path="/couponstamp" element={<CouponStamp />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/ordercomplete" element={<OrderComplete />} />
           </Routes>
           <AppContent />
         </div>

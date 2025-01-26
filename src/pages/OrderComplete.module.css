@@ -18,18 +18,6 @@
   position: relative;
 }
 
-.orderComplete::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 100%;
-  background: #BA274A;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
 .successSection {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -134,17 +122,16 @@
 .actions button {
   flex: 1;
   padding: 1rem;
-  border: none;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .trackButton {
   background: #BA274A;
   color: white;
+  border: none;
 }
 
 .trackButton:hover {
@@ -152,12 +139,14 @@
 }
 
 .homeButton {
-  background: #F8F8F8;
-  color: #1A1A1A;
+  background-color: white;
+  border: 1px solid #808080;
+  color: #808080;
 }
 
 .homeButton:hover {
-  background: #EEEEEE;
+  background-color: #eee;
+  color: #808080;
 }
 
 /* 반응형 스타일 */
