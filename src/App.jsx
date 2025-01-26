@@ -16,7 +16,6 @@ import KokeeStory from "./pages/KokeeStory";
 import Affiliated from "./pages/Affiliated";
 import Faq from "./pages/Faq";
 import Order from "./pages/Order";
-import Cart from "./pages/Cart";
 import MemberInfoUpdate from "./pages/MemberInfoUpdate";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -25,7 +24,6 @@ import OrderHistory from "./pages/OrderHistory";
 import InquiryHistory from "./pages/InquiryHistory";
 import { AuthProvider } from './components/AuthContext';
 import CouponStamp from "./pages/CouponStamp";
-
 
 function AppContent() {
   const location = useLocation(); // 현재 경로 확인
@@ -80,7 +78,6 @@ function App() {
             <Route path="/faq" element={<Faq />} />
             <Route path="/store" element={<Store />} />
             <Route path="/order" element={<Order />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
             <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
             <Route path="/register" element={<Register />} />

@@ -519,3 +519,30 @@ ul {
   display: block; 
   text-align: right;
 }
+
+.cart_icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart {
+  width: 24px;
+  height: 24px;
+}
+
+.cart_count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ba274a;
+  color: white;
+  font-size: 10px;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+}

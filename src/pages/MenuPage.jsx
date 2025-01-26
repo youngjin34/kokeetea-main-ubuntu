@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import style from "./MenuPage.module.css";
 
@@ -19,6 +20,8 @@ function MenuPage() {
   const [shots, setShots] = useState("기본");
 
   const [quantity, setQuantity] = useState(0);
+
+  const navigate = useNavigate();
 
   // 카테고리별 제품을 필터링하는 함수
   const filterByCategory = (category) => {
@@ -82,6 +85,62 @@ function MenuPage() {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [isModalOpen]);
+
+  // 장바구니에 담기 함수 추가
+  const addToCart = () => {
+    if (quantity === 0) {
+      alert("수량을 선택해주세요.");
+      return;
+    }
+
+    const cartItem = {
+      product: selectedProduct,
+      quantity: quantity,
+      options: {
+        temp,
+        whipping,
+        pearl,
+        shots
+      }
+    };
+
+    // localStorage에서 현재 장바구니 가져오기
+    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // 새 아이템 추가
+    currentCart.push(cartItem);
+    
+    // 장바구니 업데이트
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    
+    alert("장바구니에 추가되었습니다.");
+    setModalOpen(false);
+  };
+
+  // 바로 주문하기 함수 추가
+  const orderNow = () => {
+    if (quantity === 0) {
+      alert("수량을 선택해주세요.");
+      return;
+    }
+
+    const orderItem = {
+      product: selectedProduct,
+      quantity: quantity,
+      options: {
+        temp,
+        whipping,
+        pearl,
+        shots
+      }
+    };
+
+    // 주문 정보를 localStorage에 임시 저장
+    localStorage.setItem('currentOrder', JSON.stringify([orderItem]));
+    
+    // 주문 페이지로 이동
+    navigate('/order');
+  };
 
   return (
     <div className={`${style.MenuPage}`}>
@@ -343,10 +402,16 @@ function MenuPage() {
                 </div>
               </div>
               <div className={style.order_btn}>
-                <button className={`${style.btn} ${style.now_btn}`}>
+                <button 
+                  className={`${style.btn} ${style.now_btn}`}
+                  onClick={orderNow}
+                >
                   바로 주문하기
                 </button>
-                <button className={`${style.btn} ${style.cart_btn}`}>
+                <button 
+                  className={`${style.btn} ${style.cart_btn}`}
+                  onClick={addToCart}
+                >
                   담기
                 </button>
               </div>

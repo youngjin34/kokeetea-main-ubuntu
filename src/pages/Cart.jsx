@@ -3,6 +3,7 @@ import style from "./Cart.module.css";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState("전체선택"); // 카테고리 기능 삭제
 
   // 샘플 데이터 삭제

@@ -72,7 +72,7 @@ function Order() {
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
-        <h1 className={style.checkout_title}>결제하기</h1>
+        <h1 className={style.title}>결제하기</h1>
         <div className={style.checkout_menu_container}>
           <div className={style.checkout_items}>
             <h2 className={style.checkout_order_title}>
