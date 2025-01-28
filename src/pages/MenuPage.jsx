@@ -7,7 +7,7 @@ import style from "./MenuPage.module.css";
 function MenuPage() {
   const [products, setProducts] = useState([]);
   const [filteredMenu, setFilteredMenu] = useState([]);
-  const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택택
+  const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택
 
   const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
   const [isModalOpen, setModalOpen] = useState(false);
@@ -20,6 +20,8 @@ function MenuPage() {
   const [shots, setShots] = useState("기본");
 
   const [quantity, setQuantity] = useState(0);
+
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const navigate = useNavigate();
 
@@ -54,6 +56,15 @@ function MenuPage() {
   const toggleModal = (product = null) => {
     setSelectedProduct(product);
     setModalOpen(!isModalOpen);
+    
+    if (!product || isModalOpen) {
+      setTemp("HOT");
+      setWhipping("기본");
+      setPearl("추가 안함");
+      setShots("기본");
+      setQuantity(1);
+      setTotalPrice(product.pdPrice);
+    }
   };
 
   useEffect(() => {
@@ -86,34 +97,57 @@ function MenuPage() {
     };
   }, [isModalOpen]);
 
-  // 장바구니에 담기 함수 추가
-  const addToCart = () => {
+  // 장바구니에 담기 함수 수정
+  const addToCart = async () => {
     if (quantity === 0) {
       alert("수량을 선택해주세요.");
       return;
     }
 
-    const cartItem = {
-      product: selectedProduct,
-      quantity: quantity,
-      options: {
-        temp,
-        whipping,
-        pearl,
-        shots
-      }
-    };
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
 
-    // localStorage에서 현재 장바구니 가져오기
-    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // 새 아이템 추가
-    currentCart.push(cartItem);
-    
-    // 장바구니 업데이트
-    localStorage.setItem('cart', JSON.stringify(currentCart));
-    
-    alert("장바구니에 추가되었습니다.");
+    if (token && email) {
+      try {
+        const response = await fetch('http://localhost:8080/kokee/carts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            pdName: selectedProduct.pdName,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            email: email,
+            options: `${temp}, ${whipping}, ${pearl}, ${shots}`
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('장바구니 추가 실패');
+        }
+
+        alert("장바구니에 추가되었습니다.");
+      } catch (error) {
+        console.error("장바구니 추가 실패:", error);
+        alert("장바구니 추가에 실패했습니다.");
+      }
+    } else {
+      // 비로그인 상태: localStorage에 저장
+      const cartItem = {
+        pdName: selectedProduct.pdName,
+        quantity: quantity,
+        totalPrice: totalPrice,
+        options: `${temp}, ${whipping}, ${pearl}, ${shots}`
+      };
+
+      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+      currentCart.push(cartItem);
+      localStorage.setItem("cart", JSON.stringify(currentCart));
+      alert("장바구니에 추가되었습니다.");
+    }
+
     setModalOpen(false);
   };
 
@@ -131,16 +165,45 @@ function MenuPage() {
         temp,
         whipping,
         pearl,
-        shots
-      }
+        shots,
+      },
     };
 
     // 주문 정보를 localStorage에 임시 저장
-    localStorage.setItem('currentOrder', JSON.stringify([orderItem]));
-    
+    localStorage.setItem("currentOrder", JSON.stringify([orderItem]));
+
     // 주문 페이지로 이동
-    navigate('/order');
+    navigate("/order");
   };
+
+  const calculateOptionPrice = () => {
+    let optionPrice = 0;
+    
+    // 휘핑 옵션 가격
+    if (whipping === "휘핑추가") {
+      optionPrice += 500;
+    }
+    
+    // 펄 옵션 가격
+    if (pearl === "블랙 펄" || pearl === "화이트 펄") {
+      optionPrice += 500;
+    }
+    
+    // 샷 옵션 가격
+    if (shots === "샷 추가") {
+      optionPrice += 500;
+    }
+    
+    return optionPrice;
+  };
+
+  useEffect(() => {
+    if (selectedProduct) {
+      const basePrice = selectedProduct.pdPrice;
+      const optionPrice = calculateOptionPrice();
+      setTotalPrice((basePrice + optionPrice) * quantity);
+    }
+  }, [temp, whipping, pearl, shots, quantity, selectedProduct]);
 
   return (
     <div className={`${style.MenuPage}`}>
@@ -201,15 +264,26 @@ function MenuPage() {
             <div
               key={product.pdId}
               className={style.MenuItem}
-              onClick={() => toggleModal(product)} // 클릭 시 선택된 제품을 모달에 전달
+              onClick={() => toggleModal(product)}
             >
               <img src={product.image} alt={product.pdName} />
               <h3>{product.pdName}</h3>
               <p>{product.pdPrice} 원</p>
+
+              {/* 영양정보 오버레이 추가 */}
+              <div className={style.nutrition_overlay}>
+                <div className={style.nutrition_info}>
+                  <h4>영양정보</h4>
+                  <p>칼로리: {product.calories || "300"} kcal</p>
+                  <p>당류: {product.sugar || "30"}g</p>
+                  <p>카페인: {product.caffeine || "150"}mg</p>
+                  <p>나트륨: {product.sodium || "120"}mg</p>
+                </div>
+              </div>
             </div>
             <button
               className={style.menu_order_btn}
-              onClick={() => toggleModal(product)} // 클릭 시 선택된 제품을 모달에 전달
+              onClick={() => toggleModal(product)}
             >
               <img src="/public/img/cart.png" /> 주문
             </button>
@@ -230,7 +304,14 @@ function MenuPage() {
               <div className={style.modal_info}>
                 <h2>{selectedProduct.pdName}</h2>
                 <div className={style.descript}>{selectedProduct.desc}</div>
-                <div className={style.price}>{selectedProduct.pdPrice} 원</div>
+                <div className={style.price}>
+                  {totalPrice.toLocaleString()} 원
+                  {calculateOptionPrice() > 0 && (
+                    <span className={style.base_price}>
+                      (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션 {calculateOptionPrice().toLocaleString()}원)
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -402,17 +483,17 @@ function MenuPage() {
                 </div>
               </div>
               <div className={style.order_btn}>
-                <button 
-                  className={`${style.btn} ${style.now_btn}`}
-                  onClick={orderNow}
-                >
-                  바로 주문하기
-                </button>
-                <button 
+                <button
                   className={`${style.btn} ${style.cart_btn}`}
                   onClick={addToCart}
                 >
                   담기
+                </button>
+                <button
+                  className={`${style.btn} ${style.now_btn}`}
+                  onClick={orderNow}
+                >
+                  바로 주문하기
                 </button>
               </div>
             </div>

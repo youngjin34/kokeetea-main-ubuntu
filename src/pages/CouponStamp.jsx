@@ -104,6 +104,15 @@ const CouponStamp = () => {
     }
   };
 
+  const calculateProgress = (totalAmount) => {
+    const silverToGold = 50000;
+    const goldToRed = 100000;
+    const redToDiamond = 200000;
+
+    const progress = (totalAmount / userData.nextLevelAmount) * 100;
+    return Math.min(progress, 100);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     
@@ -170,7 +179,7 @@ const CouponStamp = () => {
                   <span className={style.progressAmount}>{userData.nextLevelAmount.toLocaleString()}원</span> 추가 결제 시<br />
                   <span className={style.nextLevel}>{userData.nextLevel}</span> 등급이 될 수 있어요.
                 </div>
-                <ProgressBar progress={30} />
+                <ProgressBar progress={calculateProgress(userData.totalOrderAmount)} />
               </div>
             </div>
             <div className={style.membershipStats}>

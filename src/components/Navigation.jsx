@@ -130,6 +130,42 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // 장바구니 데이터를 서버와 동기화하는 함수
+  const syncCartData = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/kokee/carts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
+      }
+      
+      const data = await response.json();
+      localStorage.setItem('cart', JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("장바구니 동기화 실패:", error);
+      return [];
+    }
+  };
+
+  // Navigation.jsx에서 장바구니 카운트를 상태로 관리
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      const cartData = await syncCartData();
+      setCartCount(cartData.length);
+    };
+    
+    fetchCartCount();
+  }, []);
+
   return (
     <div className={`${style.Navigation}`}>
       <div className={style.nav_container}>
@@ -424,7 +460,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
                 <span className={style.cart_count}>
-                  {JSON.parse(localStorage.getItem('cart'))?.length || 0}
+                  {cartCount}
                 </span>
               </Link>
             </li>

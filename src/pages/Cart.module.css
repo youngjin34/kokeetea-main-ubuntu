@@ -2,7 +2,7 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  min-height: calc(100vh - 140px); 
+  min-height: calc(100vh - 140px);
 }
 
 .MainContent {
@@ -132,11 +132,12 @@
   color: #666;
   margin-bottom: 5px;
 }
+
 .cart_item_options {
   font-size: 14px;
   color: #666666;
-  padding-left: 10px;
 }
+
 .cart_item_options button {
   font-size: 10px;
   margin-left: 20px;
@@ -277,7 +278,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  user-select: none;  /* 텍스트 선택 방지 */
+  user-select: none; /* 텍스트 선택 방지 */
 }
 
 .checkbox_round_input {
@@ -453,7 +454,7 @@
 
 .option_btn {
   padding: 10px 20px;
-  border: 2px solid #E0E0E0;
+  border: 2px solid #e0e0e0;
   border-radius: 8px;
   background-color: white;
   cursor: pointer;
@@ -516,4 +517,76 @@
 
 .modalContent::-webkit-scrollbar-thumb:hover {
   background: #a32342;
+}
+
+.empty_cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.empty_cart_image {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
+.empty_cart h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.empty_cart p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.go_to_menu_button {
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.go_to_menu_button:hover {
+  background-color: #a32342;
+}
+
+@media (max-width: 768px) {
+  .empty_cart {
+    padding: 40px 16px;
+  }
+
+  .empty_cart_image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .empty_cart h2 {
+    font-size: 20px;
+  }
+
+  .empty_cart p {
+    font-size: 14px;
+  }
+
+  .go_to_menu_button {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
 }

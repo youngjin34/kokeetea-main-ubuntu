@@ -35,6 +35,38 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
     e.preventDefault();
     try {
       await login(userName, password);
+      
+      // localStorage의 장바구니 데이터 확인
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      
+      if (localCart.length > 0) {
+        // 서버에 장바구니 데이터 전송
+        const token = localStorage.getItem('token');
+        
+        for (const item of localCart) {
+          try {
+            await fetch('http://localhost:8080/kokee/carts', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                productId: item.product.pdId,
+                quantity: item.quantity,
+                options: `${item.options.temp}, ${item.options.whipping}, ${item.options.pearl}, ${item.options.shots}`,
+                price: item.product.pdPrice
+              })
+            });
+          } catch (error) {
+            console.error("장바구니 동기화 실패:", error);
+          }
+        }
+        
+        // localStorage의 장바구니 데이터 삭제
+        localStorage.removeItem("cart");
+      }
+
       setIsLogined(true);
       setHeaderLogined(true);
       onClose();

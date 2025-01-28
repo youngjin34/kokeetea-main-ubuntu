@@ -23,55 +23,74 @@ const Cart = () => {
   const [shots, setShots] = useState("기본");
   const [size, setSize] = useState("Regular"); // 사이즈 옵션 추가
 
-  // 장바구니 데이터 가져오기
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
-
-  const fetchCartItems = async () => {
+  // 기존의 loadLocalStorageData, syncCartData, loadCartData 함수들을 대체
+  const fetchCartData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/kokee/carts', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const token = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+      let cartData = [];
       
-      if (!response.ok) {
-        throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
+      if (token && email) {
+        // 로그인 상태: 서버에서 데이터 가져오기
+        const response = await fetch(`http://localhost:8080/kokee/carts/${email}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`서버 에러: ${response.status}`);
+        }
+        
+        cartData = await response.json();
+      } else {
+        // 비로그인 상태: 로컬스토리지에서 데이터 가져오기
+        const localCartData = localStorage.getItem('cart');
+        cartData = localCartData ? JSON.parse(localCartData) : [];
+        console.log('로컬 장바구니 데이터:', cartData);
       }
       
-      const data = await response.json();
-      setCartItems(data);
+      setCartItems(cartData);
+      console.log('설정된 장바구니 데이터:', cartData);
     } catch (error) {
+      console.error("장바구니 데이터 로드 실패:", error);
       setError(error.message);
-      console.error("장바구니 데이터 로딩 실패:", error);
+      // 에러 발생시 빈 배열로 초기화하여 UI 렌더링은 가능하도록 함
+      setCartItems([]);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchCartData();
+  }, []);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
+
   // 장바구니 아이템 삭제
   const handleRemove = async () => {
-    try {
-      const response = await fetch("/kokee/carts", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          itemIds: selectedItems
-        }),
-      });
+    const email = localStorage.getItem('email');
+    const token = localStorage.getItem('token');
 
-      if (!response.ok) {
-        throw new Error("상품 삭제에 실패했습니다.");
+    try {
+      for (const itemId of selectedItems) {
+        await fetch(`http://localhost:8080/kokee/carts/delete_one/${itemId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
       }
 
-      // 성공 시 장바구니 새로고침
-      fetchCartItems();
+      fetchCartData();
       setSelectedItems([]);
     } catch (error) {
       console.error("상품 삭제 실패:", error);
@@ -81,22 +100,26 @@ const Cart = () => {
 
   // 수량 증가
   const handleIncrement = async (id) => {
+    const email = localStorage.getItem('email');
+    if (!email) return;
+
+    const item = cartItems.find(item => item.id === id);
+    const newAmount = (amounts[id] || item.amount) + 1;
+    
     try {
-      const response = await fetch(`/kokee/carts/${id}/amount`, {
-        method: "PATCH",
+      await fetch(`/kokee/carts/update/${email}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: (amounts[id] || cartItems.find(item => item.id === id).amount) + 1
+          id: id,
+          updateMount: newAmount,
+          updatePrice: calculateTotalPrice(newAmount, item.price)
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("수량 변경에 실패했습니다.");
-      }
-
-      fetchCartItems();
+      fetchCartData();
     } catch (error) {
       console.error("수량 증가 실패:", error);
       alert("수량 변경에 실패했습니다.");
@@ -105,43 +128,51 @@ const Cart = () => {
 
   // 수량 감소
   const handleDecrement = async (id) => {
-    const currentAmount = amounts[id] || cartItems.find(item => item.id === id).amount;
+    const email = localStorage.getItem('email');
+    if (!email) return;
+
+    const item = cartItems.find(item => item.id === id);
+    const currentAmount = amounts[id] || item.amount;
     if (currentAmount <= 1) return;
 
+    const newAmount = currentAmount - 1;
+    
     try {
-      const response = await fetch(`/kokee/carts/${id}/amount`, {
-        method: "PATCH",
+      await fetch(`/kokee/carts/update/${email}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: currentAmount - 1
+          id: id,
+          updateMount: newAmount,
+          updatePrice: calculateTotalPrice(newAmount, item.price)
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("수량 변경에 실패했습니다.");
-      }
-
-      fetchCartItems();
+      fetchCartData();
     } catch (error) {
       console.error("수량 감소 실패:", error);
       alert("수량 변경에 실패했습니다.");
     }
   };
 
-  // 체크박스 관련 함수들
+  // 체크박스 관련 함수들 수정
   const handleCheck = (id) => {
-    setSelectedItems(prev => 
-      prev.includes(id) 
-        ? prev.filter(item => item !== id)
-        : [...prev, id]
-    );
+    setSelectedItems(prev => {
+      const isSelected = prev.includes(id);
+      if (isSelected) {
+        return prev.filter(itemId => itemId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   const handleAllCheck = (e) => {
     if (e.target.checked) {
-      setSelectedItems(cartItems.map(item => item.id));
+      const allItemIds = cartItems.map(item => item.id);
+      setSelectedItems(allItemIds);
     } else {
       setSelectedItems([]);
     }
@@ -168,7 +199,7 @@ const Cart = () => {
 
   const handleAddToCart = async (product) => {
     try {
-      const response = await fetch("/kokee/carts", {
+      const response = await fetch("http://localhost:8080/kokee/carts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -243,21 +274,55 @@ const Cart = () => {
     setOptionModalOpen(true);
   };
 
+  // 이미지 경로를 가져오는 함수 추가
+  const getMenuImage = (category) => {
+    const imageMap = {
+      "브라운슈가밀크티": "../../public/img/Cold Cloud/Brown Sugar Cold Brew.png",
+      "타로밀크티": "../../public/img/Milk Tea/Taro Milk Tea.png",
+      "얼그레이밀크티": "../../public/img/Milk Tea/Earl Grey Milk Tea.png",
+      // 나머지 메뉴들에 대한 이미지 경로도 추가
+    };
+    
+    // 이미지가 없는 경우 바로 기본 이미지 반환
+    return imageMap[category] ?? "/public/img/default-menu.png";
+  };
+
+  // 옵션 표시 형식 수정
+  const formatOptions = (options) => {
+    if (!options) return "옵션 없음";
+    
+    try {
+      // options가 문자열인 경우 그대로 반환
+      if (typeof options === 'string') {
+        return options;
+      }
+      
+      // options가 객체인 경우 형식화
+      if (typeof options === 'object') {
+        return Object.entries(options)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(', ');
+      }
+      
+      return "옵션 없음";
+    } catch (error) {
+      console.error("옵션 형식화 오류:", error);
+      return "옵션 없음";
+    }
+  };
+
   const saveOptionChanges = async () => {
     try {
-      const response = await fetch(`/kokee/carts/${selectedCartItem.id}/options`, {
+      const formattedOptions = `${temp}, ${size}, ${whipping}, ${pearl}, ${shots}`;
+      
+      const response = await fetch(`http://localhost:8080/kokee/carts/${selectedCartItem.id}/options`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
-          options: {
-            temp,
-            whipping,
-            pearl,
-            shots,
-            size
-          }
+          options: formattedOptions
         }),
       });
 
@@ -266,7 +331,7 @@ const Cart = () => {
       }
 
       setOptionModalOpen(false);
-      fetchCartItems();
+      fetchCartData();
     } catch (error) {
       console.error("옵션 변경 실패:", error);
       alert("옵션 변경에 실패했습니다.");
@@ -300,178 +365,147 @@ const Cart = () => {
   if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러: {error}</div>;
 
-  const tableData = [
-    {
-      id: 1,
-      category: "브라운슈가밀크티",
-      price: "5,600원",
-      options: "ICE / 펄 추가(+500원) / 샷 추가(+500원)",
-      amount: 1,
-    },
-    {
-      id: 2,
-      category: "타로밀크티",
-      price: "5,600원",
-      options: "ICE",
-      amount: 2,
-    },
-    {
-      id: 3,
-      category: "타로밀크티",
-      price: "5,600원",
-      options: "ICE",
-      amount: 2,
-    },
-    {
-      id: 4,
-      category: "타로밀크티",
-      price: "5,600원",
-      options: "ICE",
-      amount: 2,
-    },
-    {
-      id: 5,
-      category: "타로밀크티",
-      price: "5,600원",
-      options: "ICE",
-      amount: 2,
-    },
-  ];
-
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
         <h1 className={style.cart_title}>장바구니</h1>
         <div className={style.cart_menu_container}>
           <div className={style.cart_items}>
-            <div>
-              <div className={style.total_select}>
-                <div>
-                  <label className={style.checkbox_round}>
-                    <input
-                      className={style.checkbox_round_input}
-                      type="checkbox"
-                      onChange={handleAllCheck}
-                      checked={selectedItems.length === cartItems.length}
-                      id="selectAll"
-                    />
-                    <span className={style.total_select_text}>전체선택</span>
-                  </label>
-                </div>
-                <button className={style.remove_button} onClick={handleRemove}>
-                  삭제
+            {cartItems.length === 0 ? (
+              <div className={style.empty_cart}>
+                <h2>장바구니가 비어있습니다</h2>
+                <p>원하는 메뉴를 장바구니에 담아보세요!</p>
+                <button 
+                  className={style.go_to_menu_button}
+                  onClick={() => navigate('/menupage')}
+                >
+                  메뉴 보러가기
                 </button>
               </div>
-            </div>
-            <div className={style.cart_items_scrollable}>
-              {tableData.map((row) => (
-                <div key={row.id} className={style.cart_item}>
-                  <div className={style.checkbox_item}>
-                    <label className={style.checkbox_round}>
-                      <input
-                        className={style.checkbox_round_input}
-                        type="checkbox"
-                        checked={selectedItems.includes(row.id)}
-                        onChange={() => handleCheck(row.id)}
-                        id={`checkbox-${row.id}`}
-                      />
-                      <span className={style.checkbox_round_label}></span>
-                    </label>
+            ) : (
+              <>
+                <div>
+                  <div className={style.total_select}>
+                    <div>
+                      <label className={style.checkbox_round}>
+                        <input
+                          className={style.checkbox_round_input}
+                          type="checkbox"
+                          onChange={handleAllCheck}
+                          checked={selectedItems.length === cartItems.length}
+                          id="selectAll"
+                        />
+                        <span className={style.total_select_text}>전체선택</span>
+                      </label>
+                    </div>
+                    <button className={style.remove_button} onClick={handleRemove}>
+                      삭제
+                    </button>
                   </div>
-                  <div className={style.cart_item_image}>
-                    {row.category === "브라운슈가밀크티" ? (
-                      <img
-                        src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
-                        alt=""
-                      />
-                    ) : (
-                      <img
-                        src="../../public/img/Cold Cloud/Brown Sugar Cold Brew.png"
-                        alt=""
-                      />
-                    )}
-                  </div>
-                  <div className={style.cart_item_}>
-                    <div className={style.cart_item_top}>
-                      <div className={style.cart_item_header}>
-                        <span className={style.cart_item_name}>
-                          {row.category}
-                        </span>
-                      </div>
-                      <div>
-                        <div className={style.cart_item_count}>
-                          <button
-                            className={style.minus_button}
-                            onClick={() => handleDecrement(row.id)}
-                          >
-                            -
-                          </button>
+                </div>
+                <div className={style.cart_items_scrollable}>
+                  {cartItems.map((item) => (
+                    <div key={item.id} className={style.cart_item}>
+                      <div className={style.checkbox_item}>
+                        <label className={style.checkbox_round}>
                           <input
-                            type="text"
-                            value={amounts[row.id] || row.amount}
-                            className={style.amount_input}
-                            readOnly
+                            className={style.checkbox_round_input}
+                            type="checkbox"
+                            checked={selectedItems.includes(item.id)}
+                            onChange={() => handleCheck(item.id)}
+                            id={`checkbox-${item.id}`}
                           />
-                          <button
-                            className={style.plus_button}
-                            onClick={() => handleIncrement(row.id)}
+                          <span className={style.checkbox_round_label}></span>
+                        </label>
+                      </div>
+                      <div className={style.cart_item_image}>
+                        <img
+                          src={getMenuImage(item.category)}
+                          alt={item.category}
+                          loading="lazy"
+                          className={style.menu_image}
+                        />
+                      </div>
+                      <div className={style.cart_item_}>
+                        <div className={style.cart_item_top}>
+                          <div className={style.cart_item_header}>
+                            <span className={style.cart_item_name}>
+                              {item.category || "상품명 없음"}
+                            </span>
+                          </div>
+                          <div>
+                            <div className={style.cart_item_count}>
+                              <button
+                                className={style.minus_button}
+                                onClick={() => handleDecrement(item.id)}
+                              >
+                                -
+                              </button>
+                              <input
+                                type="text"
+                                value={item.amount}
+                                className={style.amount_input}
+                                readOnly
+                              />
+                              <button
+                                className={style.plus_button}
+                                onClick={() => handleIncrement(item.id)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={style.cart_item_price}>
+                          {typeof item.price === 'number' 
+                            ? `${item.price.toLocaleString()}원` 
+                            : item.price}
+                        </div>
+                        <div className={style.cart_item_options}>
+                          {formatOptions(item.options)}
+                          <button 
+                            className={style.option_change_btn}
+                            onClick={() => handleOptionChange(item)}
                           >
-                            +
+                            옵션변경
                           </button>
                         </div>
                       </div>
                     </div>
-                    <div className={style.cart_item_price}>{row.price}</div>
-                    <div className={style.cart_item_bottom}>
-                      <div className={style.cart_item_options}>
-                        옵션 {row.options}
-                        <button className={style.option_change_btn} onClick={() => handleOptionChange(row)}>
-                          옵션 변경
-                        </button>
-                      </div>
-                      <div className={style.cart_item_totalPrice}>
-                        총 금액{" "}
-                        <span className={style.cart_item_totalPrice_money}>
-                          {calculateTotalPrice(
-                            amounts[row.id] || row.amount,
-                            row.price
-                          ).toLocaleString()}
-                        </span>
-                        원
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
 
-          <div className={style.order_summary}>
-            <div className={style.order_summary_top}>
-              <div className={style.order_summary_title}>주문내역 확인</div>
-              <div className={style.order_summary_detail}>
-                <span className={style.order_summary_item}>총 주문수량</span>
-                <span className={style.order_summary_count}>
-                  {calculateTotalSelectedAmount()}개
-                </span>
+          {cartItems.length > 0 && (
+            <div className={style.order_summary}>
+              <div className={style.order_summary_top}>
+                <div className={style.order_summary_title}>주문내역 확인</div>
+                <div className={style.order_summary_detail}>
+                  <span className={style.order_summary_item}>총 주문수량</span>
+                  <span className={style.order_summary_count}>
+                    {calculateTotalSelectedAmount()}개
+                  </span>
+                </div>
+                <div className={style.order_summary_detail}>
+                  <span className={style.order_summary_item}>결제예정금액</span>
+                  <span className={style.order_summary_price}>
+                    {calculateTotalSelectedPrice().toLocaleString()}원
+                  </span>
+                </div>
+                <div className={style.order_summary_text}>
+                  *최종금액은 결제화면에서 확인 가능합니다.
+                </div>
               </div>
-              <div className={style.order_summary_detail}>
-                <span className={style.order_summary_item}>결제예정금액</span>
-                <span className={style.order_summary_price}>
-                  {calculateTotalSelectedPrice().toLocaleString()}원
-                </span>
-              </div>
-              <div className={style.order_summary_text}>
-                *최종금액은 결제화면에서 확인 가능합니다.
-              </div>
+                <button 
+                  className={style.checkout_button} 
+                  onClick={handleCheckout}
+                >
+                  결제하기
+                </button>
             </div>
-              <button 
-                className={style.checkout_button} 
-                onClick={handleCheckout}
-              >
-                결제하기
-              </button>
-          </div>
+          )}
         </div>
       </div>
       {isOptionModalOpen && selectedCartItem && (

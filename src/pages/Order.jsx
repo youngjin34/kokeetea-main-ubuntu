@@ -138,6 +138,67 @@ function Order() {
     navigate("/cart");
   };
 
+  // 상태 추가
+  const [isStoreModalOpen, setIsStoreModalOpen] = useState(false);
+  const [selectedStore, setSelectedStore] = useState("구로점");
+
+  // Store.jsx의 stores 데이터 가져오기
+  const stores = [
+    {
+      id: 1,
+      name: "구로점",
+      address: "서울시 구로구 디지털로 300, 11층 (구로동, 지밸리비즈플라자)",
+      phone: "02-2345-6789",
+    },
+    {
+      id: 2,
+      name: "인천점",
+      address: "인천광역시 부평구 경원대로 1373, 2층(북인천우체국)",
+      phone: "032-567-8901",
+    },
+    {
+      id: 3,
+      name: "판교점",
+      address: "경기도 성남시 수정구 창업로 54 (시흥동, 판교제2테크노밸리기업성장센터) 2층",
+      phone: "031-789-0123",
+    },
+    {
+      id: 4,
+      name: "천안아산점",
+      address: "충청남도 아산시 배방읍 희망로46번길 45-17 위너스빌딩 4층",
+      phone: "041-234-5678",
+    },
+    {
+      id: 5,
+      name: "광주점",
+      address: "광주광역시 서구 천변좌로 268 19층",
+      phone: "062-345-6789",
+    },
+    {
+      id: 6,
+      name: "대구점",
+      address: "대구광역시 달서구 장산남로 11(용산동 230-9)",
+      phone: "053-456-7890",
+    },
+    {
+      id: 7,
+      name: "부산점",
+      address: "부산광역시 연제구 중앙대로 1000, 14층, 16층",
+      phone: "051-567-8901",
+    },
+  ];
+
+  // 지점 변경 모달 열기/닫기 함수
+  const toggleStoreModal = () => {
+    setIsStoreModalOpen(!isStoreModalOpen);
+  };
+
+  // 지점 선택 함수
+  const handleStoreSelect = (storeName) => {
+    setSelectedStore(storeName);
+    setIsStoreModalOpen(false);
+  };
+
   const OrderMethods = () => {
     return (
       <div className={style.order_methods}>
@@ -145,10 +206,38 @@ function Order() {
         <div>
           <h3 className={style.branch}>주문 매장</h3>
           <div className={style.checkout_store_title}>
-            <span className={style.store_button}>구로점</span>
-            <button className={style.branch_change}>변경</button>
+            <span className={style.store_button}>{selectedStore}</span>
+            <button className={style.branch_change} onClick={toggleStoreModal}>
+              변경
+            </button>
           </div>
         </div>
+
+        {/* 지점 선택 모달 */}
+        {isStoreModalOpen && (
+          <div className={style.store_modal_overlay}>
+            <div className={style.store_modal}>
+              <h3>매장 선택</h3>
+              <div className={style.store_list}>
+                {stores.map((store) => (
+                  <div
+                    key={store.id}
+                    className={`${style.store_item} ${
+                      selectedStore === store.name ? style.selected : ""
+                    }`}
+                    onClick={() => handleStoreSelect(store.name)}
+                  >
+                    <div className={style.store_name}>{store.name}</div>
+                    <div className={style.store_address}>{store.address}</div>
+                  </div>
+                ))}
+              </div>
+              <button className={style.close_button} onClick={toggleStoreModal}>
+                닫기
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 픽업 방법 섹션 */}
         <div>
@@ -186,7 +275,14 @@ function Order() {
             </select>
           </div>
           <div className={style.discount_price}>
-            <div>쿠폰 할인 금액</div>
+            <div className={style.coupon}>
+              <img 
+                src="https://cdn-icons-png.flaticon.com/512/879/879757.png" 
+                alt="쿠폰 아이콘" 
+                className={style.coupon_img}
+              />
+              <span>쿠폰 할인 금액</span>
+            </div>
             <span className={style.discount_price_money}>
               - {calculateDiscount().toLocaleString()}원
             </span>
