@@ -111,7 +111,7 @@
 .cart_item_bottom {
   display: flex;
   justify-content: space-between;
-  background-color: #f8f9fa;
+  background-color: #f8f8f8;
   height: 50px;
   align-items: center;
   border-radius: 8px;
@@ -206,7 +206,7 @@
   height: 100%;
   padding: 20px;
   border-radius: 8px;
-  background-color: #f8f9fa;
+  background-color: #f8f8f8;
 }
 
 .order_summary_top {

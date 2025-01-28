@@ -42,7 +42,7 @@
 .sideNav {
   width: 200px;
   margin-left: 20px;
-  border-top: 2px solid #cccccc;
+  border-top: 2px solid #E5D5DA;
   height: 100%;
 }
 
@@ -51,12 +51,12 @@
   cursor: pointer;
   font-size: 16px;
   transition: all 0.2s ease;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #E5D5DA;
   font-weight: 600;
 }
 
 .sideNavItem:last-child {
-  border-bottom: 2px solid #cccccc;
+  border-bottom: 2px solid #E5D5DA;
 }
 
 .sideNavItem:hover {
@@ -64,7 +64,7 @@
 }
 
 .periodFilter {
-  background-color: #f5f5f5;
+  background-color: #f8f8f8;
   padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 20px;

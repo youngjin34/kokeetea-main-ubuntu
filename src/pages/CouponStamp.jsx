@@ -42,6 +42,8 @@ const CouponStamp = () => {
     stamps: 0,
     coupons: []
   });
+  const [coupons, setCoupons] = useState([]);
+  const [stamps, setStamps] = useState(0);
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -82,6 +84,26 @@ const CouponStamp = () => {
 
   const levelInfo = getLevelInfo(userData.memberLevel);
 
+  const fetchCouponStampData = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/kokee/coupon-stamp', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('쿠폰/스탬프 정보를 불러오는데 실패했습니다.');
+      }
+      
+      const data = await response.json();
+      setCoupons(data.coupons);
+      setStamps(data.stamps);
+    } catch (error) {
+      console.error('쿠폰/스탬프 데이터 로딩 실패:', error);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     
@@ -119,6 +141,10 @@ const CouponStamp = () => {
     };
     
     fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    fetchCouponStampData();
   }, []);
 
   return (

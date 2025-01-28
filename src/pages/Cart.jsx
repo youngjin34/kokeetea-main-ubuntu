@@ -31,9 +31,20 @@ const Cart = () => {
   const fetchCartItems = async () => {
     setLoading(true);
     try {
-      // 더미데이터 사용
-      setCartItems(tableData);
-      setLoading(false);
+      const response = await fetch('http://localhost:8080/kokee/carts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
+      }
+      
+      const data = await response.json();
+      setCartItems(data);
     } catch (error) {
       setError(error.message);
       console.error("장바구니 데이터 로딩 실패:", error);

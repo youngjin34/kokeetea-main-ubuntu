@@ -11,6 +11,24 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // 페이지 닫을 때 로그아웃 처리
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("realname");
+      localStorage.removeItem("email");
+      localStorage.removeItem("token");
+      localStorage.removeItem("isAdmin");
+      localStorage.removeItem("phoneNumber");
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   // 로그인 함수
   const login = async (userName, password) => {
     try {

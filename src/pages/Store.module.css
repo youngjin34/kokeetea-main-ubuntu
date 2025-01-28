@@ -28,7 +28,7 @@
     font-size: 15px;
     outline: none;
     transition: all 0.2s ease;
-    border: 1px solid #eee;
+    border: 1px solid #E5D5DA;
     background: white;
 
     &::placeholder {
@@ -58,7 +58,7 @@
   margin-bottom: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid #eee;
+  border: 1px solid #E5D5DA;
   position: relative;
 }
 

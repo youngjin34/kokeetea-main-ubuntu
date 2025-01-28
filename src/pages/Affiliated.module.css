@@ -56,7 +56,7 @@
 
 .Form {
   text-align: left;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   padding: 30px;
   margin-top: 20px;
@@ -114,14 +114,14 @@
   height: 36px;
   box-sizing: border-box;
   margin: 0;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   font-size: 14px;
 }
 
 .FormGroup textarea {
   height: auto;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   flex: 1;
   padding: 8px;
@@ -204,9 +204,9 @@
 .TermsContent {
   height: 200px;
   padding: 15px;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #f8f8f8;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -224,7 +224,7 @@
   flex: none;
   height: 36px;
   padding: 8px;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   box-sizing: border-box;
   appearance: none;
@@ -240,7 +240,7 @@
   flex: 1;
   height: 36px;
   padding: 8px;
-  border: 1px solid #F5EDF0;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   box-sizing: border-box;
   font-size: 14px;

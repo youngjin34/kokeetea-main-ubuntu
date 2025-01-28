@@ -441,7 +441,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
                     LOGIN
                   </Link>
                 </li>
-                <li className={style.menu_divider}>|</li>
+                <li className={style.menu_divider} style={{ color: fontColor }}>|</li>
                 <li>
                   <Link to="/register" style={{ color: fontColor }} className={style.login_join_text}>
                     JOIN
@@ -451,7 +451,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
             )}
             {headerLogined && (
               <>
-                <li className={style.menu_divider}>|</li>
+                <li className={style.menu_divider} style={{ color: fontColor }}>|</li>
                 <li>
                   <Link to="/mypage" style={{ color: fontColor }} className={style.user_menu_text}>
                     MY PAGE

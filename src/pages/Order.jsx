@@ -49,17 +49,29 @@ function Order() {
     const fetchOrderData = async () => {
       try {
         // 장바구니 데이터 가져오기
-        const cartResponse = await fetch('/api/cart');
+        const cartResponse = await fetch('http://localhost:8080/kokee/carts', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const cartData = await cartResponse.json();
         setCartItems(cartData);
 
         // 사용 가능한 쿠폰 가져오기
-        const couponsResponse = await fetch('/api/coupons');
+        const couponsResponse = await fetch('http://localhost:8080/kokee/coupons', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const couponsData = await couponsResponse.json();
         setAvailableCoupons(['적용할 쿠폰을 선택하세요', ...couponsData]);
 
         // 멤버십 정보 가져오기
-        const membershipResponse = await fetch('/api/membership');
+        const membershipResponse = await fetch('http://localhost:8080/kokee/membership', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const membershipData = await membershipResponse.json();
         setMembershipInfo(membershipData);
       } catch (error) {

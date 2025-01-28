@@ -55,43 +55,20 @@ const InquiryHistory = () => {
   const fetchInquiries = async () => {
     setLoading(true);
     try {
-      // 백엔드 연동 전 테스트용 더미 데이터
-      const dummyData = [
-        {
-          id: 1,
-          subject: '상품문의',
-          title: '상품 재입고 문의드립니다',
-          date: '2024-03-20',
-          status: '답변완료',
-          content: '언제 재입고 되나요?',
-          reply: '안녕하세요. 다음주 중으로 재입고 예정입니다.',
-          replyDate: '2024-03-21'
-        },
-        {
-          id: 2,
-          subject: '배송문의',
-          title: '배송지 변경 가능한가요?',
-          date: '2024-03-19',
-          status: '접수완료',
-          content: '배송지를 변경하고 싶습니다.',
+      const response = await fetch('http://localhost:8080/kokee/inquiries', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      ];
+      });
 
-      // 실제 API 호출 대신 더미 데이터 사용
-      // const response = await fetch('/api/inquiries', {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   credentials: 'include',
-      // });
+      if (!response.ok) {
+        throw new Error('문의 내역을 불러오는데 실패했습니다.');
+      }
 
-      // if (!response.ok) {
-      //   throw new Error('문의 내역을 불러오는데 실패했습니다.');
-      // }
-
-      // const data = await response.json();
-      const filteredData = filterInquiriesByPeriod(dummyData, period, startDate, endDate);
+      const data = await response.json();
+      const filteredData = filterInquiriesByPeriod(data, period, startDate, endDate);
       setOrders(filteredData);
     } catch (err) {
       setError(err.message);
