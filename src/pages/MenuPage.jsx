@@ -107,6 +107,19 @@ function MenuPage() {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
 
+    const cartItem = {
+      pdName: selectedProduct.pdName,
+      quantity: quantity,
+      totalPrice: totalPrice,
+      image: selectedProduct.image,  // 이미지 경로 추가
+      options: {
+        temp: temp,
+        whipping: whipping,
+        pearl: pearl,
+        shots: shots
+      }
+    };
+
     if (token && email) {
       try {
         const response = await fetch('http://localhost:8080/kokee/carts', {
@@ -116,11 +129,8 @@ function MenuPage() {
             'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
-            pdName: selectedProduct.pdName,
-            quantity: quantity,
-            totalPrice: totalPrice,
-            email: email,
-            options: `${temp}, ${whipping}, ${pearl}, ${shots}`
+            ...cartItem,
+            email: email
           })
         });
 
@@ -135,13 +145,6 @@ function MenuPage() {
       }
     } else {
       // 비로그인 상태: localStorage에 저장
-      const cartItem = {
-        pdName: selectedProduct.pdName,
-        quantity: quantity,
-        totalPrice: totalPrice,
-        options: `${temp}, ${whipping}, ${pearl}, ${shots}`
-      };
-
       const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
       currentCart.push(cartItem);
       localStorage.setItem("cart", JSON.stringify(currentCart));

@@ -23,7 +23,6 @@ const Cart = () => {
   const [shots, setShots] = useState("기본");
   const [size, setSize] = useState("Regular"); // 사이즈 옵션 추가
 
-  // 기존의 loadLocalStorageData, syncCartData, loadCartData 함수들을 대체
   const fetchCartData = async () => {
     setLoading(true);
     try {
@@ -277,9 +276,9 @@ const Cart = () => {
   // 이미지 경로를 가져오는 함수 추가
   const getMenuImage = (category) => {
     const imageMap = {
-      "브라운슈가밀크티": "../../public/img/Cold Cloud/Brown Sugar Cold Brew.png",
-      "타로밀크티": "../../public/img/Milk Tea/Taro Milk Tea.png",
-      "얼그레이밀크티": "../../public/img/Milk Tea/Earl Grey Milk Tea.png",
+      "브라운슈가밀크티": "./img/Cold Cloud/Brown Sugar Cold Brew.png",
+      "타로밀크티": "./img/Milk Tea/Taro Milk Tea.png",
+      "얼그레이밀크티": "./img/Milk Tea/Earl Grey Milk Tea.png",
       // 나머지 메뉴들에 대한 이미지 경로도 추가
     };
     
@@ -292,16 +291,30 @@ const Cart = () => {
     if (!options) return "옵션 없음";
     
     try {
-      // options가 문자열인 경우 그대로 반환
+      // options가 문자열인 경우, 쉼표로 분리하여 배열로 변환
       if (typeof options === 'string') {
-        return options;
+        return options.split(',')
+          .map(opt => opt.trim())
+          .join(' / ');
       }
       
-      // options가 객체인 경우 형식화
+      // options가 객체인 경우
       if (typeof options === 'object') {
         return Object.entries(options)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(', ');
+          .filter(([_, value]) => value) // 값이 있는 옵션만 필터링
+          .map(([key, value]) => {
+            // 키값을 한글로 변환
+            const koreanKey = {
+              temp: '온도',
+              size: '크기',
+              whipping: '휘핑',
+              pearl: '펄',
+              shots: '샷'
+            }[key] || key;
+            
+            return `${value}`; // 키 레이블은 제외하고 값만 표시
+          })
+          .join(' / ');
       }
       
       return "옵션 없음";
@@ -420,9 +433,8 @@ const Cart = () => {
                       </div>
                       <div className={style.cart_item_image}>
                         <img
-                          src={getMenuImage(item.category)}
-                          alt={item.category}
-                          loading="lazy"
+                          src={item.image || "/img/default-menu.png"}
+                          alt={item.pdName}
                           className={style.menu_image}
                         />
                       </div>
@@ -430,7 +442,7 @@ const Cart = () => {
                         <div className={style.cart_item_top}>
                           <div className={style.cart_item_header}>
                             <span className={style.cart_item_name}>
-                              {item.category || "상품명 없음"}
+                              {item.pdName}
                             </span>
                           </div>
                           <div>
@@ -443,7 +455,7 @@ const Cart = () => {
                               </button>
                               <input
                                 type="text"
-                                value={item.amount}
+                                value={item.quantity}
                                 className={style.amount_input}
                                 readOnly
                               />
@@ -457,9 +469,9 @@ const Cart = () => {
                           </div>
                         </div>
                         <div className={style.cart_item_price}>
-                          {typeof item.price === 'number' 
-                            ? `${item.price.toLocaleString()}원` 
-                            : item.price}
+                          {typeof item.totalPrice === 'number' 
+                            ? item.totalPrice.toLocaleString()
+                            : parseInt(item.totalPrice).toLocaleString()}원
                         </div>
                         <div className={style.cart_item_options}>
                           {formatOptions(item.options)}
