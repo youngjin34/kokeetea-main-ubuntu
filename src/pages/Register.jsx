@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./Register.module.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const IdInput = ({ value, onChangeUserId, validId }) => (
   <div className={style.FormGroup}>

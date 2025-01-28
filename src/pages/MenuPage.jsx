@@ -63,7 +63,7 @@ function MenuPage() {
       setPearl("추가 안함");
       setShots("기본");
       setQuantity(1);
-      setTotalPrice(product.pdPrice);
+      setTotalPrice(0);
     }
   };
 
@@ -108,30 +108,23 @@ function MenuPage() {
     const email = localStorage.getItem('email');
 
     const cartItem = {
-      pdName: selectedProduct.pdName,
-      quantity: quantity,
-      totalPrice: totalPrice,
-      image: selectedProduct.image,  // 이미지 경로 추가
-      options: {
-        temp: temp,
-        whipping: whipping,
-        pearl: pearl,
-        shots: shots
-      }
+      product_name: selectedProduct.pdName,
+      price: selectedProduct.pdPrice,
+      mount: quantity,
+      email: email,
+      date: new Date().toISOString(),
+      order_whether: 0
     };
 
     if (token && email) {
       try {
-        const response = await fetch('http://localhost:8080/kokee/carts', {
+        const response = await fetch('http://localhost:8080/kokee/cart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({
-            ...cartItem,
-            email: email
-          })
+          body: JSON.stringify(cartItem)
         });
 
         if (!response.ok) {

@@ -48,43 +48,81 @@ function Order() {
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('email');
+
+        if (!token || !email) {
+          console.error('로그인이 필요합니다.');
+          return;
+        }
+
         // 장바구니 데이터 가져오기
-        const cartResponse = await fetch('http://localhost:8080/kokee/carts', {
+        const cartResponse = await fetch(`http://localhost:8080/kokee/cart/${email}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
+        
+        if (!cartResponse.ok) {
+          throw new Error('장바구니 데이터 로딩 실패');
+        }
+        
         const cartData = await cartResponse.json();
-        setCartItems(cartData);
+        // DB 구조에 맞게 데이터 변환
+        const mappedCartData = cartData.map(item => ({
+          id: item.id,
+          category: item.product_name,
+          price: `${item.price.toLocaleString()}원`,
+          amount: item.mount,
+          date: item.date,
+          order_whether: item.order_whether,
+          // 기존 UI에 필요한 추가 데이터 유지
+          options: item.options || "기본 옵션",
+          image: item.image || getDefaultProductImage(item.product_name)
+        }));
+        
+        setCartItems(mappedCartData);
 
         // 사용 가능한 쿠폰 가져오기
-        const couponsResponse = await fetch('http://localhost:8080/kokee/coupons', {
+        const couponsResponse = await fetch(`http://localhost:8080/kokee/coupons/${email}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
+        
+        if (!couponsResponse.ok) {
+          throw new Error('쿠폰 데이터 로딩 실패');
+        }
+        
         const couponsData = await couponsResponse.json();
         setAvailableCoupons(['적용할 쿠폰을 선택하세요', ...couponsData]);
 
         // 멤버십 정보 가져오기
-        const membershipResponse = await fetch('http://localhost:8080/kokee/membership', {
+        const membershipResponse = await fetch(`http://localhost:8080/kokee/membership/${email}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
+        
+        if (!membershipResponse.ok) {
+          throw new Error('멤버십 데이터 로딩 실패');
+        }
+        
         const membershipData = await membershipResponse.json();
         setMembershipInfo(membershipData);
+
       } catch (error) {
         console.error('데이터 로딩 중 오류 발생:', error);
+        // 에러 발생 시 기본값 설정
+        setCartItems([]);
+        setAvailableCoupons(['적용할 쿠폰을 선택하세요']);
+        setMembershipInfo({ stamps: 0, level: 'BASIC' });
       }
     };
 
     fetchOrderData();
   }, []);
 
-  // 기존의 하드코딩된 데이터 제거
-  // const tableData = [...] 삭제
-  // const coupons = [...] 삭제
 
   // calculateTotalPrice 수정
   const calculateTotalPrice = () => {
@@ -130,8 +168,63 @@ function Order() {
     setSelectedMethod(method);
   };
 
-  const handlePayment = () => {
-    navigate("/ordercomplete");
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+
+      if (!token || !email) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      // 주문 데이터 생성
+      const orderData = {
+        email: email,
+        store: selectedStore,
+        pickupMethod: selectedPickupMethod,
+        coupon: selectedCoupon,
+        paymentMethod: selectedMethod,
+        totalAmount: calculateTotalPrice() - calculateDiscount(),
+        items: cartItems.map(item => ({
+          product_name: item.category,
+          price: parseFloat(item.price.replace(/[^0-9.-]+/g,"")),
+          mount: item.amount,
+          order_whether: 1 // 주문 완료 상태로 변경
+        }))
+      };
+
+      // 주문 처리 요청
+      const response = await fetch('http://localhost:8080/kokee/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      if (!response.ok) {
+        throw new Error('주문 처리 실패');
+      }
+
+      // 주문 완료 후 장바구니 상태 업데이트
+      await Promise.all(cartItems.map(item => 
+        fetch(`http://localhost:8080/kokee/carts/update/${item.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ order_whether: 1 })
+        })
+      ));
+
+      navigate("/ordercomplete");
+    } catch (error) {
+      console.error('결제 처리 중 오류 발생:', error);
+      alert('결제 처리에 실패했습니다.');
+    }
   };
 
   const handleCancel = () => {
@@ -352,17 +445,10 @@ function Order() {
             {cartItems.map((row) => (
               <div key={row.id} className={style.checkout_item}>
                 <div className={style.checkout_item_image}>
-                  {row.category === "브라운슈가밀크티" ? (
-                    <img
-                      src="https://user-images.githubusercontent.com/65029974/296408085-b7efb704-587e-4311-b7e4-9a64699cb317.png"
-                      alt=""
-                    />
-                  ) : (
-                    <img
-                      src="https://user-images.githubusercontent.com/65029974/296408080-6a54c8ae-5c63-487d-8b95-a94717f68b0b.png"
-                      alt=""
-                    />
-                  )}
+                  <img
+                    src={row.image}
+                    alt=""
+                  />
                 </div>
                 <div className={style.checkout_item_description}>
                   <div className={style.checkout_item_header}>
@@ -388,19 +474,6 @@ function Order() {
                       </span>
                       원
                     </div>
-
-                    {/* <div className={style.cart_item_options}>
-                      </div>
-                      <div className={style.cart_item_totalPrice}>
-                        총 금액{" "}
-                        <span className={style.cart_item_totalPrice_money}>
-                          {calculateTotalPrice(
-                            amounts[row.id] || row.amount,
-                            row.price
-                            ).toLocaleString()}
-                            </span>
-                            원
-                            </div> */}
                   </div>
                 </div>
               </div>

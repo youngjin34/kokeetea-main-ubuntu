@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./OrderHistory.module.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const OrderHistory = () => {
   useEffect(() => {

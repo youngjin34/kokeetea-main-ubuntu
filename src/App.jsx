@@ -22,7 +22,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MyPage from "./pages/MyPage";
 import OrderHistory from "./pages/OrderHistory";
 import InquiryHistory from "./pages/InquiryHistory";
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import CouponStamp from "./pages/CouponStamp";
 import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
