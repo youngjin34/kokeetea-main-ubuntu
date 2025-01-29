@@ -23,7 +23,7 @@ const InquiryHistory = () => {
       const endDateTime = new Date(end);
       endDateTime.setHours(23, 59, 59);
 
-      return inquiries.filter(inquiry => {
+      return inquiries.filter((inquiry) => {
         const inquiryDate = new Date(inquiry.date);
         return inquiryDate >= startDateTime && inquiryDate <= endDateTime;
       });
@@ -31,7 +31,7 @@ const InquiryHistory = () => {
 
     const today = new Date();
     let filterDate = new Date();
-    
+
     switch (selectedPeriod) {
       case "1개월":
         filterDate.setMonth(today.getMonth() - 1);
@@ -46,7 +46,7 @@ const InquiryHistory = () => {
         return inquiries;
     }
 
-    return inquiries.filter(inquiry => {
+    return inquiries.filter((inquiry) => {
       const inquiryDate = new Date(inquiry.date);
       return inquiryDate >= filterDate && inquiryDate <= today;
     });
@@ -55,22 +55,39 @@ const InquiryHistory = () => {
   const fetchInquiries = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/kokee/inquiries', {
-        method: 'GET',
+      const response = await fetch("http://localhost:8080/kokee/inquiries", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         }
       });
 
       if (!response.ok) {
-        throw new Error('문의 내역을 불러오는데 실패했습니다.');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      const filteredData = filterInquiriesByPeriod(data, period, startDate, endDate);
+      const mappedData = data.map((item) => ({
+        id: item.id,
+        subject: "1:1문의",
+        title: item.title,
+        content: item.text,
+        date: new Date(item.date).toLocaleDateString(),
+        status: item.status || "답변대기",
+        reply: item.reply,
+        replyDate: item.replyDate ? new Date(item.replyDate).toLocaleDateString() : null,
+      }));
+
+      const filteredData = filterInquiriesByPeriod(
+        mappedData,
+        period,
+        startDate,
+        endDate
+      );
       setOrders(filteredData);
     } catch (err) {
+      console.error("Error fetching inquiries:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -109,7 +126,7 @@ const InquiryHistory = () => {
 
   // 날짜 입력 시 기간별 선택 해제
   const handleDateInput = (e, type) => {
-    if (type === 'start') {
+    if (type === "start") {
       setStartDate(e.target.value);
     } else {
       setEndDate(e.target.value);
@@ -120,15 +137,21 @@ const InquiryHistory = () => {
 
   // 삭제 기능도 백엔드 연동으로 수정
   const handleDelete = async (inquiryId) => {
-    if (window.confirm('문의를 삭제하시겠습니까?')) {
+    if (window.confirm("문의를 삭제하시겠습니까?")) {
       try {
-        const response = await fetch(`/api/inquiries/${inquiryId}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        });
+        const response = await fetch(
+          `http://localhost:8080/kokee/inquiries/${inquiryId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('문의 삭제에 실패했습니다.');
+          throw new Error("문의 삭제에 실패했습니다.");
         }
 
         // 삭제 성공 시 목록 새로고침
@@ -156,26 +179,29 @@ const InquiryHistory = () => {
                     {["1개월", "3개월", "1년"].map((p) => (
                       <button
                         key={p}
-                        className={`${style.periodButton} ${period === p ? style.active : ''}`}
+                        className={`${style.periodButton} ${
+                          period === p ? style.active : ""
+                        }`}
                         onClick={() => handlePeriodClick(p)}
                       >
                         {p}
                       </button>
                     ))}
-                    <span style={{marginLeft: '70px'}}>일자별</span>
-                    <input 
-                      type="date" 
-                      className={style.dateInput} 
+                    <span style={{ marginLeft: "70px" }}>일자별</span>
+                    <input
+                      type="date"
+                      className={style.dateInput}
                       value={startDate}
-                      onChange={(e) => handleDateInput(e, 'start')}
-                    /> -
-                    <input 
-                      type="date" 
-                      className={style.dateInput} 
+                      onChange={(e) => handleDateInput(e, "start")}
+                    />{" "}
+                    -
+                    <input
+                      type="date"
+                      className={style.dateInput}
                       value={endDate}
-                      onChange={(e) => handleDateInput(e, 'end')}
+                      onChange={(e) => handleDateInput(e, "end")}
                     />
-                    <button 
+                    <button
                       className={style.searchButton}
                       onClick={handleDateSearch}
                     >
@@ -184,7 +210,11 @@ const InquiryHistory = () => {
                   </div>
                 )}
 
-                <table className={`${style.orderTable} ${selectedInquiry ? style.selectedTable : ''}`}>
+                <table
+                  className={`${style.orderTable} ${
+                    selectedInquiry ? style.selectedTable : ""
+                  }`}
+                >
                   <thead>
                     <tr>
                       <th>접수구분</th>
@@ -194,61 +224,82 @@ const InquiryHistory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {(selectedInquiry ? [selectedInquiry] : orders).map((order) => (
-                      <React.Fragment key={order.id}>
-                        <tr>
-                          <td>{order.subject}</td>
-                          <td>
-                            <span 
-                              onClick={() => handleTitleClick(order)}
-                              style={{ cursor: 'pointer' }}
-                            >
-                              {order.title}
-                            </span>
-                          </td>
-                          <td>{order.date}</td>
-                          <td>{order.status}</td>
-                        </tr>
-                        {selectedInquiry?.id === order.id && (
+                    {(selectedInquiry ? [selectedInquiry] : orders).map(
+                      (order) => (
+                        <React.Fragment key={order.id}>
                           <tr>
-                            <td colSpan="4" style={{ borderBottom: 'none' }}>
-                              <div className={style.inquiryDetail} style={{ textAlign: 'left' }}>
-                                <div className={style.inquiryContent}>
-                                  {order.content?.split('\n').map((line, i) => (
-                                    <p key={i} style={{ margin: '0' }}>{line}</p>
-                                  ))}
-                                </div>
-                                {order.reply && (
-                                  <div className={style.replySection}>
-                                    <h3>답변 내용</h3>
-                                    <div className={style.replyContent}>
-                                      {order.reply.split('\n').map((line, i) => (
-                                        <p key={i} style={{ margin: '0', lineHeight: '1.5' }}>{line}</p>
-                                      ))}
-                                    </div>
-                                    <div className={style.replyDate}>답변일자 {order.replyDate}</div>
-                                  </div>
-                                )}
-                                <div className={style.buttonContainer}>
-                                  <button 
-                                    className={style.backButton}
-                                    onClick={() => setSelectedInquiry(null)}
-                                  >
-                                    뒤로
-                                  </button>
-                                  <button 
-                                    className={style.deleteButton}
-                                    onClick={() => handleDelete(order.id)}
-                                  >
-                                    삭제
-                                  </button>
-                                </div>
-                              </div>
+                            <td>{order.subject}</td>
+                            <td>
+                              <span
+                                onClick={() => handleTitleClick(order)}
+                                style={{ cursor: "pointer" }}
+                              >
+                                {order.title}
+                              </span>
                             </td>
+                            <td>{order.date}</td>
+                            <td>{order.status}</td>
                           </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
+                          {selectedInquiry?.id === order.id && (
+                            <tr>
+                              <td colSpan="4" style={{ borderBottom: "none" }}>
+                                <div
+                                  className={style.inquiryDetail}
+                                  style={{ textAlign: "left" }}
+                                >
+                                  <div className={style.inquiryContent}>
+                                    {order.content
+                                      ?.split("\n")
+                                      .map((line, i) => (
+                                        <p key={i} style={{ margin: "0" }}>
+                                          {line}
+                                        </p>
+                                      ))}
+                                  </div>
+                                  {order.reply && (
+                                    <div className={style.replySection}>
+                                      <h3>답변 내용</h3>
+                                      <div className={style.replyContent}>
+                                        {order.reply
+                                          .split("\n")
+                                          .map((line, i) => (
+                                            <p
+                                              key={i}
+                                              style={{
+                                                margin: "0",
+                                                lineHeight: "1.5",
+                                              }}
+                                            >
+                                              {line}
+                                            </p>
+                                          ))}
+                                      </div>
+                                      <div className={style.replyDate}>
+                                        답변일자 {order.replyDate}
+                                      </div>
+                                    </div>
+                                  )}
+                                  <div className={style.buttonContainer}>
+                                    <button
+                                      className={style.backButton}
+                                      onClick={() => setSelectedInquiry(null)}
+                                    >
+                                      뒤로
+                                    </button>
+                                    <button
+                                      className={style.deleteButton}
+                                      onClick={() => handleDelete(order.id)}
+                                    >
+                                      삭제
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      )
+                    )}
                   </tbody>
                 </table>
               </>
@@ -256,27 +307,35 @@ const InquiryHistory = () => {
           </div>
         </div>
         <div className={style.sideNav}>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/memberinfoupdate' ? style.active : ''}`}
-            onClick={() => handleNavigation('/memberinfoupdate')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/memberinfoupdate" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/memberinfoupdate")}
           >
             회원정보 확인 · 수정
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/couponstamp' ? style.active : ''}`}
-            onClick={() => handleNavigation('/couponstamp')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/couponstamp" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/couponstamp")}
           >
             쿠폰 · 스탬프 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/orderhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/orderhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/orderhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/orderhistory")}
           >
             주문내역 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/inquiryhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/inquiryhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/inquiryhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/inquiryhistory")}
           >
             1:1 문의 내역
           </div>

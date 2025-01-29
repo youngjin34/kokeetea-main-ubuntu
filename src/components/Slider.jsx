@@ -13,6 +13,14 @@ function Slider({ selectedMenu = "coldCloud" }) {
     return `rgba(${r}, ${g}, ${b}, 0.1)`; // 투명도 90% 추가
   };
 
+  // wheel 이벤트 핸들러 추가
+  const handleWheel = (e) => {
+    e.stopPropagation(); // 이벤트 전파 중단
+    const container = e.currentTarget;
+    const scrollAmount = e.deltaY;
+    container.scrollTop += scrollAmount;
+  };
+
   useEffect(() => {
     if (!selectedMenu || selectedMenu.length === 0) return;
 
@@ -38,7 +46,7 @@ function Slider({ selectedMenu = "coldCloud" }) {
   }
 
   return (
-    <div className={style.SliderContainer}>
+    <div className={style.SliderContainer} onWheel={handleWheel}>
       <div className={style.SliderWrapper} ref={sliderRef}>
         {selectedMenu.concat(selectedMenu).map((item, index) => (
           <div key={index}>

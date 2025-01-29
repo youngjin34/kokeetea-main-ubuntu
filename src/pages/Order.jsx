@@ -68,17 +68,15 @@ function Order() {
         }
         
         const cartData = await cartResponse.json();
-        // DB 구조에 맞게 데이터 변환
+        
+        // Cart 데이터를 Order 페이지 형식에 맞게 매핑
         const mappedCartData = cartData.map(item => ({
           id: item.id,
-          category: item.product_name,
+          category: item.productName,
           price: `${item.price.toLocaleString()}원`,
+          options: `${item.temperature} / ${item.sugar} / ${item.iceAmount}${item.pearl !== '기본' ? ` / ${item.pearl}` : ''}`,
           amount: item.mount,
-          date: item.date,
-          order_whether: item.order_whether,
-          // 기존 UI에 필요한 추가 데이터 유지
-          options: item.options || "기본 옵션",
-          image: item.image || getDefaultProductImage(item.product_name)
+          image: `/img/${item.productName}.png` // 이미지 경로는 실제 경로에 맞게 수정 필요
         }));
         
         setCartItems(mappedCartData);
@@ -187,38 +185,35 @@ function Order() {
         paymentMethod: selectedMethod,
         totalAmount: calculateTotalPrice() - calculateDiscount(),
         items: cartItems.map(item => ({
-          product_name: item.category,
-          price: parseFloat(item.price.replace(/[^0-9.-]+/g,"")),
+          productName: item.category,
           mount: item.amount,
-          order_whether: 1 // 주문 완료 상태로 변경
+          price: parseInt(item.price.replace(/[^0-9.-]+/g,"")),
+          branchName: selectedStore,
+          email: email
         }))
       };
 
       // 주문 처리 요청
-      const response = await fetch('http://localhost:8080/kokee/orders', {
+      const response = await fetch('http://localhost:8080/kokee/orders/' + email, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify(orderData.items)
       });
 
       if (!response.ok) {
         throw new Error('주문 처리 실패');
       }
 
-      // 주문 완료 후 장바구니 상태 업데이트
-      await Promise.all(cartItems.map(item => 
-        fetch(`http://localhost:8080/kokee/carts/update/${item.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ order_whether: 1 })
-        })
-      ));
+      // 주문 완료 후 장바구니 비우기
+      await fetch(`http://localhost:8080/kokee/carts/delete/${email}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
       navigate("/ordercomplete");
     } catch (error) {

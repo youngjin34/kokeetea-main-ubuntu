@@ -205,18 +205,13 @@ const Cart = () => {
   const calculateTotalSelectedAmount = () => {
     return cartItems
       .filter((item) => selectedItems.includes(item.id))
-      .reduce((acc, curr) => acc + (amounts[curr.id] || curr.amount), 0);
+      .reduce((acc, curr) => acc + curr.quantity, 0);
   };
 
   const calculateTotalSelectedPrice = () => {
     return cartItems
       .filter((item) => selectedItems.includes(item.id))
-      .reduce(
-        (acc, curr) =>
-          acc +
-          calculateTotalPrice(amounts[curr.id] || curr.amount, curr.price),
-        0
-      );
+      .reduce((acc, curr) => acc + curr.totalPrice, 0);
   };
 
   const handleAddToCart = async (product) => {
@@ -448,16 +443,11 @@ const Cart = () => {
                         <input
                           type="checkbox"
                           onChange={handleAllCheck}
-                          checked={
-                            cartItems.length > 0 &&
-                            selectedItems.length === cartItems.length
-                          }
+                          checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
                           className={style.checkbox_round_input}
                           id="selectAll"
                         />
-                        <span className={style.total_select_text}>
-                          전체선택
-                        </span>
+                        <span className={style.total_select_text}>전체선택</span>
                       </label>
                     </div>
                     <button
