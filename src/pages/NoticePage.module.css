@@ -84,7 +84,7 @@
 .TableHeader {
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr) 180px 100px;
-  background-color: #f8f9fa;
+  background-color: #f8f8f8;
   padding: 15px 0;
   text-align: center;
   font-weight: bold;
@@ -111,9 +111,10 @@
 .ContentRow {
   display: grid;
   grid-column: 1 / -1;
-  background-color: #f8f9fa;
+  background-color: #f8f8f8;
   overflow: hidden;
   animation: slideDown 0.5s ease-out;
+
 }
 
 .Content {

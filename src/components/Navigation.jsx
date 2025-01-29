@@ -104,6 +104,15 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     setLoginModalOpen(!isLoginModalOpen);
   };
 
+  // 로그인 성공 핸들러 수정
+  const handleLoginSuccess = async () => {
+    toggleLoginModal();
+    setHeaderLogined(true);
+    setIsLogined(true);
+    // 로그인 성공 시 즉시 장바구니 데이터 동기화
+    await syncCartData();
+  };
+
   // 바깥쪽 클릭 시 모달 닫기
   const handleOutsideClick = (e) => {
     if (loginRef.current === e.target) {
@@ -137,7 +146,25 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // 장바구니 데이터를 서버와 동기화하는 함수
+  // Navigation.jsx에서 장바구니 카운트를 상태로 관리
+  const [cartCount, setCartCount] = useState(() => {
+    // 초기값을 즉시 계산
+    return parseInt(localStorage.getItem('cartCount') || '0');
+  });
+
+  useEffect(() => {
+    // localStorage 변경 감지 - 필수적인 경우만 유지
+    const handleStorageChange = (e) => {
+      if (e.key === 'cartCount') {
+        setCartCount(parseInt(e.newValue || '0'));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // syncCartData 함수 최적화
   const syncCartData = async () => {
     try {
       const response = await fetch('http://localhost:8080/kokee/carts', {
@@ -148,30 +175,20 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         }
       });
       
-      if (!response.ok) {
-        throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
-      }
+      if (!response.ok) throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
       
       const data = await response.json();
       localStorage.setItem('cart', JSON.stringify(data));
+      // 카트 카운트 직접 업데이트
+      const newCount = data.length;
+      localStorage.setItem('cartCount', newCount.toString());
+      setCartCount(newCount);
       return data;
     } catch (error) {
       console.error("장바구니 동기화 실패:", error);
       return [];
     }
   };
-
-  // Navigation.jsx에서 장바구니 카운트를 상태로 관리
-  const [cartCount, setCartCount] = useState(0);
-
-  useEffect(() => {
-    const fetchCartCount = async () => {
-      const cartData = await syncCartData();
-      setCartCount(cartData.length);
-    };
-    
-    fetchCartCount();
-  }, []);
 
   return (
     <div className={`${style.Navigation}`}>
@@ -449,28 +466,30 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         </div>
         <div className="inner">
           <ul className={`${style.header_top}`}>
-            <li>
-              <Link to="/cart" style={{ color: fontColor }} className={style.cart_icon}>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke={fontColor === "black" ? "#000" : "#fff"}
-                  strokeWidth="1.5"
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span className={style.cart_count}>
-                  {cartCount}
-                </span>
-              </Link>
-            </li>
+            {headerLogined && (
+              <li>
+                <Link to="/cart" style={{ color: fontColor }} className={style.cart_icon}>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke={fontColor === "black" ? "#000" : "#fff"}
+                    strokeWidth="1.5"
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  <span className={style.cart_count}>
+                    {cartCount}
+                  </span>
+                </Link>
+              </li>
+            )}
             {headerLogined ? (
               <li onClick={logoutFunction}>
                 <Link to="#" style={{ color: fontColor }} className={style.user_menu_text}>
@@ -543,11 +562,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               onClose={toggleLoginModal}
               setIsLogined={setIsLogined}
               setHeaderLogined={setHeaderLogined}
-              onLoginSuccess={() => {
-                toggleLoginModal();
-                setHeaderLogined(true);
-                setIsLogined(true);
-              }}
+              onLoginSuccess={handleLoginSuccess}
             />
           </div>
         </div>

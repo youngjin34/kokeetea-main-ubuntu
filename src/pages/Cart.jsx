@@ -21,6 +21,8 @@ const Cart = () => {
   const [size, setSize] = useState("Regular");
   const [sugar, setSugar] = useState("70%");
   const [iceAmount, setIceAmount] = useState("보통");
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [priceChange, setPriceChange] = useState({ size: 0, pearl: 0 });
 
   const fetchCartData = async () => {
     setLoading(true);
@@ -49,15 +51,15 @@ const Cart = () => {
       const cartData = await response.json();
       const mappedCartData = cartData.map((item) => ({
         id: item.id,
-        product_name: selectedProduct.pdName,
-        price: totalPrice,
-        mount: quantity,
-        email: email,
-        size: size,
-        temp: temp,
-        sugar: sugar,
-        iceAmount: iceAmount,
-        pearl: pearl,
+        pdName: item.productName,
+        totalPrice: item.price,
+        quantity: item.mount,
+        email: item.email,
+        size: item.size,
+        temperature: item.temperature,
+        sugar: item.sugar,
+        iceAmount: item.iceAmount,
+        pearl: item.pearl,
       }));
 
       setCartItems(mappedCartData);
@@ -86,16 +88,13 @@ const Cart = () => {
 
     try {
       for (const itemId of selectedItems) {
-        await fetch(
-          `http://localhost:8080/kokee/carts/delete_one/${itemId}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await fetch(`http://localhost:8080/kokee/carts/delete_one/${itemId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
       }
 
       fetchCartData();
@@ -156,7 +155,7 @@ const Cart = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: id,
@@ -167,7 +166,7 @@ const Cart = () => {
           iceAmount: iceAmount,
           pearl: pearl,
           size: size,
-        })
+        }),
       });
 
       fetchCartData();
@@ -175,7 +174,7 @@ const Cart = () => {
       console.error("수량 감소 실패:", error);
       alert("수량 변경에 실패했습니다.");
     }
-  }
+  };
 
   // 체크박스 관련 함수들 수정
   const handleCheck = (id) => {
@@ -286,12 +285,57 @@ const Cart = () => {
     setSugar(cartItem.sugar || "70%");
     setIceAmount(cartItem.iceAmount || "보통");
     setPearl(cartItem.pearl || "기본");
+    
+    // 초기 가격 설정
+    const basePrice = cartItem.totalPrice / cartItem.quantity;
+    setCurrentPrice(basePrice);
+    setPriceChange({ size: 0, pearl: 0 });
+    
     setOptionModalOpen(true);
+  };
+
+  // 사이즈 변경 핸들러
+  const handleSizeChange = (newSize) => {
+    let sizePrice = 0;
+    if (newSize === "Large") sizePrice = 1000;
+    if (newSize === "Kokee-Large") sizePrice = 1500;
+    
+    setPriceChange(prev => ({ ...prev, size: sizePrice }));
+    setSize(newSize);
+  };
+
+  // 펄 변경 핸들러
+  const handlePearlChange = (newPearl) => {
+    let pearlPrice = 0;
+    if (newPearl === "화이트 펄") pearlPrice = 500;
+    if (newPearl === "레인보우 펄") pearlPrice = 1000;
+    
+    setPriceChange(prev => ({ ...prev, pearl: pearlPrice }));
+    setPearl(newPearl);
+  };
+
+  // 옵션 가격 계산 함수 추가
+  const calculateOptionPrice = (basePrice) => {
+    let additionalPrice = 0;
+    
+    // 사이즈 옵션 가격
+    if (size === "Large") additionalPrice += 1000;
+    if (size === "Kokee-Large") additionalPrice += 1500;
+    
+    // 펄 옵션 가격
+    if (pearl === "화이트 펄") additionalPrice += 500;
+    if (pearl === "레인보우 펄") additionalPrice += 1000;
+    
+    return basePrice + additionalPrice;
   };
 
   const saveOptionChanges = async () => {
     try {
       const token = localStorage.getItem("token");
+      const basePrice = selectedCartItem.totalPrice / selectedCartItem.quantity; // 기본 단가 계산
+      const newUnitPrice = calculateOptionPrice(basePrice); // 새로운 단가 계산
+      const newTotalPrice = newUnitPrice * selectedCartItem.quantity; // 새로운 총 가격
+
       const response = await fetch(
         `http://localhost:8080/kokee/carts/update/${selectedCartItem.email}`,
         {
@@ -302,8 +346,8 @@ const Cart = () => {
           },
           body: JSON.stringify({
             id: selectedCartItem.id,
-            updateMount: selectedCartItem.mount,
-            updatePrice: selectedCartItem.price,
+            updateMount: selectedCartItem.quantity,
+            updatePrice: newTotalPrice,
             temperature: temp,
             size: size,
             sugar: sugar,
@@ -539,12 +583,6 @@ const Cart = () => {
         >
           <div className={style.modalContent}>
             <div className={style.modal_first}>
-              <div className={style.option_title}>옵션 선택</div>
-              <img
-                src={selectedCartItem.image || "/img/default-menu.png"}
-                alt={selectedCartItem.pdName}
-                className={style.modalImage}
-              />
               <div className={style.modal_info}>
                 <h2>{selectedCartItem.pdName}</h2>
                 <div className={style.price}>
@@ -554,19 +592,6 @@ const Cart = () => {
             </div>
 
             <div className={style.option_container}>
-              <div className={style.temp_option}>
-                <label className={`${style.radio_style} ${style.ice_option}`}>
-                  <input
-                    type="radio"
-                    name="temp"
-                    value="ICE"
-                    checked={temp === "ICE"}
-                    onChange={() => setTemp("ICE")}
-                  />
-                  <span>ICE ❄️</span>
-                </label>
-              </div>
-
               <div className={style.rest_option}>
                 {/* 사이즈 옵션 */}
                 <div className={style.option}>
@@ -578,7 +603,7 @@ const Cart = () => {
                         name="size"
                         value="Regular"
                         checked={size === "Regular"}
-                        onChange={() => setSize("Regular")}
+                        onChange={() => handleSizeChange("Regular")}
                       />
                       <span>Regular</span>
                     </label>
@@ -588,9 +613,13 @@ const Cart = () => {
                         name="size"
                         value="Large"
                         checked={size === "Large"}
-                        onChange={() => setSize("Large")}
+                        onChange={() => handleSizeChange("Large")}
                       />
-                      <span>Large<br/>(+1000원)</span>
+                      <span>
+                        Large
+                        <br />
+                        (+1,000원)
+                      </span>
                     </label>
                     <label className={style.sub_radio_style}>
                       <input
@@ -598,9 +627,13 @@ const Cart = () => {
                         name="size"
                         value="Kokee-Large"
                         checked={size === "Kokee-Large"}
-                        onChange={() => setSize("Kokee-Large")}
+                        onChange={() => handleSizeChange("Kokee-Large")}
                       />
-                      <span>Kokee-Large<br/>(+1500원)</span>
+                      <span>
+                        Kokee-Large
+                        <br />
+                        (+1,500원)
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -689,9 +722,13 @@ const Cart = () => {
                         name="pearl"
                         value="기본"
                         checked={pearl === "기본"}
-                        onChange={() => setPearl("기본")}
+                        onChange={() => handlePearlChange("기본")}
                       />
-                      <span>기본<br/>(블랙 펄)</span>
+                      <span>
+                        기본
+                        <br />
+                        (블랙 펄)
+                      </span>
                     </label>
                     <label className={style.sub_radio_style}>
                       <input
@@ -699,9 +736,13 @@ const Cart = () => {
                         name="pearl"
                         value="화이트 펄"
                         checked={pearl === "화이트 펄"}
-                        onChange={() => setPearl("화이트 펄")}
+                        onChange={() => handlePearlChange("화이트 펄")}
                       />
-                      <span>화이트 펄 변경<br/>(+500원)</span>
+                      <span>
+                        화이트 펄 변경
+                        <br />
+                        (+500원)
+                      </span>
                     </label>
                     <label className={style.sub_radio_style}>
                       <input
@@ -709,22 +750,28 @@ const Cart = () => {
                         name="pearl"
                         value="레인보우 펄"
                         checked={pearl === "레인보우 펄"}
-                        onChange={() => setPearl("레인보우 펄")}
+                        onChange={() => handlePearlChange("레인보우 펄")}
                       />
-
-                      <span>레인보우 펄 변경<br/>(+1000원)</span>
+                      <span>
+                        레인보우 펄 변경
+                        <br />
+                        (+1,000원)
+                      </span>
                     </label>
                   </div>
                 </div>
               </div>
 
               <div className={style.modalClose} onClick={closeModal}>
-                <img src="/public/img/close.png" alt="Close" />
+                <img src="/img/close.png" alt="Close" />
               </div>
             </div>
 
             <div className={style.modal_footer}>
-              <button className={style.confirm_button} onClick={saveOptionChanges}>
+              <button
+                className={style.confirm_button}
+                onClick={saveOptionChanges}
+              >
                 변경하기
               </button>
             </div>
