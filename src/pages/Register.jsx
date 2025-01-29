@@ -181,7 +181,6 @@ const EmailInput = ({ emailId, emailDomain, onChange, onDomainChange }) => {
 
 const Register = () => {
   const navigate = useNavigate();
-  const { signup } = useAuth();
   const [formData, setFormData] = useState({
     userId: "",
     password: "",
@@ -249,6 +248,20 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // 모든 필수 항목 검사
+    if (!formData.userId || !formData.password || !formData.passwordConfirm || 
+        !formData.name || !formData.phoneNumber || !formData.emailId || 
+        !formData.emailDomain) {
+      alert('모든 필수 항목을 입력해주세요.');
+      return;
+    }
+
+    // 비밀번호 일치 여부 확인
+    if (formData.password !== formData.passwordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     // 약관 동의 체크
     if (!formData.termsChecked || !formData.privacyChecked) {
       alert('필수 약관에 모두 동의해주세요.');

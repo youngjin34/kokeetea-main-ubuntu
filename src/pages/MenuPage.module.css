@@ -148,13 +148,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(186, 39, 74, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 8px;
+
 }
 
 .nutrition_info {
@@ -211,8 +211,7 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-
-  max-width: 80%;
+  width: 480px;
   text-align: center;
   position: relative;
   overflow-y: auto; /* 세로 스크롤이 생기도록 설정 */

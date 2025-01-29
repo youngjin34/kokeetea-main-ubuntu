@@ -215,7 +215,7 @@ function MenuPage() {
     // 펄 옵션 가격
     if (pearl === "블랙 펄" || pearl === "화이트 펄") {
       optionPrice += 500;
-    } else if (pearl === "무지개 펄") {
+    } else if (pearl === "레인보우 펄") {
       optionPrice += 1000;
     }
 
