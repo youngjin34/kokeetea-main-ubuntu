@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import style from "./OrderHistory.module.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 const OrderHistory = () => {
   useEffect(() => {
@@ -9,12 +8,23 @@ const OrderHistory = () => {
   }, []);
 
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
   const [period, setPeriod] = useState("1개월");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const currentPath = window.location.pathname;
   const [orders, setOrders] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+
+  useEffect(() => {
+    // Get user info from localStorage instead of context
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserId(user.id);
+      setUserToken(user.token);
+    }
+  }, []);
 
   const filterOrdersByPeriod = (orders, selectedPeriod, start, end) => {
     // 날짜 입력으로 필터링하는 경우
@@ -54,11 +64,13 @@ const OrderHistory = () => {
   };
 
   const fetchOrders = async () => {
+    if (!userId || !userToken) return;
+    
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/${currentUser?.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/${userId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${currentUser?.token}`,
+          'Authorization': `Bearer ${userToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -77,10 +89,10 @@ const OrderHistory = () => {
   };
 
   useEffect(() => {
-    if (currentUser?.id) {
+    if (userId) {
       fetchOrders();
     }
-  }, [period, startDate, endDate, currentUser]);
+  }, [period, startDate, endDate, userId]);
 
   const handleNavigation = (path) => {
     navigate(path);

@@ -8,22 +8,28 @@ function MenuPage() {
   const [products, setProducts] = useState([]);
   const [filteredMenu, setFilteredMenu] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택
-
   const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
   const [isModalOpen, setModalOpen] = useState(false);
   const modalRef = useRef(null);
 
   // 각 옵션에 대한 상태 관리
-  const [temp, setTemp] = useState("HOT");
-  const [whipping, setWhipping] = useState("기본");
-  const [pearl, setPearl] = useState("추가 안함");
-  const [shots, setShots] = useState("기본");
-
+  const [temp, setTemp] = useState("ICE");
+  const [size, setSize] = useState("Regular");
+  const [iceAmount, setIceAmount] = useState("보통");
+  const [sugar, setSugar] = useState("70%");
   const [quantity, setQuantity] = useState(0);
-
   const [totalPrice, setTotalPrice] = useState(0);
+  const [pearl, setPearl] = useState("기본");
 
   const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    setIsLoggedIn(token && email);
+  }, []);
 
   // 카테고리별 제품을 필터링하는 함수
   const filterByCategory = (category) => {
@@ -54,16 +60,28 @@ function MenuPage() {
   }, []);
 
   const toggleModal = (product = null) => {
-    setSelectedProduct(product);
-    setModalOpen(!isModalOpen);
-    
-    if (!product || isModalOpen) {
-      setTemp("HOT");
-      setWhipping("기본");
-      setPearl("추가 안함");
-      setShots("기본");
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+
+    if (!token || !email) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
+
+    if (product) {
       setQuantity(1);
+      setSelectedProduct(product);
+      setModalOpen(true);
+    } else {
+      setModalOpen(false);
+      setSize("Regular");
+      setTemp("ICE");
+      setSugar("70%");
+      setIceAmount("보통");
+      setPearl("기본");
+      setQuantity(0);
       setTotalPrice(0);
+      setSelectedProduct(null);
     }
   };
 
@@ -104,51 +122,60 @@ function MenuPage() {
       return;
     }
 
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
 
     const cartItem = {
       product_name: selectedProduct.pdName,
-      price: selectedProduct.pdPrice,
+      price: totalPrice,
       mount: quantity,
       email: email,
-      date: new Date().toISOString(),
-      order_whether: 0
+      size: size,
+      temp: temp,
+      sugar: sugar,
+      iceAmount: iceAmount,
+      pearl: pearl,
     };
 
     if (token && email) {
       try {
-        const response = await fetch('http://localhost:8080/kokee/cart', {
-          method: 'POST',
+        const response = await fetch("http://localhost:8080/kokee/carts", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(cartItem)
+          body: JSON.stringify(cartItem),
         });
 
         if (!response.ok) {
-          throw new Error('장바구니 추가 실패');
+          throw new Error("장바구니 추가 실패");
         }
 
-        alert("장바구니에 추가되었습니다.");
+        const result = await response.text();
+        if (result === "success") {
+          alert("장바구니에 추가되었습니다.");
+          toggleModal();
+        } else {
+          alert("장바구니 추가에 실패했습니다.");
+        }
       } catch (error) {
         console.error("장바구니 추가 실패:", error);
         alert("장바구니 추가에 실패했습니다.");
       }
-    } else {
-      // 비로그인 상태: localStorage에 저장
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-      currentCart.push(cartItem);
-      localStorage.setItem("cart", JSON.stringify(currentCart));
-      alert("장바구니에 추가되었습니다.");
     }
-
-    setModalOpen(false);
   };
 
   // 바로 주문하기 함수 추가
   const orderNow = () => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+
+    if (!token || !email) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
+
     if (quantity === 0) {
       alert("수량을 선택해주세요.");
       return;
@@ -158,38 +185,40 @@ function MenuPage() {
       product: selectedProduct,
       quantity: quantity,
       options: {
-        temp,
-        whipping,
-        pearl,
-        shots,
+        image: selectedProduct.image,
+        name: selectedProduct.pdName,
+        size: size,
+        temp: temp,
+        sugar: sugar,
+        iceAmount: iceAmount,
+        pearl: pearl,
+        price: totalPrice,
+        email: email,
+
       },
     };
 
-    // 주문 정보를 localStorage에 임시 저장
     localStorage.setItem("currentOrder", JSON.stringify([orderItem]));
-
-    // 주문 페이지로 이동
     navigate("/order");
   };
 
   const calculateOptionPrice = () => {
     let optionPrice = 0;
-    
-    // 휘핑 옵션 가격
-    if (whipping === "휘핑추가") {
-      optionPrice += 500;
+
+    // 사이즈 옵션 가격
+    if (size === "Large") {
+      optionPrice += 1000;
+    } else if (size === "Kokee-Large") {
+      optionPrice += 1500;
     }
-    
+
     // 펄 옵션 가격
     if (pearl === "블랙 펄" || pearl === "화이트 펄") {
       optionPrice += 500;
+    } else if (pearl === "무지개 펄") {
+      optionPrice += 1000;
     }
-    
-    // 샷 옵션 가격
-    if (shots === "샷 추가") {
-      optionPrice += 500;
-    }
-    
+
     return optionPrice;
   };
 
@@ -199,7 +228,34 @@ function MenuPage() {
       const optionPrice = calculateOptionPrice();
       setTotalPrice((basePrice + optionPrice) * quantity);
     }
-  }, [temp, whipping, pearl, shots, quantity, selectedProduct]);
+  }, [size, temp, sugar, iceAmount, pearl, quantity, selectedProduct]);
+
+  const handleDirectOrder = (product) => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+
+    if (!token || !email) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
+
+    const orderItem = {
+      product: product,
+      quantity: 1,
+      options: {
+        size: "Regular",
+        temp: "ICE",
+        sugar: "70%",
+        iceAmount: "보통",
+        pearl: "기본",
+        price: totalPrice,
+        email: email,
+      },
+    };
+
+    localStorage.setItem("currentOrder", JSON.stringify([orderItem]));
+    navigate("/order");
+  };
 
   return (
     <div className={`${style.MenuPage}`}>
@@ -259,12 +315,13 @@ function MenuPage() {
           <div key={index}>
             <div
               key={product.pdId}
-              className={style.MenuItem}
-              onClick={() => toggleModal(product)}
+              className={`${style.MenuItem} ${
+                !isLoggedIn ? style.disabled : ""
+              }`}
             >
               <img src={product.image} alt={product.pdName} />
               <h3>{product.pdName}</h3>
-              <p>{product.pdPrice} 원</p>
+              <p>{product.pdPrice.toLocaleString()} 원</p>
 
               {/* 영양정보 오버레이 추가 */}
               <div className={style.nutrition_overlay}>
@@ -277,12 +334,20 @@ function MenuPage() {
                 </div>
               </div>
             </div>
-            <button
-              className={style.menu_order_btn}
-              onClick={() => toggleModal(product)}
-            >
-              <img src="/public/img/cart.png" /> 주문
-            </button>
+            <div className={style.button_container}>
+              <button
+                className={style.menu_order_btn}
+                onClick={() => toggleModal(product)}
+              >
+                <img src="/public/img/cart.png" /> 옵션선택
+              </button>
+              <button
+                className={`${style.menu_order_btn} ${style.direct_order_btn}`}
+                onClick={() => handleDirectOrder(product)}
+              >
+                바로주문
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -304,7 +369,8 @@ function MenuPage() {
                   {totalPrice.toLocaleString()} 원
                   {calculateOptionPrice() > 0 && (
                     <span className={style.base_price}>
-                      (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션 {calculateOptionPrice().toLocaleString()}원)
+                      (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션{" "}
+                      {calculateOptionPrice().toLocaleString()}원)
                     </span>
                   )}
                 </div>
@@ -313,17 +379,7 @@ function MenuPage() {
 
             <div className={style.option_container}>
               <div className={style.temp_option}>
-                <label className={style.radio_style}>
-                  <input
-                    type="radio"
-                    name="temp"
-                    value="HOT"
-                    checked={temp === "HOT"}
-                    onChange={() => setTemp("HOT")}
-                  />
-                  <span>HOT</span>
-                </label>
-                <label className={style.radio_style}>
+                <label className={`${style.radio_style} ${style.ice_option}`}>
                   <input
                     type="radio"
                     name="temp"
@@ -331,68 +387,146 @@ function MenuPage() {
                     checked={temp === "ICE"}
                     onChange={() => setTemp("ICE")}
                   />
-                  <span>ICE</span>
+                  <span>ICE ❄️</span>
                 </label>
               </div>
 
               <div className={style.rest_option}>
-                {/* 휘핑 옵션 */}
+                {/* 사이즈 옵션 */}
                 <div className={style.option}>
-                  <h3>휘핑 추가</h3>
-                  <div className={style.whipping_option}>
+                  <h3>사이즈</h3>
+                  <div className={style.size_option}>
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
-                        name="whipping"
-                        value="기본"
-                        checked={whipping === "기본"}
-                        onChange={() => setWhipping("기본")}
+                        name="size"
+                        value="Regular"
+                        checked={size === "Regular"}
+                        onChange={() => setSize("Regular")}
                       />
-                      <span>기본</span>
+                      <span>Regular</span>
                     </label>
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
-                        name="whipping"
-                        value="휘핑추가"
-                        checked={whipping === "휘핑추가"}
-                        onChange={() => setWhipping("휘핑추가")}
+                        name="size"
+                        value="Large"
+                        checked={size === "Large"}
+                        onChange={() => setSize("Large")}
                       />
                       <span>
-                        휘핑추가
+                        Large
                         <br />
-                        (+500원)
+                        (+1000원)
+                      </span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value="Kokee-Large"
+                        checked={size === "Kokee-Large"}
+                        onChange={() => setSize("Kokee-Large")}
+                      />
+                      <span>
+                        Kokee-Large
+                        <br />
+                        (+1500원)
                       </span>
                     </label>
                   </div>
                 </div>
 
-                {/* 펄 추가 옵션 */}
+                {/* 당도 옵션 */}
                 <div className={style.option}>
-                  <h3>펄 추가</h3>
+                  <h3>당도</h3>
+                  <div className={style.sugar_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="50%"
+                        checked={sugar === "50%"}
+                        onChange={() => setSugar("50%")}
+                      />
+                      <span>50%</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="70%"
+                        checked={sugar === "70%"}
+                        onChange={() => setSugar("70%")}
+                      />
+                      <span>70%</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="100%"
+                        checked={sugar === "100%"}
+                        onChange={() => setSugar("100%")}
+                      />
+                      <span>100%</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 얼음량 옵션 */}
+                <div className={style.option}>
+                  <h3>얼음량</h3>
+                  <div className={style.ice_amount_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="적게"
+                        checked={iceAmount === "적게"}
+                        onChange={() => setIceAmount("적게")}
+                      />
+                      <span>적게</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="보통"
+                        checked={iceAmount === "보통"}
+                        onChange={() => setIceAmount("보통")}
+                      />
+                      <span>보통</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="많이"
+                        checked={iceAmount === "많이"}
+                        onChange={() => setIceAmount("많이")}
+                      />
+                      <span>많이</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 펄 옵션 추가 */}
+                <div className={style.option}>
+                  <h3>펄 선택</h3>
                   <div className={style.pearl_option}>
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
                         name="pearl"
-                        value="추가 안함"
-                        checked={pearl === "추가 안함"}
-                        onChange={() => setPearl("추가 안함")}
-                      />
-                      <span>추가 안함</span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="pearl"
-                        value="블랙 펄"
-                        checked={pearl === "블랙 펄"}
-                        onChange={() => setPearl("블랙 펄")}
+                        value="기본"
+                        checked={pearl === "기본"}
+                        onChange={() => setPearl("기본")}
                       />
                       <span>
-                        블랙 펄
+                        기본
                         <br />
-                        (+500원)
+                        (블랙 펄)
                       </span>
                     </label>
                     <label className={style.sub_radio_style}>
@@ -404,57 +538,32 @@ function MenuPage() {
                         onChange={() => setPearl("화이트 펄")}
                       />
                       <span>
-                        화이트 펄
+                        화이트 펄 변경
                         <br />
                         (+500원)
                       </span>
                     </label>
-                  </div>
-                </div>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="레인보우 펄"
+                        checked={pearl === "레인보우 펄"}
+                        onChange={() => setPearl("레인보우 펄")}
+                      />
 
-                {/* 샷 양 옵션 */}
-                <div className={style.option}>
-                  <h3>샷 양</h3>
-                  <div className={style.shots_option}>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="shots"
-                        value="기본"
-                        checked={shots === "기본"}
-                        onChange={() => setShots("기본")}
-                      />
-                      <span>기본</span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="shots"
-                        value="연하게"
-                        checked={shots === "연하게"}
-                        onChange={() => setShots("연하게")}
-                      />
-                      <span>연하게</span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="shots"
-                        value="샷 추가"
-                        checked={shots === "샷 추가"}
-                        onChange={() => setShots("샷 추가")}
-                      />
                       <span>
-                        샷 추가
+                        레인보우 펄 변경
                         <br />
-                        (+500원)
+                        (+1000원)
                       </span>
+
                     </label>
                   </div>
                 </div>
               </div>
 
-              <div className={style.modalClose} onClick={toggleModal}>
+              <div className={style.modalClose} onClick={() => toggleModal()}>
                 <img src="/public/img/close.png" />
               </div>
             </div>
@@ -468,7 +577,7 @@ function MenuPage() {
                     // 0 로 안 떨어지게 하기
                     onClick={() =>
                       setQuantity((prevQuantity) =>
-                        Math.max(prevQuantity - 1, 0)
+                        Math.max(prevQuantity - 2, 1)
                       )
                     }
                   >
@@ -489,7 +598,7 @@ function MenuPage() {
                   className={`${style.btn} ${style.now_btn}`}
                   onClick={orderNow}
                 >
-                  바로 주문하기
+                  주문하기
                 </button>
               </div>
             </div>

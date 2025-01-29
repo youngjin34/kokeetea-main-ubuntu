@@ -58,10 +58,13 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("realname")) {
-      setHeaderLogined(true);
-    }
-    // 메뉴 영역 외부 클릭 시 메뉴 닫기
+    const checkLoginStatus = () => {
+      const isLoggedIn = !!localStorage.getItem("realname");
+      setHeaderLogined(isLoggedIn);
+    };
+
+    checkLoginStatus();
+
     const handleClickOutside = (event) => {
       if (
         modalRef.current &&
@@ -69,14 +72,18 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
         isModalOpen
       ) {
         setModalOpen(false);
-        setActiveSubMenu(null); // 모달 닫을 때 하위 메뉴도 닫기
+        setActiveSubMenu(null);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("storage", checkLoginStatus);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("storage", checkLoginStatus);
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, isLogined]);
 
   function logoutFunction() {
     localStorage.clear();
@@ -536,6 +543,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
               onClose={toggleLoginModal}
               setIsLogined={setIsLogined}
               setHeaderLogined={setHeaderLogined}
+              onLoginSuccess={() => {
+                toggleLoginModal();
+                setHeaderLogined(true);
+                setIsLogined(true);
+              }}
             />
           </div>
         </div>

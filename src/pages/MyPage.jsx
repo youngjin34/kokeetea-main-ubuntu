@@ -16,7 +16,7 @@ const MyPage = () => {
 
   const fetchMembershipInfo = async () => {
     try {
-      const response = await fetch('/api/membership/info', {
+      const response = await fetch('http://localhost:8080/kokee/membership/info', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

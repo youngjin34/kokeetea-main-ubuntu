@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
@@ -22,7 +22,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MyPage from "./pages/MyPage";
 import OrderHistory from "./pages/OrderHistory";
 import InquiryHistory from "./pages/InquiryHistory";
-import { AuthProvider } from './context/AuthContext';
 import CouponStamp from "./pages/CouponStamp";
 import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
@@ -40,62 +39,62 @@ function AppContent() {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 (원페이지 스크롤)
   const [isLogined, setIsLogined] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Header
-          currentPage={currentPage}
-          isLogined={isLogined}
-          setIsLogined={setIsLogined}
-        />
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+  useEffect(() => {
+    // 로컬 스토리지에서 로그인 상태 확인
+    const email = localStorage.getItem("email");
+    if (email) {
+      setIsLogined(true);
+    }
+  }, []);
 
-        <div className={`${style.App}`}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
-              }
-            />
-            <Route path="/menupage" element={<MenuPage />} />
-            <Route path="/kokeestory" element={<KokeeStory />} />
-            <Route path="/affiliated" element={<Affiliated />} />
-            <Route path="/notice" element={<NoticePage />} />
-            <Route path="/inquiry" element={<Inquiry />} />
-            <Route path="/faq" element={<Faq />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
-            <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/orderhistory" element={<OrderHistory />} />
-            <Route path="/inquiryhistory" element={<InquiryHistory />} />
-            <Route path="/couponstamp" element={<CouponStamp />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/ordercomplete" element={<OrderComplete />} />
-          </Routes>
-          <AppContent />
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+  return (  
+    <BrowserRouter>
+      <Header
+        currentPage={currentPage}
+        isLogined={isLogined}
+        setIsLogined={setIsLogined}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <div className={`${style.App}`}>
+        <Routes>
+          <Route path="/" element={<Home currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+          <Route path="/menupage" element={<MenuPage />} />
+          <Route path="/kokeestory" element={<KokeeStory />} />
+          <Route path="/affiliated" element={<Affiliated />} />
+          <Route path="/notice" element={<NoticePage />} />
+          <Route path="/inquiry" element={<Inquiry />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
+          <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login setIsLogined={setIsLogined} />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/orderhistory" element={<OrderHistory />} />
+          <Route path="/inquiryhistory" element={<InquiryHistory />} />
+          <Route path="/couponstamp" element={<CouponStamp />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/ordercomplete" element={<OrderComplete />} />
+        </Routes>
+        <AppContent />
+      </div>
+    </BrowserRouter>
   );
 }
 

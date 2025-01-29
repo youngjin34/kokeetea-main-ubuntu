@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./Register.module.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import axios from 'axios';
 
 const IdInput = ({ value, onChangeUserId, validId }) => (
   <div className={style.FormGroup}>
@@ -190,14 +190,12 @@ const Register = () => {
     phoneNumber: "",
     emailId: "",
     emailDomain: "",
-    agree1: "",
-    agree2: "",
+    termsChecked: false,
+    privacyChecked: false
   });
 
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
-  const [termsChecked, setTermsChecked] = useState(false);
-  const [privacyChecked, setPrivacyChecked] = useState(false);
 
   const [validId, setValidId] = useState(false);
   const [validPw, setValidPw] = useState(false);
@@ -250,15 +248,40 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // 약관 동의 체크
+    if (!formData.termsChecked || !formData.privacyChecked) {
+      alert('필수 약관에 모두 동의해주세요.');
+      return;
+    }
+
     try {
-      const result = await signup(formData);
-      if (result.success) {
+      const response = await axios.post("http://localhost:8080/kokee/join", {
+        userId: formData.userId,
+        userPw: formData.password,
+        userPwCheck: formData.passwordConfirm,
+        userName: formData.name,
+        phoneNumber: formData.phoneNumber,
+        email01: formData.emailId,
+        email02: formData.emailDomain,
+        role: "user",
+        membership: "SILVER",
+        couponCount: 0,
+        stampCount: 0,
+        termsAgreed: true
+      });
+
+      if (response.data === "success") {
         localStorage.setItem("phoneNumber", formData.phoneNumber);
-        alert(result.message);
+        alert("회원가입을 환영합니다. 메인페이지로 이동합니다.");
         navigate("/");
       }
     } catch (error) {
-      alert(error.message);
+      if (error.response?.data === "failed") {
+        alert("입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요.");
+      } else {
+        alert("알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.");
+      }
     }
   };
 
@@ -305,8 +328,11 @@ const Register = () => {
                   <input
                     type="checkbox"
                     id="terms"
-                    checked={termsChecked}
-                    onChange={(e) => setTermsChecked(e.target.checked)}
+                    checked={formData.termsChecked}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      termsChecked: e.target.checked
+                    }))}
                     className={style.checkbox}
                   />
                   <span className={style.requiredText}>[필수]</span> 이용약관에
@@ -323,8 +349,11 @@ const Register = () => {
                   <input
                     type="checkbox"
                     id="privacy"
-                    checked={privacyChecked}
-                    onChange={(e) => setPrivacyChecked(e.target.checked)}
+                    checked={formData.privacyChecked}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      privacyChecked: e.target.checked
+                    }))}
                     className={style.checkbox}
                   />
                   <span className={style.requiredText}>[필수]</span> 개인정보

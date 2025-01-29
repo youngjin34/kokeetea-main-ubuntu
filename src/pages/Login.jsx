@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import style from './Login.module.css';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import { toast, Slide } from 'react-toastify';
 
 
-const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
+const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -31,47 +30,56 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
     onClose();
   };
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      await login(userName, password);
-      
-      // localStorage의 장바구니 데이터 확인
-      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-      
-      if (localCart.length > 0) {
-        // 서버에 장바구니 데이터 전송
-        const token = localStorage.getItem('token');
-        
-        for (const item of localCart) {
-          try {
-            await fetch('http://localhost:8080/kokee/carts', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                productId: item.product.pdId,
-                quantity: item.quantity,
-                options: `${item.options.temp}, ${item.options.whipping}, ${item.options.pearl}, ${item.options.shots}`,
-                price: item.product.pdPrice
-              })
-            });
-          } catch (error) {
-            console.error("장바구니 동기화 실패:", error);
-          }
-        }
-        
-        // localStorage의 장바구니 데이터 삭제
-        localStorage.removeItem("cart");
-      }
+      const result = await axios.post("http://localhost:8080/kokee/login", {
+        userName: userName,
+        password: password,
+      });
 
-      setIsLogined(true);
-      setHeaderLogined(true);
-      onClose();
+      if (result.status === 200) {
+        const userData = {
+          userName: userName,
+          name: result.data.name,
+          email: result.data.email,
+          phoneNumber: result.data.phoneNumber,
+        };
+
+        // localStorage에 저장
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("realname", result.data.name);
+        localStorage.setItem("email", result.data.email);
+        localStorage.setItem("phoneNumber", result.data.phoneNumber);
+        localStorage.setItem("token", result.data.token);
+
+        toast(`${result.data.name}님 환영합니다!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Slide,
+        });
+
+        handleLoginSuccess();
+      }
     } catch (error) {
-      console.error('Login failed:', error);
+      toast("아이디와 비밀번호를 확인해주세요", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Slide,
+      });
     }
   };
 
@@ -95,11 +103,17 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
     }
   };
 
+  const handleLoginSuccess = () => {
+    setIsLogined(true);
+    setHeaderLogined(true);
+    onLoginSuccess?.();
+  };
+
   return (
     <div className={style.pageContainer}>
       <div className={`${style.container} ${isSignUpActive ? style.rightPanelActive : ''}`}>
         <div className={`${style.formContainer} ${style.signUpContainer}`}>
-          <form className={style.form} onSubmit={handleLogin}>
+          <form className={style.form} onSubmit={handleSubmit}>
             <h2 className={style.LoginTitle}>점주 로그인</h2>
             <input 
               className={style.input} 
@@ -128,7 +142,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined }) => {
           </form>
         </div>
         <div className={`${style.formContainer} ${style.signInContainer}`}>
-          <form className={style.form} onSubmit={handleLogin}>
+          <form className={style.form} onSubmit={handleSubmit}>
             <h2 className={style.LoginTitle}>일반 로그인</h2>
             <div className={style.socialContainer}>
               <a href="#" className={`${style.socialLink} ${style.kakao}`}>

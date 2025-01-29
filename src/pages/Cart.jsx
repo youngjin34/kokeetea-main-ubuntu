@@ -13,59 +13,57 @@ const Cart = () => {
   const [amounts, setAmounts] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeCategory, setActiveCategory] = useState("전체선택"); // 카테고리 기능 삭제
   const navigate = useNavigate();
   const [isOptionModalOpen, setOptionModalOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState(null);
-  const [temp, setTemp] = useState("HOT");
-  const [whipping, setWhipping] = useState("기본");
-  const [pearl, setPearl] = useState("추가 안함");
-  const [shots, setShots] = useState("기본");
-  const [size, setSize] = useState("Regular"); // 사이즈 옵션 추가
+  const [temp, setTemp] = useState("ICE");
+  const [pearl, setPearl] = useState("기본");
+  const [size, setSize] = useState("Regular");
+  const [sugar, setSugar] = useState("70%");
+  const [iceAmount, setIceAmount] = useState("보통");
 
   const fetchCartData = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const email = localStorage.getItem("email");
-      let cartData = [];
 
-      if (token && email) {
-        // 로그인 상태: 서버에서 데이터 가져오기
-        const response = await fetch(
-          `http://localhost:8080/kokee/carts/${email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`서버 에러: ${response.status}`);
-        }
-
-        cartData = await response.json();
-        cartData = cartData.map((item) => ({
-          id: item.id,
-          pdName: item.product_name,
-          quantity: item.mount,
-          totalPrice: item.price,
-          date: item.date,
-          order_whether: item.order_whether,
-        }));
-      } else {
-        // 비로그인 상태: 로컬스토리지에서 데이터 가져오기
-        const localCartData = localStorage.getItem("cart");
-        cartData = localCartData ? JSON.parse(localCartData) : [];
+      if (!token || !email) {
+        throw new Error("로그인이 필요합니다");
       }
 
-      setCartItems(cartData);
+      const response = await fetch(
+        `http://localhost:8080/kokee/carts/${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`서버 에러: ${response.status}`);
+      }
+
+      const cartData = await response.json();
+      const mappedCartData = cartData.map((item) => ({
+        id: item.id,
+        product_name: selectedProduct.pdName,
+        price: totalPrice,
+        mount: quantity,
+        email: email,
+        size: size,
+        temp: temp,
+        sugar: sugar,
+        iceAmount: iceAmount,
+        pearl: pearl,
+      }));
+
+      setCartItems(mappedCartData);
     } catch (error) {
       console.error("장바구니 데이터 로드 실패:", error);
       setError(error.message);
-      // 에러 발생시 빈 배열로 초기화하여 UI 렌더링은 가능하도록 함
       setCartItems([]);
     } finally {
       setLoading(false);
@@ -76,46 +74,35 @@ const Cart = () => {
     fetchCartData();
   }, []);
 
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    }
-  }, [cartItems]);
-
   // 장바구니 아이템 삭제
   const handleRemove = async () => {
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
 
-    if (token && email) {
-      try {
-        for (const itemId of selectedItems) {
-          await fetch(
-            `http://localhost:8080/kokee/carts/delete_one/${itemId}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-        }
+    if (!token || !email) {
+      setError("로그인이 필요합니다");
+      return;
+    }
 
-        fetchCartData();
-        setSelectedItems([]);
-      } catch (error) {
-        console.error("상품 삭제 실패:", error);
-        alert("상품 삭제에 실패했습니다.");
+    try {
+      for (const itemId of selectedItems) {
+        await fetch(
+          `http://localhost:8080/kokee/carts/delete_one/${itemId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       }
-    } else {
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const updatedCart = currentCart.filter(
-        (item) => !selectedItems.includes(item.id)
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      setCartItems(updatedCart);
+
+      fetchCartData();
       setSelectedItems([]);
+    } catch (error) {
+      console.error("상품 삭제 실패:", error);
+      alert("상품 삭제에 실패했습니다.");
     }
   };
 
@@ -137,6 +124,11 @@ const Cart = () => {
           id: id,
           updateMount: newAmount,
           updatePrice: calculateTotalPrice(newAmount, item.price),
+          temperature: temp,
+          sugar: sugar,
+          iceAmount: iceAmount,
+          pearl: pearl,
+          size: size,
         }),
       });
 
@@ -150,7 +142,8 @@ const Cart = () => {
   // 수량 감소
   const handleDecrement = async (id) => {
     const email = localStorage.getItem("email");
-    if (!email) return;
+    const token = localStorage.getItem("token");
+    if (!email || !token) return;
 
     const item = cartItems.find((item) => item.id === id);
     const currentAmount = amounts[id] || item.amount;
@@ -159,16 +152,22 @@ const Cart = () => {
     const newAmount = currentAmount - 1;
 
     try {
-      await fetch(`/kokee/carts/update/${email}`, {
+      await fetch(`http://localhost:8080/kokee/carts/update/${email}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           id: id,
           updateMount: newAmount,
           updatePrice: calculateTotalPrice(newAmount, item.price),
-        }),
+          temperature: temp,
+          sugar: sugar,
+          iceAmount: iceAmount,
+          pearl: pearl,
+          size: size,
+        })
       });
 
       fetchCartData();
@@ -176,7 +175,7 @@ const Cart = () => {
       console.error("수량 감소 실패:", error);
       alert("수량 변경에 실패했습니다.");
     }
-  };
+  }
 
   // 체크박스 관련 함수들 수정
   const handleCheck = (id) => {
@@ -222,17 +221,26 @@ const Cart = () => {
   };
 
   const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+
+    if (!token || !email) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/kokee/carts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           product_name: product.category,
           mount: product.amount,
           price: parseInt(product.price.replace(/,/g, "").replace("원", "")),
-          email: "test@example.com", // 임시 이메일
+          email: email,
         }),
       });
 
@@ -242,11 +250,10 @@ const Cart = () => {
       const result = await response.text();
       if (result === "success") {
         alert("상품이 장바구니에 추가되었습니다.");
+        fetchCartData();
       } else {
         alert("상품 추가에 실패했습니다. 다시 시도해주세요.");
       }
-
-      // 장바구니 업데이트 기능은 현재 제공하지 않음
     } catch (error) {
       console.error("상품 추가에 실패했습니다:", error);
       alert("상품 추가에 실패했습니다. 다시 시도해주세요.");
@@ -273,98 +280,35 @@ const Cart = () => {
 
   const handleOptionChange = (cartItem) => {
     setSelectedCartItem(cartItem);
-    // 기존 옵션값 파싱 및 설정
-    const options = cartItem.options.split(", ");
-    options.forEach((option) => {
-      const [key, value] = option.split(": ");
-      switch (key.trim()) {
-        case "온도":
-          setTemp(value.trim());
-          break;
-        case "크기":
-          setSize(value.trim());
-          break;
-        case "휘핑크림":
-          setWhipping(value.trim());
-          break;
-        case "펄":
-          setPearl(value.trim());
-          break;
-        case "샷":
-          setShots(value.trim());
-          break;
-      }
-    });
+    // 기존 옵션값 설정
+    setTemp(cartItem.temperature || "HOT");
+    setSize(cartItem.size || "Regular");
+    setSugar(cartItem.sugar || "70%");
+    setIceAmount(cartItem.iceAmount || "보통");
+    setPearl(cartItem.pearl || "기본");
     setOptionModalOpen(true);
-  };
-
-  // 이미지 경로를 가져오는 함수 추가
-  const getMenuImage = (category) => {
-    const imageMap = {
-      브라운슈가밀크티: "./img/Cold Cloud/Brown Sugar Cold Brew.png",
-      타로밀크티: "./img/Milk Tea/Taro Milk Tea.png",
-      얼그레이밀크티: "./img/Milk Tea/Earl Grey Milk Tea.png",
-      // 나머지 메뉴들에 대한 이미지 경로도 추가
-    };
-
-    // 이미지가 없는 경우 바로 기본 이미지 반환
-    return imageMap[category] ?? "/public/img/default-menu.png";
-  };
-
-  // 옵션 표시 형식 수정
-  const formatOptions = (options) => {
-    if (!options) return "옵션 없음";
-
-    try {
-      // options가 문자열인 경우, 쉼표로 분리하여 배열로 변환
-      if (typeof options === "string") {
-        return options
-          .split(",")
-          .map((opt) => opt.trim())
-          .join(" / ");
-      }
-
-      // options가 객체인 경우
-      if (typeof options === "object") {
-        return Object.entries(options)
-          .filter(([_, value]) => value) // 값이 있는 옵션만 필터링
-          .map(([key, value]) => {
-            // 키값을 한글로 변환
-            const koreanKey =
-              {
-                temp: "온도",
-                size: "크기",
-                whipping: "휘핑",
-                pearl: "펄",
-                shots: "샷",
-              }[key] || key;
-
-            return `${value}`; // 키 레이블은 제외하고 값만 표시
-          })
-          .join(" / ");
-      }
-
-      return "옵션 없음";
-    } catch (error) {
-      console.error("옵션 형식화 오류:", error);
-      return "옵션 없음";
-    }
   };
 
   const saveOptionChanges = async () => {
     try {
-      const formattedOptions = `${temp}, ${size}, ${whipping}, ${pearl}, ${shots}`;
-
+      const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/kokee/carts/${selectedCartItem.id}/options`,
+        `http://localhost:8080/kokee/carts/update/${selectedCartItem.email}`,
         {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            options: formattedOptions,
+            id: selectedCartItem.id,
+            updateMount: selectedCartItem.mount,
+            updatePrice: selectedCartItem.price,
+            temperature: temp,
+            size: size,
+            sugar: sugar,
+            iceAmount: iceAmount,
+            pearl: pearl,
           }),
         }
       );
@@ -381,16 +325,42 @@ const Cart = () => {
     }
   };
 
+  // 옵션 표시 형식 수정
+  const formatOptions = (item) => {
+    if (!item) return "옵션 없음";
+
+    const options = [];
+    if (item.temperature) options.push(item.temperature);
+    if (item.size) options.push(item.size);
+    if (item.sugar) options.push(item.sugar);
+    if (item.iceAmount) options.push(item.iceAmount);
+    if (item.pearl) options.push(item.pearl);
+
+    return options.length > 0 ? options.join(" / ") : "옵션 없음";
+  };
+
+  // 이미지 경로를 가져오는 함수 추가
+  const getMenuImage = (category) => {
+    const imageMap = {
+      브라운슈가밀크티: "./img/Cold Cloud/Brown Sugar Cold Brew.png",
+      타로밀크티: "./img/Milk Tea/Taro Milk Tea.png",
+      얼그레이밀크티: "./img/Milk Tea/Earl Grey Milk Tea.png",
+      // 나머지 메뉴들에 대한 이미지 경로도 추가
+    };
+
+    // 이미지가 없는 경우 바로 기본 이미지 반환
+    return imageMap[category] ?? "/public/img/default-menu.png";
+  };
+
   // 모달 닫을 때 초기화
   const closeModal = () => {
     setOptionModalOpen(false);
     setSelectedCartItem(null);
     // 옵션 상태 초기화
-    setTemp("HOT");
-    setWhipping("기본");
-    setPearl("추가 안함");
-    setShots("기본");
-    setSize("Regular");
+    setTemp("ICE");
+    setSugar("70%");
+    setIceAmount("보통");
+    setPearl("기본");
   };
 
   // 모달 열릴 때 body 스크롤 막기
@@ -514,7 +484,7 @@ const Cart = () => {
                           원
                         </div>
                         <div className={style.cart_item_options}>
-                          {formatOptions(item.options)}
+                          {formatOptions(item)}
                           <button
                             className={style.option_change_btn}
                             onClick={() => handleOptionChange(item)}
@@ -568,138 +538,193 @@ const Cart = () => {
           }}
         >
           <div className={style.modalContent}>
-            <div className={style.modal_header}>
-              <h2>{selectedCartItem.category}</h2>
-              <button className={style.closeButton} onClick={closeModal}>
-                <img src="/public/img/close.png" alt="Close" />
-              </button>
+            <div className={style.modal_first}>
+              <div className={style.option_title}>옵션 선택</div>
+              <img
+                src={selectedCartItem.image || "/img/default-menu.png"}
+                alt={selectedCartItem.pdName}
+                className={style.modalImage}
+              />
+              <div className={style.modal_info}>
+                <h2>{selectedCartItem.pdName}</h2>
+                <div className={style.price}>
+                  {selectedCartItem.totalPrice.toLocaleString()} 원
+                </div>
+              </div>
             </div>
 
-            <div className={style.options_section}>
-              <div className={style.option_group}>
-                <h3>온도</h3>
-                <div className={style.option_buttons}>
-                  <button
-                    className={`${style.option_btn} ${
-                      temp === "HOT" ? style.selected : ""
-                    }`}
-                    onClick={() => setTemp("HOT")}
-                  >
-                    HOT
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      temp === "ICE" ? style.selected : ""
-                    }`}
-                    onClick={() => setTemp("ICE")}
-                  >
-                    ICE
-                  </button>
+            <div className={style.option_container}>
+              <div className={style.temp_option}>
+                <label className={`${style.radio_style} ${style.ice_option}`}>
+                  <input
+                    type="radio"
+                    name="temp"
+                    value="ICE"
+                    checked={temp === "ICE"}
+                    onChange={() => setTemp("ICE")}
+                  />
+                  <span>ICE ❄️</span>
+                </label>
+              </div>
+
+              <div className={style.rest_option}>
+                {/* 사이즈 옵션 */}
+                <div className={style.option}>
+                  <h3>사이즈</h3>
+                  <div className={style.size_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value="Regular"
+                        checked={size === "Regular"}
+                        onChange={() => setSize("Regular")}
+                      />
+                      <span>Regular</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value="Large"
+                        checked={size === "Large"}
+                        onChange={() => setSize("Large")}
+                      />
+                      <span>Large<br/>(+1000원)</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value="Kokee-Large"
+                        checked={size === "Kokee-Large"}
+                        onChange={() => setSize("Kokee-Large")}
+                      />
+                      <span>Kokee-Large<br/>(+1500원)</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 당도 옵션 */}
+                <div className={style.option}>
+                  <h3>당도</h3>
+                  <div className={style.sugar_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="50%"
+                        checked={sugar === "50%"}
+                        onChange={() => setSugar("50%")}
+                      />
+                      <span>50%</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="70%"
+                        checked={sugar === "70%"}
+                        onChange={() => setSugar("70%")}
+                      />
+                      <span>70%</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="sugar"
+                        value="100%"
+                        checked={sugar === "100%"}
+                        onChange={() => setSugar("100%")}
+                      />
+                      <span>100%</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 얼음량 옵션 */}
+                <div className={style.option}>
+                  <h3>얼음량</h3>
+                  <div className={style.ice_amount_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="적게"
+                        checked={iceAmount === "적게"}
+                        onChange={() => setIceAmount("적게")}
+                      />
+                      <span>적게</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="보통"
+                        checked={iceAmount === "보통"}
+                        onChange={() => setIceAmount("보통")}
+                      />
+                      <span>보통</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="iceAmount"
+                        value="많이"
+                        checked={iceAmount === "많이"}
+                        onChange={() => setIceAmount("많이")}
+                      />
+                      <span>많이</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 펄 옵션 */}
+                <div className={style.option}>
+                  <h3>펄 선택</h3>
+                  <div className={style.pearl_option}>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="기본"
+                        checked={pearl === "기본"}
+                        onChange={() => setPearl("기본")}
+                      />
+                      <span>기본<br/>(블랙 펄)</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="화이트 펄"
+                        checked={pearl === "화이트 펄"}
+                        onChange={() => setPearl("화이트 펄")}
+                      />
+                      <span>화이트 펄 변경<br/>(+500원)</span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="pearl"
+                        value="레인보우 펄"
+                        checked={pearl === "레인보우 펄"}
+                        onChange={() => setPearl("레인보우 펄")}
+                      />
+
+                      <span>레인보우 펄 변경<br/>(+1000원)</span>
+                    </label>
+                  </div>
                 </div>
               </div>
 
-              <div className={style.option_group}>
-                <h3>크기</h3>
-                <div className={style.option_buttons}>
-                  <button
-                    className={`${style.option_btn} ${
-                      size === "Regular" ? style.selected : ""
-                    }`}
-                    onClick={() => setSize("Regular")}
-                  >
-                    Regular
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      size === "Large" ? style.selected : ""
-                    }`}
-                    onClick={() => setSize("Large")}
-                  >
-                    Large (+500원)
-                  </button>
-                </div>
-              </div>
-
-              <div className={style.option_group}>
-                <h3>휘핑크림</h3>
-                <div className={style.option_buttons}>
-                  <button
-                    className={`${style.option_btn} ${
-                      whipping === "기본" ? style.selected : ""
-                    }`}
-                    onClick={() => setWhipping("기본")}
-                  >
-                    기본
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      whipping === "없음" ? style.selected : ""
-                    }`}
-                    onClick={() => setWhipping("없음")}
-                  >
-                    없음
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      whipping === "많이" ? style.selected : ""
-                    }`}
-                    onClick={() => setWhipping("많이")}
-                  >
-                    많이
-                  </button>
-                </div>
-              </div>
-
-              <div className={style.option_group}>
-                <h3>펄</h3>
-                <div className={style.option_buttons}>
-                  <button
-                    className={`${style.option_btn} ${
-                      pearl === "추가 안함" ? style.selected : ""
-                    }`}
-                    onClick={() => setPearl("추가 안함")}
-                  >
-                    추가 안함
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      pearl === "타피오카 펄" ? style.selected : ""
-                    }`}
-                    onClick={() => setPearl("타피오카 펄")}
-                  >
-                    타피오카 펄 (+500원)
-                  </button>
-                </div>
-              </div>
-
-              <div className={style.option_group}>
-                <h3>샷</h3>
-                <div className={style.option_buttons}>
-                  <button
-                    className={`${style.option_btn} ${
-                      shots === "기본" ? style.selected : ""
-                    }`}
-                    onClick={() => setShots("기본")}
-                  >
-                    기본
-                  </button>
-                  <button
-                    className={`${style.option_btn} ${
-                      shots === "1샷 추가" ? style.selected : ""
-                    }`}
-                    onClick={() => setShots("1샷 추가")}
-                  >
-                    1샷 추가 (+500원)
-                  </button>
-                </div>
+              <div className={style.modalClose} onClick={closeModal}>
+                <img src="/public/img/close.png" alt="Close" />
               </div>
             </div>
 
             <div className={style.modal_footer}>
-              <button
-                className={style.confirm_button}
-                onClick={saveOptionChanges}
-              >
+              <button className={style.confirm_button} onClick={saveOptionChanges}>
                 변경하기
               </button>
             </div>
