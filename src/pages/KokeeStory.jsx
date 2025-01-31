@@ -45,7 +45,7 @@ const KokeeStory = () => {
         <div 
           className={style.ParallaxBackground}
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1544145945-f90425340c7e?q=80&w=2070&auto=format&fit=crop")`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?q=80&w=2070&auto=format&fit=crop")`,
             transform: `translateY(${(scrollPosition - window.innerHeight) * 0.5}px)`
           }}
         >
@@ -93,7 +93,7 @@ const KokeeStory = () => {
         <div 
           className={style.ParallaxBackground}
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1561336526-2914f13ceb36?q=80&w=2070&auto=format&fit=crop")`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=2070&auto=format&fit=crop")`,
             transform: `translateY(${(scrollPosition - window.innerHeight * 4) * 0.5}px)`
           }}
         >
