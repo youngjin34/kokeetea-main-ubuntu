@@ -17,7 +17,7 @@ const Cart = () => {
   const [isOptionModalOpen, setOptionModalOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState(null);
   const [temp, setTemp] = useState("ICE");
-  const [pearl, setPearl] = useState("기본");
+  const [topping, setTopping] = useState("기본");
   const [size, setSize] = useState("Regular");
   const [sugar, setSugar] = useState("70%");
   const [iceAmount, setIceAmount] = useState("보통");
@@ -59,7 +59,7 @@ const Cart = () => {
         temperature: item.temperature,
         sugar: item.sugar,
         iceAmount: item.iceAmount,
-        pearl: item.pearl,
+        topping: item.topping,
       }));
 
       setCartItems(mappedCartData);
@@ -126,7 +126,7 @@ const Cart = () => {
           temperature: temp,
           sugar: sugar,
           iceAmount: iceAmount,
-          pearl: pearl,
+          topping: topping,
           size: size,
         }),
       });
@@ -164,7 +164,7 @@ const Cart = () => {
           temperature: temp,
           sugar: sugar,
           iceAmount: iceAmount,
-          pearl: pearl,
+          topping: topping,
           size: size,
         }),
       });
@@ -213,61 +213,7 @@ const Cart = () => {
       .filter((item) => selectedItems.includes(item.id))
       .reduce((acc, curr) => acc + curr.totalPrice, 0);
   };
-
-  const handleAddToCart = async (product) => {
-    const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
-
-    if (!token || !email) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:8080/kokee/carts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          product_name: product.category,
-          mount: product.amount,
-          price: parseInt(product.price.replace(/,/g, "").replace("원", "")),
-          email: email,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.text();
-      if (result === "success") {
-        alert("상품이 장바구니에 추가되었습니다.");
-        fetchCartData();
-      } else {
-        alert("상품 추가에 실패했습니다. 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.error("상품 추가에 실패했습니다:", error);
-      alert("상품 추가에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-  };
-
-  const calculateTotalCartPrice = () => {
-    return cartItems.reduce(
-      (acc, curr) => acc + calculateTotalPrice(curr.amount, curr.price),
-      0
-    );
-  };
-  const calculateTotalCartAmount = () => {
-    return cartItems.reduce((acc, curr) => acc + curr.amount, 0);
-  };
-
+  
   const handleCheckout = () => {
     navigate("/order");
   };
@@ -279,13 +225,13 @@ const Cart = () => {
     setSize(cartItem.size || "Regular");
     setSugar(cartItem.sugar || "70%");
     setIceAmount(cartItem.iceAmount || "보통");
-    setPearl(cartItem.pearl || "기본");
-    
+    setTopping(cartItem.topping || "기본");
+
     // 초기 가격 설정
     const basePrice = cartItem.totalPrice / cartItem.quantity;
     setCurrentPrice(basePrice);
     setPriceChange({ size: 0, pearl: 0 });
-    
+
     setOptionModalOpen(true);
   };
 
@@ -294,33 +240,39 @@ const Cart = () => {
     let sizePrice = 0;
     if (newSize === "Large") sizePrice = 1000;
     if (newSize === "Kokee-Large") sizePrice = 1500;
-    
-    setPriceChange(prev => ({ ...prev, size: sizePrice }));
+
+    setPriceChange((prev) => ({ ...prev, size: sizePrice }));
     setSize(newSize);
   };
 
   // 펄 변경 핸들러
-  const handlePearlChange = (newPearl) => {
+  const handleToppingChange = (newTopping) => {
     let pearlPrice = 0;
-    if (newPearl === "화이트 펄") pearlPrice = 500;
-    if (newPearl === "레인보우 펄") pearlPrice = 1000;
-    
-    setPriceChange(prev => ({ ...prev, pearl: pearlPrice }));
-    setPearl(newPearl);
+    if (newTopping === "타피오카 펄") pearlPrice = 500;
+    if (newTopping === "화이트 펄") pearlPrice = 500;
+    if (newTopping === "밀크폼") pearlPrice = 1000;
+    if (newTopping === "코코넛") pearlPrice = 1000;
+    if (newTopping === "알로에") pearlPrice = 1000;
+
+    setPriceChange((prev) => ({ ...prev, pearl: pearlPrice }));
+    setTopping(newTopping);
   };
 
   // 옵션 가격 계산 함수 추가
   const calculateOptionPrice = (basePrice) => {
     let additionalPrice = 0;
-    
+
     // 사이즈 옵션 가격
     if (size === "Large") additionalPrice += 1000;
     if (size === "Kokee-Large") additionalPrice += 1500;
-    
+
     // 펄 옵션 가격
-    if (pearl === "화이트 펄") additionalPrice += 500;
-    if (pearl === "레인보우 펄") additionalPrice += 1000;
-    
+    if (topping === "타피오카 펄") additionalPrice += 500;
+    if (topping === "화이트 펄") additionalPrice += 500;
+    if (topping === "밀크폼") additionalPrice += 1000;
+    if (topping === "코코넛") additionalPrice += 1000;
+    if (topping === "알로에") additionalPrice += 1000;
+
     return basePrice + additionalPrice;
   };
 
@@ -347,7 +299,7 @@ const Cart = () => {
             size: size,
             sugar: sugar,
             iceAmount: iceAmount,
-            pearl: pearl,
+            topping: topping,
           }),
         }
       );
@@ -373,7 +325,7 @@ const Cart = () => {
     if (item.size) options.push(item.size);
     if (item.sugar) options.push(item.sugar);
     if (item.iceAmount) options.push(item.iceAmount);
-    if (item.pearl) options.push(item.pearl);
+    if (item.topping) options.push(item.topping);
 
     return options.length > 0 ? options.join(" / ") : "옵션 없음";
   };
@@ -399,7 +351,7 @@ const Cart = () => {
     setTemp("ICE");
     setSugar("70%");
     setIceAmount("보통");
-    setPearl("기본");
+    setTopping("기본");
   };
 
   // 모달 열릴 때 body 스크롤 막기
@@ -443,11 +395,16 @@ const Cart = () => {
                         <input
                           type="checkbox"
                           onChange={handleAllCheck}
-                          checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
+                          checked={
+                            cartItems.length > 0 &&
+                            selectedItems.length === cartItems.length
+                          }
                           className={style.checkbox_round_input}
                           id="selectAll"
                         />
-                        <span className={style.total_select_text}>전체선택</span>
+                        <span className={style.total_select_text}>
+                          전체선택
+                        </span>
                       </label>
                     </div>
                     <button
@@ -573,16 +530,47 @@ const Cart = () => {
         >
           <div className={style.modalContent}>
             <div className={style.modal_first}>
+              <img 
+                src={selectedCartItem.image} 
+                alt={selectedCartItem.pdName}
+                className={style.modalImage}
+              />
               <div className={style.modal_info}>
                 <h2>{selectedCartItem.pdName}</h2>
                 <div className={style.price}>
                   {selectedCartItem.totalPrice.toLocaleString()} 원
+                  <span className={style.base_price}>
+                    (기본 {(selectedCartItem.totalPrice / selectedCartItem.quantity).toLocaleString()}원 + 옵션 {calculateOptionPrice(0).toLocaleString()}원)
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className={style.option_container}>
               <div className={style.rest_option}>
+                {/* 온도 옵션 */}
+                <div className={style.temp_option}>
+                  <label className={`${style.radio_style} ${style.hot_option}`}>
+                    <input
+                      type="radio"
+                      name="temp"
+                      value="HOT"
+                      checked={temp === "HOT"}
+                      onChange={() => setTemp("HOT")}
+                    />
+                    <span>HOT 🔥</span>
+                  </label>
+                  <label className={`${style.radio_style} ${style.ice_option}`}>
+                    <input
+                      type="radio"
+                      name="temp"
+                      value="ICE"
+                      checked={temp === "ICE"}
+                      onChange={() => setTemp("ICE")}
+                    />
+                    <span>ICE ❄️</span>
+                  </label>
+                </div>
                 {/* 사이즈 옵션 */}
                 <div className={style.option}>
                   <h3>사이즈</h3>
@@ -702,31 +690,45 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* 펄 옵션 */}
+                {/* 토핑 옵션 */}
                 <div className={style.option}>
-                  <h3>펄 선택</h3>
-                  <div className={style.pearl_option}>
+                  <h3>토핑 변경</h3>
+                  <div className={style.topping_option}>
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
-                        name="pearl"
+                        name="topping"
                         value="기본"
-                        checked={pearl === "기본"}
-                        onChange={() => handlePearlChange("기본")}
+                        checked={topping === "기본"}
+                        onChange={() => handleToppingChange("기본")}
                       />
                       <span>
                         기본
                         <br />
-                        (블랙 펄)
+                        (변경 안 함)
                       </span>
                     </label>
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
-                        name="pearl"
+                        name="topping"
+                        value="타피오카 펄"
+                        checked={topping === "타피오카 펄"}
+                        onChange={() => handleToppingChange("타피오카 펄")}
+                      />
+                      <span>
+                        타피오카 펄 변경
+                        <br />
+                        (+500원)
+                      </span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="topping"
                         value="화이트 펄"
-                        checked={pearl === "화이트 펄"}
-                        onChange={() => handlePearlChange("화이트 펄")}
+                        checked={topping === "화이트 펄"}
+                        onChange={() => handleToppingChange("화이트 펄")}
                       />
                       <span>
                         화이트 펄 변경
@@ -737,13 +739,41 @@ const Cart = () => {
                     <label className={style.sub_radio_style}>
                       <input
                         type="radio"
-                        name="pearl"
-                        value="레인보우 펄"
-                        checked={pearl === "레인보우 펄"}
-                        onChange={() => handlePearlChange("레인보우 펄")}
+                        name="topping"
+                        value="밀크폼"
+                        checked={topping === "밀크폼"}
+                        onChange={() => handleToppingChange("밀크폼")}
                       />
                       <span>
-                        레인보우 펄 변경
+                        밀크폼 변경
+                        <br />
+                        (+1,000원)
+                      </span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="topping"
+                        value="코코넛"
+                        checked={topping === "코코넛"}
+                        onChange={() => handleToppingChange("코코넛")}
+                      />
+                      <span>
+                        코코넛 변경
+                        <br />
+                        (+1,000원)
+                      </span>
+                    </label>
+                    <label className={style.sub_radio_style}>
+                      <input
+                        type="radio"
+                        name="topping"
+                        value="알로에"
+                        checked={topping === "알로에"}
+                        onChange={() => handleToppingChange("알로에")}
+                      />
+                      <span>
+                        알로에 변경
                         <br />
                         (+1,000원)
                       </span>

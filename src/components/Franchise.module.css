@@ -345,3 +345,9 @@
   background-color: #ba274a;
   z-index: -1;
 }
+
+.simulation_title {
+  font-size: 48px;
+  font-weight: bold;
+}
+

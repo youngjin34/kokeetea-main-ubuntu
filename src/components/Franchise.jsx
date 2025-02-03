@@ -95,7 +95,7 @@ function Franchise() {
         <p className={`${style.franchise_title}`}>
           <span className={style.underline}>KOKEE TEA</span>
           <br />
-          가맹 비용 시뮬레이션
+          <span className={style.simulation_title}>가맹 비용 시뮬레이션</span>
         </p>
         <p className={`${style.franchise_sub_title}`}>
           예상 창업 비용을 계산해보세요!

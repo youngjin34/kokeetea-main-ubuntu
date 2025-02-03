@@ -18,23 +18,6 @@ function Order() {
     "테이크아웃(일회용컵)",
     "딜리버리(직원에게 전달)",
   ];
-  const coupons = ["적용할 쿠폰을 선택하세요.", "10% 할인", "20% 할인"];
-  const tableData = [
-    {
-      id: 1,
-      category: "브라운슈가밀크티",
-      price: "5,600원",
-      options: "ICE / 펄 추가(+500원) / 샷 추가(+500원)",
-      amount: 1,
-    },
-    {
-      id: 2,
-      category: "타로밀크티",
-      price: "5,600원",
-      options: "ICE",
-      amount: 2,
-    },
-  ];
 
   // 하드코딩된 데이터 대신 상태 추가
   const [cartItems, setCartItems] = useState([]);
