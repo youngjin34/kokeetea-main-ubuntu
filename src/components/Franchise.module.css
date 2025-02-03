@@ -46,10 +46,12 @@
 
 .franchise_sub_title {
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
   padding: 0 45px;
-  margin-top: 16px;
+  margin-top: 15px;
   margin-bottom: 30px;
+  font-weight: bold;
+  color: #333;
 }
 
 .content {
@@ -160,14 +162,14 @@
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
 }
 
 .number_input {
   padding: 8px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
   flex: 1;
   margin-bottom: 0;
@@ -189,13 +191,13 @@
   margin-top: 15px;
   padding: 10px;
   background: #f8f8f8;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .cost_result {
   margin-top: 20px;
   background: #f5f5f5;
-  border-radius: 4px;
+  border-radius: 8px;
   text-align: center;
   height: auto;
   padding: 20px;
@@ -209,8 +211,14 @@
   font-size: 20px;
   font-weight: bold;
   color: #ba274a;
-  margin: 10px 0;
+  margin: 10px 0 5px 0;
 }
+
+.monthly_cost {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
 
 .cost_breakdown {
   font-size: 12px;
@@ -242,19 +250,33 @@
 
 .cost_result small {
   font-size: 14px;
+  color: #666;
 }
 
 .cost_result h3 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
+  position: relative;
+  padding-left: 16px;
+}
+
+.cost_result h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;  
+  height: 24px;  
+  background: #ba274a;  
+  border-radius: 8px;   
 }
 
 .cost_result p {
   font-size: 20px;
   font-weight: bold;
   color: #ba274a;
-  margin-bottom: 0;
 }
 
 .cost_result small {
@@ -263,6 +285,8 @@
 
 .unit {
   font-size: 14px;
+  color: #333;
+  font-weight: bold;
 }
 
 .form_group span {
@@ -284,7 +308,6 @@
 .franchise_btn {
   display: flex;
   justify-content: center;
-  gap: 15px;
 }
 
 .franchise_btn button {
@@ -292,15 +315,33 @@
   font-size: 16px;
   font-weight: bold;
   color: #ba274a;
-  width: 120px;
-  height: 45px;
+  height: 50px;
   background: none;
   border: 2px solid #ba274a;
   border-radius: 8px;
   transition: all 0.3s ease;
+  padding: 0;
+  margin: 10px 5px;
 }
 
 .btn a {
   text-decoration: none;
   color: inherit;
+}
+
+.underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  bottom: 0;
+  width: 105%;
+  height: 40%;
+  background-color: #ba274a;
+  z-index: -1;
 }

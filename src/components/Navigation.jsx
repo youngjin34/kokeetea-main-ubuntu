@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
 
-function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
+function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurrentPage }) {
   const navigate = useNavigate();
 
   const [headerLogined, setHeaderLogined] = useState(false);
@@ -139,7 +139,17 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage }) {
 
   // 홈으로 이동하는 함수를 단순화
   const handleLogoClick = () => {
-    navigate('/');
+    if (window.location.pathname === '/') {
+      // 현재 홈페이지에 있을 경우 첫 번째 섹션으로 스크롤
+      const homeComponent = document.getElementById('section-0');
+      if (homeComponent) {
+        homeComponent.scrollIntoView({ behavior: 'smooth' });
+        setCurrentPage(0);
+      }
+    } else {
+      // 다른 페이지에 있을 경우 홈페이지로 이동하면서 state 전달
+      navigate('/', { state: { currentPage: 0 } });
+    }
   };
 
   const toggleMobileMenu = () => {

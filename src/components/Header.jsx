@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import style from "./Header.module.css";
 
-const Header = ({ currentPage, isLogined, setIsLogined }) => {
+const Header = ({ currentPage, isLogined, setIsLogined, setCurrentPage }) => {
   const [isHovered, setIsHovered] = useState(false); // 헤더 배경색을 하얗게 할지 여부
   const [isNavHovered, setIsNavHovered] = useState(false); // Navigation에 마우스가 올렸는지 여부
 
@@ -74,6 +74,7 @@ const Header = ({ currentPage, isLogined, setIsLogined }) => {
           currentPage={currentPage}
           isLogined={isLogined} // 네비게이션에 로그인 상태 전달
           setIsLogined={setIsLogined} // 네비게이션에서 로그인 상태 변경 함수 사용
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </div>

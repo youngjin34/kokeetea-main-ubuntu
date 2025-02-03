@@ -12,6 +12,18 @@ function Home({ currentPage, setCurrentPage }) {
   const [isScrolling, setIsScrolling] = useState(false); // 스크롤 중 여부 상태 관리
   const footerHeight = 140; // 푸터 높이 설정
 
+  useEffect(() => {
+    // 컴포넌트 마운트 시 항상 첫 번째 섹션으로 스크롤
+    if (outerDivRef.current) {
+      outerDivRef.current.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+      setCurrentPage(0);
+    }
+  }, []); // 빈 의존성 배열로 마운트 시에만 실행
+
   const scrollToSection = (pageIndex) => {
     const pageHeight = window.innerHeight;
     const totalHeight = outerDivRef.current.scrollHeight;

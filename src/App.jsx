@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,7 +27,17 @@ import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
 
 function AppContent() {
-  const location = useLocation(); // 현재 경로 확인
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.currentPage !== undefined) {
+      const homeComponent = document.getElementById('section-0');
+      if (homeComponent) {
+        homeComponent.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
 
   return (
     <>
@@ -54,6 +64,7 @@ function App() {
     <BrowserRouter>
       <Header
         currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
