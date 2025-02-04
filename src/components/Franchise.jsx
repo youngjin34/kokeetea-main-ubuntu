@@ -4,14 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 
 function Franchise() {
   const location = useLocation();
-  
+
   useEffect(() => {
     // 컴포넌트가 마운트될 때 body의 클래스를 설정
-    document.body.classList.add('franchise-page');
-    
+    document.body.classList.add("franchise-page");
+
     // 컴포넌트가 언마운트될 때 cleanup
     return () => {
-      document.body.classList.remove('franchise-page');
+      document.body.classList.remove("franchise-page");
     };
   }, []);
 
@@ -24,23 +24,23 @@ function Franchise() {
 
   // 지역별 할증률 수정
   const locationMultiplier = {
-    서울: 1.3,    // 서울특별시
-    부산: 1.2,    // 부산광역시
-    대구: 1.2,    // 대구광역시
-    인천: 1.2,    // 인천광역시
-    광주: 1.2,    // 광주광역시
-    대전: 1.2,    // 대전광역시
-    울산: 1.2,    // 울산광역시
-    세종: 1.2,    // 세종특별자치시
-    경기: 1.2,    // 경기도
-    강원: 1.1,    // 강원도
-    충북: 1.1,    // 충청북도
-    충남: 1.1,    // 충청남도
-    전북: 1.1,    // 전라북도
-    전남: 1.1,    // 전라남도
-    경북: 1.1,    // 경상북도
-    경남: 1.1,    // 경상남도
-    제주: 1.15    // 제주특별자치도
+    서울: 1.3, // 서울특별시
+    부산: 1.2, // 부산광역시
+    대구: 1.2, // 대구광역시
+    인천: 1.2, // 인천광역시
+    광주: 1.2, // 광주광역시
+    대전: 1.2, // 대전광역시
+    울산: 1.2, // 울산광역시
+    세종: 1.2, // 세종특별자치시
+    경기: 1.2, // 경기도
+    강원: 1.1, // 강원도
+    충북: 1.1, // 충청북도
+    충남: 1.1, // 충청남도
+    전북: 1.1, // 전라북도
+    전남: 1.1, // 전라남도
+    경북: 1.1, // 경상북도
+    경남: 1.1, // 경상남도
+    제주: 1.15, // 제주특별자치도
   };
 
   // 예시 가격 계산
@@ -93,9 +93,8 @@ function Franchise() {
       </div>
       <div className={`${style.franchise_content}`}>
         <p className={`${style.franchise_title}`}>
-          <span className={style.underline}>KOKEE TEA</span>
-          <br />
-          <span className={style.simulation_title}>가맹 비용 시뮬레이션</span>
+          <div className={style.underline}>KOKEE TEA</div>
+          <div className={style.simulation_title}>가맹 비용 시뮬레이션</div>
         </p>
         <p className={`${style.franchise_sub_title}`}>
           예상 창업 비용을 계산해보세요!
@@ -201,12 +200,16 @@ function Franchise() {
               예상 월 인건비: 약 {costs.monthlyLaborCost.toLocaleString()}원
             </p>
             <small>* 위 금액은 예상 비용으로, 실제와 다를 수 있습니다.</small>
-            
+
             <div className={`${style.franchise_btn}`}>
-              <button className={`${style.btn} ${style.btn_primary} ${style.btn_ghost}`}>
+              <button
+                className={`${style.btn} ${style.btn_primary} ${style.btn_ghost}`}
+              >
                 <Link to="/store">매장찾기</Link>
               </button>
-              <button className={`${style.btn} ${style.btn_primary} ${style.btn_ghost}`}>
+              <button
+                className={`${style.btn} ${style.btn_primary} ${style.btn_ghost}`}
+              >
                 <Link to="/affiliated">가맹문의</Link>
               </button>
             </div>
