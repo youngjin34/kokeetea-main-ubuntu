@@ -57,7 +57,7 @@ input {
   width: 94%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #E5D5DA;
   border-radius: 5px;
 }
 
@@ -689,7 +689,7 @@ ul {
     color: white;
     font-size: 1.2rem;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid #E5D5DA;
   }
 }
 

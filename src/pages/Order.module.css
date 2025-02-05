@@ -219,6 +219,11 @@
   border: 2px solid #ba274a;
 }
 
+.pickup_button:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
 .checkout_coupon {
   font-size: 18px;
   font-weight: 600;
@@ -410,6 +415,11 @@
   border: 2px solid #ba274a;
 }
 
+.payment_method_button:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
 .stampGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -493,8 +503,8 @@
 }
 
 .store_item.selected {
-  border-color: #ba274a;
-  background-color: #fff5f7;
+  border: 2px solid #ba274a;
+  color: #ba274a;
 }
 
 .store_name {

@@ -3,12 +3,10 @@ import style from "./MemberInfoUpdate.module.css";
 import { useNavigate } from "react-router-dom";
 
 const MemberInfoUpdate = () => {
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
   const [formData, setFormData] = useState({
@@ -51,7 +49,7 @@ const MemberInfoUpdate = () => {
         }
 
         const userData = await response.json();
-        
+
         setFormData((prev) => ({
           ...prev,
           name: userData.realName || "",
@@ -115,7 +113,7 @@ const MemberInfoUpdate = () => {
       } else {
         alert("현재 비밀번호가 일치하지 않습니다.");
         setIsPasswordVerified(false);
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           currentPassword: "",
         }));
@@ -149,18 +147,21 @@ const MemberInfoUpdate = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/kokee/update-member", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          ...formData,
-          password: formData.newPassword || undefined,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/kokee/update-member",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            ...formData,
+            password: formData.newPassword || undefined,
+          }),
+        }
+      );
 
       if (response.ok) {
         alert("회원정보가 성공적으로 수정되었습니다.");
@@ -181,13 +182,15 @@ const MemberInfoUpdate = () => {
 
   const formatPhoneNumber = (phoneNumber) => {
     if (!phoneNumber) return "";
-    
+
     // 숫자만 추출
     const numbers = phoneNumber.replace(/[^0-9]/g, "");
-    
+
     // 11자리 번호인 경우
     if (numbers.length === 11) {
-      return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+      return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(
+        7
+      )}`;
     }
     return numbers;
   };
@@ -262,7 +265,11 @@ const MemberInfoUpdate = () => {
                   className={style.input}
                   disabled={!isPasswordVerified}
                 />
-                <span className={`${style.guideMessage} ${validPw ? style.errorMessage : ""}`}>
+                <span
+                  className={`${style.guideMessage} ${
+                    validPw ? style.errorMessage : ""
+                  }`}
+                >
                   * 영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자
                 </span>
               </div>
@@ -296,9 +303,9 @@ const MemberInfoUpdate = () => {
                 value={formatPhoneNumber(formData.phoneNumber)}
                 onChange={(e) => {
                   const numbers = e.target.value.replace(/[^0-9]/g, "");
-                  setFormData(prev => ({
+                  setFormData((prev) => ({
                     ...prev,
-                    phoneNumber: numbers
+                    phoneNumber: numbers,
                   }));
                 }}
                 className={style.input}
@@ -381,15 +388,15 @@ const MemberInfoUpdate = () => {
             </div>
           </div>
           <div className={style.formActions}>
+            <button type="button" className={style.cancelButton}>
+              취소
+            </button>
             <button
               type="submit"
               className={style.confirmButton}
               onClick={handleSubmit}
             >
               확인
-            </button>
-            <button type="button" className={style.cancelButton}>
-              취소
             </button>
           </div>
         </div>

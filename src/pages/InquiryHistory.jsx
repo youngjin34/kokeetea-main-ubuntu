@@ -17,6 +17,30 @@ const InquiryHistory = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // 임시 데이터로 대체
+  const mockInquiries = [
+    {
+      id: 1,
+      subject: "1:1문의",
+      title: "메뉴 관련 문의드립니다",
+      content: "신메뉴 출시 일정이 궁금합니다.",
+      date: "2024.03.15",
+      status: "답변완료",
+      reply: "안녕하세요. 코키티입니다.\n신메뉴는 4월 초 출시 예정입니다.\n감사합니다.",
+      replyDate: "2024.03.16"
+    },
+    {
+      id: 2,
+      subject: "1:1문의",
+      title: "영업시간 문의",
+      content: "주말 영업시간이 어떻게 되나요?",
+      date: "2024.03.10",
+      status: "답변대기",
+      reply: null,
+      replyDate: null
+    }
+  ];
+
   const filterInquiriesByPeriod = (inquiries, selectedPeriod, start, end) => {
     if (start && end) {
       const startDateTime = new Date(start);
@@ -24,7 +48,7 @@ const InquiryHistory = () => {
       endDateTime.setHours(23, 59, 59);
 
       return inquiries.filter((inquiry) => {
-        const inquiryDate = new Date(inquiry.date);
+        const inquiryDate = new Date(inquiry.date.replace(/\./g, '-'));
         return inquiryDate >= startDateTime && inquiryDate <= endDateTime;
       });
     }
@@ -47,55 +71,20 @@ const InquiryHistory = () => {
     }
 
     return inquiries.filter((inquiry) => {
-      const inquiryDate = new Date(inquiry.date);
+      const inquiryDate = new Date(inquiry.date.replace(/\./g, '-'));
       return inquiryDate >= filterDate && inquiryDate <= today;
     });
   };
 
-  const fetchInquiries = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:8080/kokee/inquiries", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const mappedData = data.map((item) => ({
-        id: item.id,
-        subject: "1:1문의",
-        title: item.title,
-        content: item.text,
-        date: new Date(item.date).toLocaleDateString(),
-        status: item.status || "답변대기",
-        reply: item.reply,
-        replyDate: item.replyDate ? new Date(item.replyDate).toLocaleDateString() : null,
-      }));
-
-      const filteredData = filterInquiriesByPeriod(
-        mappedData,
-        period,
-        startDate,
-        endDate
-      );
-      setOrders(filteredData);
-    } catch (err) {
-      console.error("Error fetching inquiries:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchInquiries();
+    // 실제 API 호출 대신 임시 데이터 사용
+    const filteredData = filterInquiriesByPeriod(
+      mockInquiries,
+      period,
+      startDate,
+      endDate
+    );
+    setOrders(filteredData);
   }, [period, startDate, endDate]);
 
   const handleNavigation = (path) => {
@@ -115,7 +104,14 @@ const InquiryHistory = () => {
       alert("시작일이 종료일보다 늦을 수 없습니다.");
       return;
     }
-    fetchInquiries();
+    // 실제 API 호출 대신 임시 데이터 사용
+    const filteredData = filterInquiriesByPeriod(
+      mockInquiries,
+      period,
+      startDate,
+      endDate
+    );
+    setOrders(filteredData);
   };
 
   const handlePeriodClick = (newPeriod) => {
@@ -155,7 +151,14 @@ const InquiryHistory = () => {
         }
 
         // 삭제 성공 시 목록 새로고침
-        fetchInquiries();
+        // 실제 API 호출 대신 임시 데이터 사용
+        const filteredData = filterInquiriesByPeriod(
+          mockInquiries,
+          period,
+          startDate,
+          endDate
+        );
+        setOrders(filteredData);
         setSelectedInquiry(null);
       } catch (err) {
         alert(err.message);

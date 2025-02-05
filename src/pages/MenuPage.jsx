@@ -13,13 +13,14 @@ function MenuPage() {
   const modalRef = useRef(null);
 
   // 각 옵션에 대한 상태 관리
-  const [temp, setTemp] = useState();
+  const [temp, setTemp] = useState("ICE");
   const [size, setSize] = useState("Regular");
   const [iceAmount, setIceAmount] = useState("보통");
   const [sugar, setSugar] = useState("70%");
   const [quantity, setQuantity] = useState(0);
+
   const [totalPrice, setTotalPrice] = useState(0);
-  const [topping, setTopping] = useState("기본");
+  const [topping, setTopping] = useState(["기본"]);
 
   const navigate = useNavigate();
 
@@ -72,23 +73,29 @@ function MenuPage() {
       setQuantity(1);
       setSelectedProduct(product);
       setModalOpen(true);
+      // 모달 열 때 기본값으로 초기화
+      setTemp("ICE");
+      setSize("Regular");
+      setSugar("70%");
+      setIceAmount("보통");
+      setTopping(["기본"]);
     } else {
       setModalOpen(false);
       setSize("Regular");
       setTemp("ICE");
       setSugar("70%");
       setIceAmount("보통");
-      setTopping("기본");
+      setTopping(["기본"]);
       setQuantity(0);
       setTotalPrice(0);
       setSelectedProduct(null);
     }
   };
 
-  // temp가 변경될 때 실행될 useEffect 추가
+  // temp가 변경될 때 실행될 useEffect 수정
   useEffect(() => {
     if (temp === "HOT") {
-      setIceAmount(""); // HOT 선택 시 얼음량 초기화
+      setIceAmount("없음"); // HOT 선택 시 얼음 없음으로 설정
     } else {
       setIceAmount("보통"); // ICE 선택 시 기본값으로 설정
     }
@@ -142,10 +149,6 @@ function MenuPage() {
       alert("얼음량을 선택해주세요.");
       return false;
     }
-    if (!topping) {
-      alert("토핑을 선택해주세요.");
-      return false;
-    }
     if (quantity === 0) {
       alert("수량을 선택해주세요.");
       return false;
@@ -171,7 +174,8 @@ function MenuPage() {
       temp: temp,
       sugar: sugar,
       iceAmount: iceAmount,
-      topping: topping,
+      topping: topping.join(","),
+      image: selectedProduct.image,
     };
 
     if (token && email) {
@@ -227,7 +231,7 @@ function MenuPage() {
         temp: temp,
         sugar: sugar,
         iceAmount: iceAmount,
-        topping: topping,
+        topping: topping.join(","),
         price: totalPrice,
         email: email,
       },
@@ -247,11 +251,15 @@ function MenuPage() {
       optionPrice += 1500;
     }
 
-    // 펄 옵션 가격
-    if (topping === "타피오카 펄" || topping === "화이트 펄") {
-      optionPrice += 500;
-    } else if (topping === "밀크폼" || topping === "코코넛" || topping === "알로에") {
-      optionPrice += 1000;
+    // 토핑 옵션 가격 계산 수정
+    if (!topping.includes("기본")) {
+      topping.forEach(item => {
+        if (item === "타피오카 펄" || item === "화이트 펄") {
+          optionPrice += 500;
+        } else if (item === "밀크폼" || item === "코코넛" || item === "알로에") {
+          optionPrice += 1000;
+        }
+      });
     }
 
     return optionPrice;
@@ -261,7 +269,8 @@ function MenuPage() {
     if (selectedProduct) {
       const basePrice = selectedProduct.pdPrice;
       const optionPrice = calculateOptionPrice();
-      setTotalPrice((basePrice + optionPrice) * quantity);
+      const total = (basePrice + optionPrice) * quantity;
+      setTotalPrice(total);
     }
   }, [size, temp, sugar, iceAmount, topping, quantity, selectedProduct]);
 
@@ -390,303 +399,272 @@ function MenuPage() {
       {isModalOpen && selectedProduct && (
         <div className={style.modal} ref={modalRef}>
           <div className={style.modalContent}>
-            <div className={style.modal_first}>
-              <div className={style.option_title}>옵션 선택</div>
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.pdName}
-                className={style.modalImage}
-              />
-              <div className={style.modal_info}>
-                <h2>{selectedProduct.pdName}</h2>
-                <div className={style.descript}>{selectedProduct.desc}</div>
-                <div className={style.price}>
-                  {totalPrice.toLocaleString()} 원
-                  {calculateOptionPrice() > 0 && (
-                    <span className={style.base_price}>
-                      (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션{" "}
-                      {calculateOptionPrice().toLocaleString()}원)
-                    </span>
-                  )}
-                </div>
+            <div className={style.modal_left}>
+              <div className={style.product_image_container}>
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.pdName}
+                  className={style.modalImage}
+                />
+              </div>
+              <div className={style.product_info}>
+                <h2 className={style.product_name}>{selectedProduct.pdName}</h2>
+                <p className={style.product_price}>
+                  {(selectedProduct.pdPrice + calculateOptionPrice()).toLocaleString()}원
+                  <br />
+                  <span className={style.option_price}>
+                    (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션 {calculateOptionPrice().toLocaleString()}원)
+                  </span>
+                </p>
+                <p className={style.product_description}>
+                  {selectedProduct.pdDescription || "신선한 재료로 만든 프리미엄 음료"}
+                </p>
               </div>
             </div>
-
-            <div className={style.option_container}>
-              <div className={style.temp_option}>
-                <label className={`${style.radio_style} ${style.hot_option}`}>
-                  <input
-                    type="radio"
-                    name="temp"
-                    value="HOT"
-                    checked={temp === "HOT"}
-                    onChange={() => setTemp("HOT")}
-                  />
-                  <span>HOT 🔥</span>
-                </label>
-                <label className={`${style.radio_style} ${style.ice_option}`}>
-                  <input
-                    type="radio"
-                    name="temp"
-                    value="ICE"
-                    checked={temp === "ICE"}
-                    onChange={() => setTemp("ICE")}
-                  />
-                  <span>ICE ❄️</span>
-                </label>
-              </div>
-
-              <div className={style.rest_option}>
-                {/* 사이즈 옵션 */}
+            <div className={style.modal_right}>
+              <div className={style.option_scroll}>
                 <div className={style.option}>
-                  <h3>사이즈</h3>
-                  <div className={style.size_option}>
-                    <label className={style.sub_radio_style}>
+                  <h3>온도</h3>
+                  <div className={style.temp_option}>
+                    <label className={`${style.radio_style} ${style.hot_option}`}>
                       <input
                         type="radio"
-                        name="size"
-                        value="Regular"
-                        checked={size === "Regular"}
-                        onChange={() => setSize("Regular")}
+                        name="temp"
+                        value="HOT"
+                        checked={temp === "HOT"}
+                        onChange={() => setTemp("HOT")}
                       />
-                      <span>Regular</span>
+                      <span>HOT 🔥</span>
                     </label>
-                    <label className={style.sub_radio_style}>
+                    <label className={`${style.radio_style} ${style.ice_option}`}>
                       <input
                         type="radio"
-                        name="size"
-                        value="Large"
-                        checked={size === "Large"}
-                        onChange={() => setSize("Large")}
+                        name="temp"
+                        value="ICE"
+                        checked={temp === "ICE"}
+                        onChange={() => setTemp("ICE")}
                       />
-                      <span>
-                        Large
-                        <br />
-                        (+1000원)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="size"
-                        value="Kokee-Large"
-                        checked={size === "Kokee-Large"}
-                        onChange={() => setSize("Kokee-Large")}
-                      />
-                      <span>
-                        Kokee-Large
-                        <br />
-                        (+1500원)
-                      </span>
+                      <span>ICE ❄️</span>
                     </label>
                   </div>
                 </div>
-
-                {/* 당도 옵션 */}
-                <div className={style.option}>
-                  <h3>당도</h3>
-                  <div className={style.sugar_option}>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="sugar"
-                        value="50%"
-                        checked={sugar === "50%"}
-                        onChange={() => setSugar("50%")}
-                      />
-                      <span>50%</span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="sugar"
-                        value="70%"
-                        checked={sugar === "70%"}
-                        onChange={() => setSugar("70%")}
-                      />
-                      <span>70%</span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="sugar"
-                        value="100%"
-                        checked={sugar === "100%"}
-                        onChange={() => setSugar("100%")}
-                      />
-                      <span>100%</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* 얼음량 옵션 */}
-                {temp === "ICE" && temp !== "HOT" && (
+                <div className={style.rest_option}>
                   <div className={style.option}>
-                    <h3>얼음량</h3>
+                    <h3>사이즈</h3>
+                    <div className={style.size_option}>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="size"
+                          value="Regular"
+                          checked={size === "Regular"}
+                          onChange={() => setSize("Regular")}
+                        />
+                        <span>Regular</span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="size"
+                          value="Large"
+                          checked={size === "Large"}
+                          onChange={() => setSize("Large")}
+                        />
+                        <span>
+                          Large
+                          <br />
+                          (+1000원)
+                        </span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="size"
+                          value="Kokee-Large"
+                          checked={size === "Kokee-Large"}
+                          onChange={() => setSize("Kokee-Large")}
+                        />
+                        <span>
+                          Kokee-Large
+                          <br />
+                          (+1500원)
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className={style.option}>
+                    <h3>당도</h3>
+                    <div className={style.sugar_option}>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="sugar"
+                          value="0%"
+                          checked={sugar === "0%"}
+                          onChange={() => setSugar("0%")}
+                        />
+                        <span>0%</span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="sugar"
+                          value="30%"
+                          checked={sugar === "30%"}
+                          onChange={() => setSugar("30%")}
+                        />
+                        <span>30%</span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="sugar"
+                          value="50%"
+                          checked={sugar === "50%"}
+                          onChange={() => setSugar("50%")}
+                        />
+                        <span>50%</span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="sugar"
+                          value="70%"
+                          checked={sugar === "70%"}
+                          onChange={() => setSugar("70%")}
+                        />
+                        <span>70%</span>
+                      </label>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="sugar"
+                          value="100%"
+                          checked={sugar === "100%"}
+                          onChange={() => setSugar("100%")}
+                        />
+                        <span>100%</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className={style.option}>
+                    <h3>얼음</h3>
                     <div className={style.ice_amount_option}>
                       <label className={style.sub_radio_style}>
+                        <input
+                          type="radio"
+                          name="iceAmount"
+                          value="없음"
+                          checked={iceAmount === "없음"}
+                          onChange={() => setIceAmount("없음")}
+                        />
+                        <span>없음</span>
+                      </label>
+                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
                         <input
                           type="radio"
                           name="iceAmount"
                           value="적게"
                           checked={iceAmount === "적게"}
                           onChange={() => setIceAmount("적게")}
+                          disabled={temp === "HOT"}
                         />
                         <span>적게</span>
                       </label>
-                      <label className={style.sub_radio_style}>
+                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
                         <input
                           type="radio"
                           name="iceAmount"
                           value="보통"
                           checked={iceAmount === "보통"}
                           onChange={() => setIceAmount("보통")}
+                          disabled={temp === "HOT"}
                         />
                         <span>보통</span>
                       </label>
-                      <label className={style.sub_radio_style}>
+                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
                         <input
                           type="radio"
                           name="iceAmount"
                           value="많이"
                           checked={iceAmount === "많이"}
                           onChange={() => setIceAmount("많이")}
+                          disabled={temp === "HOT"}
                         />
                         <span>많이</span>
                       </label>
                     </div>
                   </div>
-                )}
-
-                {/* 토핑 추가 */}
-                <div className={style.option}>
-                  <h3>토핑 추가</h3>
-                  <div className={style.topping_option}>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="기본"
-                        checked={topping === "기본"}
-                        onChange={() => setTopping("기본")}
-                      />
-                      <span>
-                        기본
-                        <br />
-                        (추가 안 함)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="타피오카 펄"
-                        checked={topping === "타피오카 펄"}
-                        onChange={() => setTopping("타피오카 펄")}
-                      />
-                      <span>
-                        타피오카 펄 추가
-                        <br />
-                        (+500원)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="화이트 펄"
-                        checked={topping === "화이트 펄"}
-                        onChange={() => setTopping("화이트 펄")}
-                      />
-                      <span>
-                        화이트 펄 추가
-                        <br />
-                        (+500원)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="밀크폼"
-                        checked={topping === "밀크폼"}
-                        onChange={() => setTopping("밀크폼")}
-                      />
-                      <span>
-                        밀크폼 추가
-                        <br />
-                        (+1000원)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="코코넛"
-                        checked={topping === "코코넛"}
-                        onChange={() => setTopping("코코넛")}
-                      />
-                      <span>
-                        코코넛 추가
-                        <br />
-                        (+1000원)
-                      </span>
-                    </label>
-                    <label className={style.sub_radio_style}>
-                      <input
-                        type="radio"
-                        name="topping"
-                        value="알로에"
-                        checked={topping === "알로에"}
-                        onChange={() => setTopping("알로에")}
-                      />
-                      <span>
-                        알로에 추가
-                        <br />
-                        (+1000원)
-                      </span>
-                    </label>
+                  <div className={style.option}>
+                    <h3>토핑 추가</h3>
+                    <div className={style.topping_option}>
+                      <label className={style.sub_radio_style}>
+                        <input
+                          type="checkbox"
+                          name="topping"
+                          value="기본"
+                          checked={topping.includes("기본")}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTopping(["기본"]); // 추가안함 선택시 다른 모든 토핑 해제
+                            }
+                          }}
+                        />
+                        <span>
+                          추가 안 함
+                          <br />
+                          (+0원)
+                        </span>
+                      </label>
+                      {["타피오카 펄", "화이트 펄", "밀크폼", "코코넛", "알로에"].map((item) => (
+                        <label key={item} className={style.sub_radio_style}>
+                          <input
+                            type="checkbox"
+                            name="topping"
+                            value={item}
+                            checked={topping.includes(item)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTopping((prev) => 
+                                  prev.includes("기본") ? [item] : [...prev.filter(t => t !== "기본"), item]
+                                );
+                              } else {
+                                setTopping((prev) => {
+                                  const newToppings = prev.filter(t => t !== item);
+                                  return newToppings.length === 0 ? ["기본"] : newToppings;
+                                });
+                              }
+                            }}
+                          />
+                          <span>
+                            {item}
+                            <br />
+                            {(item === "타피오카 펄" || item === "화이트 펄") ? "(+500원)" : "(+1000원)"}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div className={style.modalClose} onClick={() => toggleModal()}>
-                <img src="/public/img/close.png" />
-              </div>
-            </div>
-
-            <div className={`${style.order_btn_container}`}>
-              <hr />
-              <div className={style.quantity}>
-                <h3>수량</h3>
-                <div className={style.quantity_btn}>
-                  <button
-                    // 0 로 안 떨어지게 하기
-                    onClick={() =>
-                      setQuantity((prevQuantity) =>
-                        Math.max(prevQuantity - 2, 1)
-                      )
-                    }
-                  >
-                    -
-                  </button>
-                  <span>{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)}>+</button>
+              
+              <div className={style.modal_bottom}>
+                <div className={style.quantity_container}>
+                  <h3>수량</h3>
+                  <div className={style.quantity_btn}>
+                    <button onClick={() => setQuantity(Math.max(quantity - 1, 1))}>-</button>
+                    <span>{quantity}</span>
+                    <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                  </div>
                 </div>
-              </div>
-              <div className={style.order_btn}>
-                <button
-                  className={`${style.btn} ${style.cart_btn}`}
-                  onClick={addToCart}
-                >
-                  담기
-                </button>
-                <button
-                  className={`${style.btn} ${style.now_btn}`}
-                  onClick={orderNow}
-                >
-                  주문하기
-                </button>
+                <div className={style.button_group}>
+                  <button className={`${style.modal_button} ${style.cart_button}`} onClick={addToCart}>
+                    담기
+                  </button>
+                  <button className={`${style.modal_button} ${style.order_button}`} onClick={orderNow}>
+                    주문하기
+                  </button>
+                </div>
               </div>
             </div>
           </div>
