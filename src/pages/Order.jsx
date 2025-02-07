@@ -360,31 +360,6 @@ function Order() {
           </div>
         </div>
 
-        {/* 멤버십 적립 섹션 */}
-        <div>
-          <h2 className={style.checkout_stamp}>멤버쉽 적립</h2>
-          <div className={style.stampGrid}>
-            {Array(10)
-              .fill(null)
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className={`${style.stamp} ${
-                    index < membershipInfo.stamps ? style.active : ""
-                  }`}
-                >
-                  <img 
-                    src="/public/img/coupon.png" 
-                    alt={index < membershipInfo.stamps ? "Active stamp" : "Inactive stamp"} 
-                  />
-                </div>
-              ))}
-          </div>
-          <div className={style.stampNote}>
-            * 스탬프 10개 적립시 등급별 무료 쿠폰 증정 주문 제품 증정
-          </div>
-        </div>
-
         {/* 결제수단 섹션 */}
         <div className={style.payment_methods_container}>
           <div className={style.payment_methods_title}>결제수단</div>

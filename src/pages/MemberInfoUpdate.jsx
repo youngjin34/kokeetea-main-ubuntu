@@ -93,7 +93,7 @@ const MemberInfoUpdate = () => {
       }
 
       const response = await fetch(
-        "http://localhost:8080/kokee/verify-password",
+        "http://localhost:8080/kokee/verify_password",
         {
           method: "POST",
           headers: {
@@ -148,7 +148,7 @@ const MemberInfoUpdate = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "http://localhost:8080/kokee/update-member",
+        "http://localhost:8080/kokee/update_member",
         {
           method: "PUT",
           headers: {
@@ -173,6 +173,35 @@ const MemberInfoUpdate = () => {
     } catch (error) {
       console.error("회원정보 수정 중 오류 발생:", error);
       alert("회원정보 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleWithdrawal = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:8080/kokee/delete_member",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        alert("회원 탈퇴가 완료되었습니다.");
+        localStorage.clear();
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "회원 탈퇴에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("회원 탈퇴 중 오류 발생:", error);
+      alert("회원 탈퇴 중 오류가 발생했습니다.");
     }
   };
 
@@ -213,7 +242,6 @@ const MemberInfoUpdate = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 className={`${style.nameInput} ${style.readOnlyInput}`}
-                readOnly
               />
             </div>
             <div className={style.formGroup}>
@@ -397,6 +425,22 @@ const MemberInfoUpdate = () => {
               onClick={handleSubmit}
             >
               확인
+            </button>
+
+            <button
+              type="button"
+              className={style.withdrawalButton}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                  )
+                ) {
+                  handleWithdrawal();
+                }
+              }}
+            >
+              회원 탈퇴
             </button>
           </div>
         </div>

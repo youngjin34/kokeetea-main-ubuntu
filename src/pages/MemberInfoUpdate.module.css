@@ -92,87 +92,14 @@
   margin-bottom: 0;
 }
 
-.input:not([type="password"]) {
+.nameInput {
+  width: 300px;
+  border-radius: 8px;
   margin-bottom: 0;
 }
 
-.confirmButton {
-  padding: 10px 10px;
-  background-color: #ba274a;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 10px;
-  width: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.confirmButton:hover {
-  background-color: #a32242;
-}
-
-.cancelButton {
-  padding: 10px 10px;
-  background-color: #ffffff;
-  color: #808080;
-  border: 1px solid #808080;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 10px;
-  width: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cancelButton:hover {
-  background-color: #eee;
-}
-
-.emailInput {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.emailInput input {
-  width: 140px;
-}
-
-.emailInput span {
-  color: #666;
-}
-
-.radioGroup {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-}
-
-.radioLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #E5D5DA;
-  font-size: 16px;
-}
-
-.warningText {
-  color: #ba274a;
-  font-size: 12px;
-  margin-top: 4px;
-  margin-left: 0;
-}
-
-.receiveText {
-  color: #ba274a;
-  font-size: 12px;
-  margin-left: 130px;
+.input:not([type="password"]) {
+  margin-bottom: 0;
 }
 
 .formActions {
@@ -180,6 +107,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  position: relative;
 }
 
 .sectionTitle {
@@ -240,7 +168,6 @@
   }
 }
 
-.nameInput,
 .idInput {
   border: none;
   padding: 10px 0 10px 0;
@@ -309,4 +236,94 @@
 
 .active {
   color: #ba274a;
+}
+
+.withdrawalSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+}
+
+.withdrawalButton {
+  position: absolute;
+  right: 0;
+  background-color: #ffffff;
+  text-decoration: underline;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancelButton {
+  padding: 10px 10px;
+  background-color: #ffffff;
+  color: #666;
+  border: 1px solid #E5D5DA;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmButton {
+  padding: 10px 10px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.confirmButton:hover {
+  background-color: #a32242;
+}
+
+.cancelButton:hover {
+  background-color: #eee;
+}
+
+.emailInput {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.emailInput span {
+  color: #666;
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #E5D5DA;
+  font-size: 16px;
+}
+
+.warningText {
+  color: #ba274a;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 0;
+}
+
+.receiveText {
+  color: #ba274a;
+  font-size: 12px;
+  margin-left: 130px;
 }

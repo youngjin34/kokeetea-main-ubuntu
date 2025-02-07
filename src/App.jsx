@@ -25,6 +25,7 @@ import InquiryHistory from "./pages/InquiryHistory";
 import CouponStamp from "./pages/CouponStamp";
 import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
+import FloatingButtons from "./components/FloatingButtons";
 
 function AppContent() {
   const location = useLocation();
@@ -68,6 +69,7 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
+      <FloatingButtons setCurrentPage={setCurrentPage} />
       <ToastContainer
         position="top-right"
         autoClose={3000}

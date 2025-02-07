@@ -57,6 +57,28 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
       : "./img/yutube_black.png";
   };
 
+  // 알림 관련 state 추가
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  // getNotificationIcon 함수 추가 (기존 아이콘 getter 함수들 근처에 추가)
+  const getNotificationIcon = () => {
+    if (isHovered || fontColor === "black") {
+      return "./img/notification_black.png";
+    }
+    return currentPage % 2 === 0
+      ? "./img/notification_white.png"
+      : "./img/notification_black.png";
+  };
+
+  // 알림 모달 상태 추가 (상단 state 선언부에 추가)
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+
+  // 알림 모달 토글 함수 추가
+  const toggleNotificationModal = (e) => {
+    e.preventDefault();
+    setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
   useEffect(() => {
     const checkLoginStatus = () => {
       const isLoggedIn = !!localStorage.getItem("realname");
@@ -477,28 +499,57 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
         <div className="inner">
           <ul className={`${style.header_top}`}>
             {headerLogined && (
-              <li>
-                <Link to="/cart" style={{ color: fontColor }} className={style.cart_icon}>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke={fontColor === "black" ? "#000" : "#fff"}
-                    strokeWidth="1.5"
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
+              <>
+                <li>
+                  <Link to="/cart" style={{ color: fontColor }} className={style.cart_icon}>
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="20" 
+                      height="20" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke={fontColor === "black" ? "#000" : "#fff"}
+                      strokeWidth="1.5"
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span className={style.cart_count}>
+                      {cartCount}
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <div 
+                    onClick={toggleNotificationModal} 
+                    style={{ color: fontColor, cursor: 'pointer' }} 
+                    className={style.notification_icon}
                   >
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                  </svg>
-                  <span className={style.cart_count}>
-                    {cartCount}
-                  </span>
-                </Link>
-              </li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke={fontColor === "black" ? "#000" : "#fff"}
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    {notificationCount > 0 && (
+                      <span className={style.notification_count}>
+                        {notificationCount}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              </>
             )}
             {headerLogined ? (
               <li onClick={logoutFunction}>
@@ -574,6 +625,29 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
               setHeaderLogined={setHeaderLogined}
               onLoginSuccess={handleLoginSuccess}
             />
+          </div>
+        </div>
+      )}
+
+      {isNotificationModalOpen && (
+        <div className={style.notification_modal_overlay} onClick={toggleNotificationModal}>
+          <div className={style.notification_modal} onClick={e => e.stopPropagation()}>
+            <div className={style.notification_modal_header}>
+              <h3>알림</h3>
+              <button onClick={toggleNotificationModal}>×</button>
+            </div>
+            <div className={style.notification_modal_content}>
+              {notificationCount > 0 ? (
+                <div className={style.notification_list}>
+                  {/* 여기에 알림 목록을 매핑하면 됩니다 */}
+                  <p>새로운 알림이 있습니다.</p>
+                </div>
+              ) : (
+                <div className={style.no_notifications}>
+                  <p>새로운 알림이 없습니다.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

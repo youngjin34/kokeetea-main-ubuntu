@@ -73,12 +73,17 @@ function MenuPage() {
       setQuantity(1);
       setSelectedProduct(product);
       setModalOpen(true);
+      if (product.pdCategory.includes("Ice Blended") || product.pdCategory.includes("Cold Cloud")) {
+        setTemp("ICE");
+      } else {
+        setTemp("ICE");
+      }
       // 모달 열 때 기본값으로 초기화
-      setTemp("ICE");
       setSize("Regular");
       setSugar("70%");
       setIceAmount("보통");
       setTopping(["기본"]);
+
     } else {
       setModalOpen(false);
       setSize("Regular");
@@ -426,6 +431,8 @@ function MenuPage() {
                 <div className={style.option}>
                   <h3>온도</h3>
                   <div className={style.temp_option}>
+                    {(!selectedProduct.pdCategory.includes("Ice Blended") &&
+                  !selectedProduct.pdCategory.includes("Cold Cloud")) && (
                     <label className={`${style.radio_style} ${style.hot_option}`}>
                       <input
                         type="radio"
@@ -436,7 +443,12 @@ function MenuPage() {
                       />
                       <span>HOT 🔥</span>
                     </label>
-                    <label className={`${style.radio_style} ${style.ice_option}`}>
+                    )}
+                    <label className={`${style.radio_style} ${style.ice_option}`}
+                    style={{
+                      width: (selectedProduct.pdCategory.includes("Ice Blended") ||
+                      selectedProduct.pdCategory.includes("Cold Cloud")) ? "100%" : "50%",
+                    }}>
                       <input
                         type="radio"
                         name="temp"

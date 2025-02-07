@@ -2,7 +2,7 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  min-height: calc(100vh - 140px); 
+  min-height: calc(100vh - 140px);
 }
 
 .MainContent {
@@ -274,16 +274,6 @@
   color: #ba274a;
 }
 
-.checkout_stamp {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #666666;
-  border-top: 2px solid #ccc;
-  margin-top: 0;
-  padding-top: 50px;
-  font-weight: 600;
-}
-
 /* Order Summary Section */
 .checkout_summary {
   display: flex;
@@ -418,44 +408,6 @@
 .payment_method_button:hover {
   background-color: #f5f5f5;
   transition: background-color 0.3s ease;
-}
-
-.stampGrid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 30px;
-  margin-bottom: 15px;
-  background: #f8f8f8;
-  border-radius: 8px;
-  padding: 40px 120px 40px 120px;
-}
-
-.stamp {
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #666666;
-  position: relative;
-}
-
-.stamp img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.stamp:not(.active) img {
-  opacity: 0.1;
-}
-
-.stampNote {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 50px;
 }
 
 .store_modal_overlay {

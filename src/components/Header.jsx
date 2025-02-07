@@ -26,6 +26,8 @@ const Header = ({ currentPage, isLogined, setIsLogined, setCurrentPage }) => {
     }
     // Home 페이지일 경우 currentPage에 따라 배경색 결정
     switch (currentPage) {
+      case 0:
+        return "transparent";
       case 1:
         return "white";
       case 2:
