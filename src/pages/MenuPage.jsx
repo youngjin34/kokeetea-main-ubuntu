@@ -27,6 +27,10 @@ function MenuPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     setIsLoggedIn(token && email);

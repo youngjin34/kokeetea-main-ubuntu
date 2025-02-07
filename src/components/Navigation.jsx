@@ -222,6 +222,30 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
     }
   };
 
+  // 기존 state 선언부 근처에 ref 추가
+  const notificationRef = useRef(null);
+
+  // 새로운 useEffect 추가
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current && 
+        !notificationRef.current.contains(event.target) &&
+        isNotificationModalOpen
+      ) {
+        setIsNotificationModalOpen(false);
+      }
+    };
+
+    if (isNotificationModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotificationModalOpen]);
+
   return (
     <div className={`${style.Navigation}`}>
       <div className={style.nav_container}>
@@ -527,6 +551,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
                     onClick={toggleNotificationModal} 
                     style={{ color: fontColor, cursor: 'pointer' }} 
                     className={style.notification_icon}
+                    ref={notificationRef}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -546,6 +571,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
                       <span className={style.notification_count}>
                         {notificationCount}
                       </span>
+                    )}
+                    {isNotificationModalOpen && (
+                      <div className={style.notification_dropdown}>
+                        <div>새로운 알림이 없습니다.</div>
+                      </div>
                     )}
                   </div>
                 </li>
@@ -625,29 +655,6 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
               setHeaderLogined={setHeaderLogined}
               onLoginSuccess={handleLoginSuccess}
             />
-          </div>
-        </div>
-      )}
-
-      {isNotificationModalOpen && (
-        <div className={style.notification_modal_overlay} onClick={toggleNotificationModal}>
-          <div className={style.notification_modal} onClick={e => e.stopPropagation()}>
-            <div className={style.notification_modal_header}>
-              <h3>알림</h3>
-              <button onClick={toggleNotificationModal}>×</button>
-            </div>
-            <div className={style.notification_modal_content}>
-              {notificationCount > 0 ? (
-                <div className={style.notification_list}>
-                  {/* 여기에 알림 목록을 매핑하면 됩니다 */}
-                  <p>새로운 알림이 있습니다.</p>
-                </div>
-              ) : (
-                <div className={style.no_notifications}>
-                  <p>새로운 알림이 없습니다.</p>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
