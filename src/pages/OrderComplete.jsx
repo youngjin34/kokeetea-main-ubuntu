@@ -77,12 +77,6 @@ const OrderComplete = ({ orderNumber = "12345", orderItems = [] }) => {
         <div className={styles.actions}>
           <button 
             className={styles.trackButton}
-            onClick={() => navigate('/order-status')}
-          >
-            주문 상태 확인
-          </button>
-          <button 
-            className={styles.homeButton}
             onClick={() => navigate('/')}
           >
             홈으로 돌아가기

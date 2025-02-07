@@ -123,9 +123,10 @@
   flex: 1;
   padding: 1rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
+
 }
 
 .trackButton {
@@ -136,17 +137,6 @@
 
 .trackButton:hover {
   background: #A32242;
-}
-
-.homeButton {
-  background-color: white;
-  border: 1px solid #808080;
-  color: #808080;
-}
-
-.homeButton:hover {
-  background-color: #eee;
-  color: #808080;
 }
 
 /* 반응형 스타일 */
