@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import style from "./Cart.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -53,7 +59,7 @@ const Cart = () => {
       const cartData = await response.json();
       const mappedCartData = cartData.map((item) => ({
         id: item.id,
-        pdName: item.product_name,
+        pdName: item.productName,
         totalPrice: item.price,
         quantity: item.mount,
         email: item.email,
@@ -68,17 +74,17 @@ const Cart = () => {
           temperature: item.temp,
           sugar: item.sugar,
           iceAmount: item.iceAmount,
-          topping: item.topping
-        }
+          topping: item.topping,
+        },
       }));
 
       setCartItems(mappedCartData);
-      localStorage.setItem('cartCount', mappedCartData.length.toString());
+      localStorage.setItem("cartCount", mappedCartData.length.toString());
     } catch (error) {
       console.error("장바구니 데이터 로드 실패:", error);
       setError(error.message);
       setCartItems([]);
-      localStorage.setItem('cartCount', '0');
+      localStorage.setItem("cartCount", "0");
     } finally {
       setLoading(false);
     }
@@ -225,14 +231,14 @@ const Cart = () => {
       .filter((item) => selectedItems.includes(item.id))
       .reduce((acc, curr) => acc + curr.totalPrice, 0);
   };
-  
+
   const handleCheckout = () => {
     navigate("/order");
   };
 
   const handleOptionChange = (cartItem) => {
     setSelectedCartItem(cartItem);
-    
+
     // 저장된 옵션 정보를 사용하여 상태 설정
     setTemp(cartItem.temperature);
     setSize(cartItem.size);
@@ -246,11 +252,19 @@ const Cart = () => {
 
     // 추가 가격 계산
     const additionalPrice = {
-      size: cartItem.size === "Large" ? 1000 : cartItem.size === "Kokee-Large" ? 1500 : 0,
-      pearl: ["타피오카 펄", "화이트 펄"].includes(cartItem.topping) ? 500 :
-             ["밀크폼", "코코넛", "알로에"].includes(cartItem.topping) ? 1000 : 0
+      size:
+        cartItem.size === "Large"
+          ? 1000
+          : cartItem.size === "Kokee-Large"
+          ? 1500
+          : 0,
+      pearl: ["타피오카 펄", "화이트 펄"].includes(cartItem.topping)
+        ? 500
+        : ["밀크폼", "코코넛", "알로에"].includes(cartItem.topping)
+        ? 1000
+        : 0,
     };
-    
+
     setPriceChange(additionalPrice);
     setOptionModalOpen(true);
   };
@@ -447,25 +461,61 @@ const Cart = () => {
                 </div>
                 <div className={style.cart_items_scrollable}>
                   {cartItems.map((item) => (
-                    <div key={item.id} className={style.cartItem}>
-                      <img src={item.image} alt={item.pdName} className={style.cartImage} />
-                      <div className={style.cartDetails}>
-                        <h3>{item.pdName}</h3>
-                        <p>가격: {item.totalPrice.toLocaleString()}원</p>
-                        <p>수량: {item.quantity}개</p>
-                        <div className={style.optionDetails}>
+                    <div key={item.id} className={style.cart_item}>
+                      <label className={style.checkbox_round}>
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.includes(item.id)}
+                          onChange={() => handleCheck(item.id)}
+                          className={style.checkbox_round_input}
+                        />
+                      </label>
+                      <div className={style.cart_item_image}>
+                        <img src={item.image} alt={item.pdName} />
+                      </div>
+                      <div className={style.cart_item_details}>
+                        <div className={style.cart_item_header}>
+                          <h3 className={style.cart_item_name}>
+                            {item.pdName}
+                          </h3>
+                        </div>
+                        <div className={style.cart_item_options}>
                           <p>온도: {item.temperature}</p>
                           <p>사이즈: {item.size}</p>
                           <p>당도: {item.sugar}</p>
-                          {item.temperature === 'ICE' && <p>얼음량: {item.iceAmount}</p>}
+                          {item.temperature === "ICE" && (
+                            <p>얼음량: {item.iceAmount}</p>
+                          )}
                           <p>토핑: {item.topping}</p>
                         </div>
-                        <button 
-                          className={style.editButton} 
-                          onClick={() => handleOptionChange(item)}
-                        >
-                          옵션 변경
-                        </button>
+                        <div className={style.cart_item_bottom}>
+                          <button
+                            className={style.option_change_btn}
+                            onClick={() => handleOptionChange(item)}
+                          >
+                            옵션변경
+                          </button>
+                          <div className={style.cart_item_count}>
+                            <button
+                              className={style.minus_button}
+                              onClick={() => handleDecrement(item.id)}
+                            >
+                              -
+                            </button>
+                            <span className={style.amount_input}>
+                              {item.quantity}
+                            </span>
+                            <button
+                              className={style.plus_button}
+                              onClick={() => handleIncrement(item.id)}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div className={style.cart_item_price}>
+                            {item.totalPrice.toLocaleString()}원
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -514,12 +564,15 @@ const Cart = () => {
                 className={style.modalImage}
               />
               <div className={style.product_info}>
-                <h2 className={style.product_name}>{selectedCartItem.pdName}</h2>
+                <h2 className={style.product_name}>
+                  {selectedCartItem.pdName}
+                </h2>
                 <p className={style.product_price}>
                   {(currentPrice + calculateOptionPrice()).toLocaleString()}원
                   <br />
                   <span className={style.option_price}>
-                    (기본 {currentPrice.toLocaleString()}원 + 옵션 {calculateOptionPrice().toLocaleString()}원)
+                    (기본 {currentPrice.toLocaleString()}원 + 옵션{" "}
+                    {calculateOptionPrice().toLocaleString()}원)
                   </span>
                 </p>
                 <p className={style.product_description}>
@@ -532,7 +585,9 @@ const Cart = () => {
                 <div className={style.option}>
                   <h3>온도</h3>
                   <div className={style.temp_option}>
-                    <label className={`${style.radio_style} ${style.hot_option}`}>
+                    <label
+                      className={`${style.radio_style} ${style.hot_option}`}
+                    >
                       <input
                         type="radio"
                         name="temp"
@@ -542,7 +597,9 @@ const Cart = () => {
                       />
                       <span>HOT 🔥</span>
                     </label>
-                    <label className={`${style.radio_style} ${style.ice_option}`}>
+                    <label
+                      className={`${style.radio_style} ${style.ice_option}`}
+                    >
                       <input
                         type="radio"
                         name="temp"
@@ -680,7 +737,13 @@ const Cart = () => {
                       />
                       <span>기본</span>
                     </label>
-                    {["타피오카 펄", "화이트 펄", "밀크폼", "코코넛", "알로에"].map((item) => (
+                    {[
+                      "타피오카 펄",
+                      "화이트 펄",
+                      "밀크폼",
+                      "코코넛",
+                      "알로에",
+                    ].map((item) => (
                       <label key={item} className={style.sub_radio_style}>
                         <input
                           type="radio"
@@ -692,7 +755,9 @@ const Cart = () => {
                         <span>
                           {item}
                           <br />
-                          {(item === "타피오카 펄" || item === "화이트 펄") ? "(+500원)" : "(+1,000원)"}
+                          {item === "타피오카 펄" || item === "화이트 펄"
+                            ? "(+500원)"
+                            : "(+1,000원)"}
                         </span>
                       </label>
                     ))}
@@ -700,7 +765,10 @@ const Cart = () => {
                 </div>
               </div>
               <div className={style.modal_bottom}>
-                <button className={style.confirm_button} onClick={saveOptionChanges}>
+                <button
+                  className={style.confirm_button}
+                  onClick={saveOptionChanges}
+                >
                   변경하기
                 </button>
               </div>

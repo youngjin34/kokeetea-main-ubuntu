@@ -63,9 +63,10 @@
   font-weight: 600;
   align-items: center;
   display: flex;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid #E5D5DA;
   padding-bottom: 10px;
   color: #000000;
+
 }
 
 .checkout_order_title_span {
@@ -79,7 +80,6 @@
   font-size: 18px;
   margin-top: 0;
   padding-top: 50px;
-  border-top: 1px solid #ccc;
 }
 
 .branch_change {
@@ -93,8 +93,10 @@
 }
 
 .store_button {
-  font-size: 1.2rem;
+  font-size: 20px;
   margin-right: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .checkout_store_title {
@@ -108,9 +110,10 @@
   display: flex;
   align-items: center;
   padding: 10px 0 10px 0;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #E5D5DA;
   height: 120px;
 }
+
 
 .checkout_item_image {
   margin-right: 15px;
@@ -174,7 +177,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 0;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid #E5D5DA;
   padding-top: 50px;
 }
 
@@ -227,11 +230,12 @@
 .checkout_coupon {
   font-size: 18px;
   font-weight: 600;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid #E5D5DA;
   padding-top: 50px;
   color: #666666;
   margin-top: 0;
   margin-bottom: 10px;
+
 }
 
 .select_coupon {
@@ -243,13 +247,13 @@
   font-size: 14px;
   border-radius: 8px;
   width: 100%;
-  border: 1px solid #000000;
+  border: 1px solid #666;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BA274A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 8px center;
   background-size: 14px;
   appearance: none;
-  color: #000000;
+  color: #666;
 }
 
 .coupon {
@@ -260,6 +264,7 @@
 
 .coupon_img {
   width: 14px;
+
   height: 14px;
 }
 
@@ -330,9 +335,10 @@
 .payment {
   display: flex;
   gap: 10px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #E5D5DA;
   padding-top: 20px;
 }
+
 
 .payment_button,
 .payment_cancel_button {
@@ -374,7 +380,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 50px;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid #E5D5DA;
   padding-top: 50px;
 }
 
@@ -492,4 +498,180 @@
 
 .close_button:hover {
   background-color: #a32342;
+}
+
+.order_items_container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.section_title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.order_items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order_item {
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  border: 1px solid #E5D5DA;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.order_item_image {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.order_item_image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.order_item_details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order_item_name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.order_item_options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  background: #f8f8f8;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.order_item_price_info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.order_item_quantity {
+  font-size: 14px;
+  color: #666;
+}
+
+.order_item_price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ba274a;
+}
+
+@media (max-width: 768px) {
+  .order_item {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .order_item_image {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+  }
+
+  .order_item_options {
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 12px;
+  }
+}
+
+.points_section {
+  background: #fff;
+  border-top: 2px solid #E5D5DA;
+}
+
+.points_section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #666;
+  padding-top: 50px;
+}
+
+.points_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  padding: 10px;
+}
+
+.points_info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+}
+
+.available_points {
+  font-weight: 600;
+  color: #ba274a;
+}
+
+.points_input_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.points_input {
+  width: 120px;
+  height: 30px;
+  border: 1px solid #E5D5DA;
+  border-radius: 4px;
+  text-align: right;
+  font-size: 14px;
+  margin: 0;
+  padding: 0 !important;
+}
+
+.points_unit {
+  color: #666;
+}
+
+.use_all_points_btn {
+  padding: 8px 16px;
+  background: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  height: 30px;
+}
+
+.use_all_points_btn:hover {
+  background: #a02243;
 }

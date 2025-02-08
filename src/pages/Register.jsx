@@ -98,13 +98,20 @@ const NameInput = ({ value, onChange }) => (
 const PhoneInput = ({ value, onChange }) => {
   const handleNumberOnly = (e) => {
     const numberOnly = e.target.value.replace(/[^0-9]/g, "");
-    const event = {
-      target: {
-        name: "phoneNumber",
-        value: numberOnly,
-      },
-    };
-    onChange(event);
+    if (numberOnly.length <= 11) {
+      const phone2 = numberOnly.slice(3, 7);
+      const phone3 = numberOnly.slice(7, 11);
+      
+      const event = {
+        target: {
+          name: "phoneNumber",
+          value: numberOnly,
+          phone2: phone2,
+          phone3: phone3
+        },
+      };
+      onChange(event);
+    }
   };
 
   return (
@@ -268,13 +275,18 @@ const Register = () => {
       return;
     }
 
+    // 전화번호 분리
+    const phone2 = formData.phoneNumber.slice(3, 7);
+    const phone3 = formData.phoneNumber.slice(7, 11);
+
     try {
       const response = await axios.post("http://localhost:8080/kokee/join", {
         userId: formData.userId,
         userPw: formData.password,
         userPwCheck: formData.passwordConfirm,
         userName: formData.name,
-        phoneNumber: formData.phoneNumber,
+        phone02: phone2,
+        phone03: phone3,
         email01: formData.emailId,
         email02: formData.emailDomain,
         role: "user",

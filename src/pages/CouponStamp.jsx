@@ -33,7 +33,7 @@ const CouponStamp = () => {
   const [activeTab, setActiveTab] = useState("membership");
   const [userData, setUserData] = useState({
     realName: '',
-    memberLevel: 'silver',
+    memberLevel: '',
     nextLevelAmount: 0,
     nextLevel: '',
     points: 0,
@@ -86,7 +86,7 @@ const CouponStamp = () => {
 
   const fetchCouponStampData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/kokee/coupon-stamp', {
+      const response = await fetch('http://localhost:8080/kokee/coupon_stamp', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -113,42 +113,58 @@ const CouponStamp = () => {
     return Math.min(progress, 100);
   };
 
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
+
+      const response = await fetch(
+        `http://localhost:8080/kokee/get_member/${email}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("사용자 정보를 불러오는데 실패했습니다");
+      }
+
+      const userData = await response.json();
+      
+      setUserData({
+        realName: userData.realName || "고객",
+        memberLevel: userData.memberLevel || "silver",
+        nextLevelAmount: userData.nextLevelAmount || 0,
+        nextLevel: userData.nextLevel || "GOLD",
+        points: userData.points || 0,
+        orderCount: userData.orderCount || 0,
+        totalOrderAmount: userData.totalOrderAmount || 0,
+        stamps: userData.stamps || 0,
+        coupons: userData.coupons || []
+      });
+
+    } catch (error) {
+      console.error('사용자 정보를 불러오는데 실패했습니다:', error);
+      // 기본 값 설정
+      setUserData({
+        realName: '고객',
+        memberLevel: 'silver',
+        nextLevelAmount: 0,
+        nextLevel: 'GOLD',
+        points: 0,
+        orderCount: 0,
+        totalOrderAmount: 0,
+        stamps: 0,
+        coupons: []
+      });
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/kokee/member/dashboard');
-        const data = await response.json();
-        
-        setUserData({
-          realName: data.realName || '고객',
-          memberLevel: data.memberLevel || 'silver',
-          nextLevelAmount: data.nextLevelAmount || 0,
-          nextLevel: data.nextLevel || 'GOLD',
-          points: data.points || 0,
-          orderCount: data.orderCount || 0,
-          totalOrderAmount: data.totalOrderAmount || 0,
-          stamps: data.stamps || 0,
-          coupons: data.coupons || []
-        });
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        // Set default values in case of error
-        setUserData({
-          realName: '고객',
-          memberLevel: 'silver',
-          nextLevelAmount: 0,
-          nextLevel: 'GOLD',
-          points: 0,
-          orderCount: 0,
-          totalOrderAmount: 0,
-          stamps: 0,
-          coupons: []
-        });
-      }
-    };
-    
     fetchUserData();
   }, []);
 

@@ -16,7 +16,7 @@ function Order() {
   const pickupMethods = [
     "매장(다회용컵)",
     "테이크아웃(일회용컵)",
-    "딜리버리(직원에게 전달)",
+    "테이크아웃(텀블러)"
   ];
 
   // 하드코딩된 데이터 대신 상태 추가
@@ -27,41 +27,55 @@ function Order() {
     level: ''
   });
 
+  // 상태 추가
+  const [points, setPoints] = useState(0);
+  const [usePoints, setUsePoints] = useState(0);
+
   // 데이터 페치 추가
   useEffect(() => {
-    const fetchOrderData = async () => {
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const email = localStorage.getItem('email');
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
 
         if (!token || !email) {
-          console.error('로그인이 필요합니다.');
-          return;
+          throw new Error("로그인이 필요합니다");
         }
 
         // 장바구니 데이터 가져오기
-        const cartResponse = await fetch(`http://localhost:8080/kokee/cart/${email}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const cartResponse = await fetch(
+          `http://localhost:8080/kokee/carts/${email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }
-        });
-        
+        );
+
         if (!cartResponse.ok) {
-          throw new Error('장바구니 데이터 로딩 실패');
+          throw new Error("장바구니 데이터 로딩 실패");
         }
-        
+
         const cartData = await cartResponse.json();
         
         // Cart 데이터를 Order 페이지 형식에 맞게 매핑
         const mappedCartData = cartData.map(item => ({
           id: item.id,
-          category: item.productName,
-          price: `${item.price.toLocaleString()}원`,
-          options: `${item.temperature} / ${item.sugar} / ${item.iceAmount}${item.pearl !== '기본' ? ` / ${item.pearl}` : ''}`,
-          amount: item.mount,
-          image: `/img/${item.productName}.png` // 이미지 경로는 실제 경로에 맞게 수정 필요
+          productName: item.productName,
+          price: item.price,
+          mount: item.mount,  // quantity -> mount로 변경
+          email: email,
+          options: {
+            temp: item.temp,
+            size: item.size,
+            sugar: item.sugar,
+            iceAmount: item.iceAmount,
+            topping: item.topping
+          },
+          image: item.image
         }));
-        
+
         setCartItems(mappedCartData);
 
         // 사용 가능한 쿠폰 가져오기
@@ -92,32 +106,46 @@ function Order() {
         const membershipData = await membershipResponse.json();
         setMembershipInfo(membershipData);
 
+        // 적립금 정보 가져오기
+        const memberResponse = await fetch(
+          `http://localhost:8080/kokee/get_member/${email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!memberResponse.ok) {
+          throw new Error("멤버십 데이터 로딩 실패");
+        }
+
+        const memberData = await memberResponse.json();
+        setPoints(memberData.points || 0);
+
       } catch (error) {
-        console.error('데이터 로딩 중 오류 발생:', error);
+        console.error("데이터 로딩 실패:", error);
+        alert("데이터 로딩에 실패했습니다.");
         // 에러 발생 시 기본값 설정
         setCartItems([]);
         setAvailableCoupons(['적용할 쿠폰을 선택하세요']);
         setMembershipInfo({ stamps: 0, level: 'BASIC' });
+        setPoints(0);
       }
     };
 
-    fetchOrderData();
+    fetchData();
   }, []);
-
-
-  // calculateTotalPrice 수정
-  const calculateTotalPrice = () => {
-    return cartItems.reduce(
-      (acc, curr) =>
-        acc +
-        curr.amount * parseInt(curr.price.replace(/,/g, "").replace("원", "")),
-      0
-    );
-  };
 
   // calculateTotalAmount 수정
   const calculateTotalAmount = () => {
-    return cartItems.reduce((acc, curr) => acc + curr.amount, 0);
+    return cartItems.reduce((total, item) => total + item.mount, 0);
+  };
+
+  // calculateTotalPrice 수정
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((total, item) => total + item.price, 0);
   };
 
   const handlePickupMethodClick = (method) => {
@@ -133,12 +161,11 @@ function Order() {
   };
 
   const calculateDiscount = () => {
-    if (selectedCoupon === "10% 할인") {
-      return calculateTotalPrice() * 0.1;
-    } else if (selectedCoupon === "20% 할인") {
-      return calculateTotalPrice() * 0.2;
+    if (!selectedCoupon || selectedCoupon === "적용할 쿠폰을 선택하세요" || selectedCoupon === "사용 안 함") {
+      return 0;
     }
-    return 0;
+    // 쿠폰 할인 로직 구현
+    return 0; // 임시 반환값
   };
 
   const [selectedMethod, setSelectedMethod] = useState("신용카드");
@@ -151,57 +178,43 @@ function Order() {
 
   const handlePayment = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const email = localStorage.getItem('email');
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
 
       if (!token || !email) {
-        alert('로그인이 필요합니다.');
+        alert("로그인이 필요합니다.");
         return;
       }
 
-      // 주문 데이터 생성
-      const orderData = {
+      // 주문 데이터 준비
+      const orderData = cartItems.map(item => ({
+        productName: item.productName,
+        mount: item.mount,
+        price: item.price,
+        branchName: selectedStore, // 선택된 지점
         email: email,
-        store: selectedStore,
-        pickupMethod: selectedPickupMethod,
-        coupon: selectedCoupon,
-        paymentMethod: selectedMethod,
-        totalAmount: calculateTotalPrice() - calculateDiscount(),
-        items: cartItems.map(item => ({
-          productName: item.category,
-          mount: item.amount,
-          price: parseInt(item.price.replace(/[^0-9.-]+/g,"")),
-          branchName: selectedStore,
-          email: email
-        }))
-      };
+        options: item.options
+      }));
 
-      // 주문 처리 요청
-      const response = await fetch('http://localhost:8080/kokee/orders/' + email, {
-        method: 'POST',
+      // 주문 데이터 전송
+      const response = await fetch(`http://localhost:8080/kokee/orders/${email}`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(orderData.items)
+        body: JSON.stringify(orderData),
       });
 
       if (!response.ok) {
-        throw new Error('주문 처리 실패');
+        throw new Error("주문 처리 실패");
       }
 
-      // 주문 완료 후 장바구니 비우기
-      await fetch(`http://localhost:8080/kokee/carts/delete/${email}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      navigate("/ordercomplete");
+      alert("주문이 완료되었습니다.");
+      navigate("/orderlist"); // 주문 완료 후 이동할 페이지
     } catch (error) {
-      console.error('결제 처리 중 오류 발생:', error);
-      alert('결제 처리에 실패했습니다.');
+      console.error("주문 처리 실패:", error);
+      alert("주문 처리에 실패했습니다.");
     }
   };
 
@@ -268,6 +281,32 @@ function Order() {
   const handleStoreSelect = (storeName) => {
     setSelectedStore(storeName);
     setIsStoreModalOpen(false);
+  };
+
+  // 적립금 입력 핸들러
+  const handlePointsChange = (e) => {
+    const value = parseInt(e.target.value) || 0;
+    const totalPrice = calculateTotalPrice();
+    
+    if (value > points) {
+      alert("보유 적립금을 초과할 수 없습니다.");
+      setUsePoints(points);
+    } else if (value > totalPrice) {
+      alert("결제 금액을 초과할 수 없습니다.");
+      setUsePoints(totalPrice);
+    } else {
+      setUsePoints(value);
+    }
+  };
+
+  // 적립금 전액 사용 핸들러
+  const handleUseAllPoints = () => {
+    const totalPrice = calculateTotalPrice();
+    if (points >= totalPrice) {
+      setUsePoints(totalPrice);
+    } else {
+      setUsePoints(points);
+    }
   };
 
   const OrderMethods = () => {
@@ -360,6 +399,34 @@ function Order() {
           </div>
         </div>
 
+        {/* 적립금 섹션 */}
+        <div className={style.points_section}>
+              <h3 className={style.section_title}>적립금</h3>
+              <div className={style.points_container}>
+                <div className={style.points_info}>
+                  <span>보유 적립금</span>
+                  <span className={style.available_points}>{points.toLocaleString()}P</span>
+                </div>
+                <div className={style.points_input_wrapper}>
+                  <input
+                    type="number"
+                    value={usePoints}
+                    onChange={handlePointsChange}
+                    min="0"
+                    max={points}
+                    className={style.points_input}
+                  />
+                  <span className={style.points_unit}>P</span>
+                  <button 
+                    onClick={handleUseAllPoints}
+                    className={style.use_all_points_btn}
+                  >
+                    전액사용
+                  </button>
+                </div>
+              </div>
+            </div>
+
         {/* 결제수단 섹션 */}
         <div className={style.payment_methods_container}>
           <div className={style.payment_methods_title}>결제수단</div>
@@ -388,49 +455,33 @@ function Order() {
         <div className={style.checkout_menu_container}>
           <div className={style.checkout_items}>
             <h2 className={style.checkout_order_title}>
-              주문내역
-              <span className={style.checkout_order_title_span}>
-                {cartItems.length}
-              </span>
-              건
+              주문 내역 <span className={style.checkout_order_title_span}>{cartItems.length}개</span>
             </h2>
-            <hr className={style.hr} />
-            {cartItems.map((row) => (
-              <div key={row.id} className={style.checkout_item}>
-                <div className={style.checkout_item_image}>
-                  <img
-                    src={row.image}
-                    alt=""
-                  />
-                </div>
-                <div className={style.checkout_item_description}>
-                  <div className={style.checkout_item_header}>
-                    <span className={style.checkout_item_name}>
-                      {row.category}
-                    </span>
+            <div className={style.order_items}>
+              {cartItems.map((item) => (
+                <div key={item.id} className={style.order_item}>
+                  <div className={style.order_item_image}>
+                    <img src={item.image} alt={item.productName} />
                   </div>
-                  <div className={style.checkout_item_price}>{row.price}</div>
-
-                  <div className={style.order_content_bottom}>
-                    <div className={style.checkout_item_options}>
-                      옵션 {row.options}
+                  <div className={style.order_item_details}>
+                    <h3 className={style.order_item_name}>{item.productName}</h3>
+                    <div className={style.order_item_options}>
+                      <p>온도: {item.options.temp}</p>
+                      <p>사이즈: {item.options.size}</p>
+                      <p>당도: {item.options.sugar}</p>
+                      {item.options.temp === 'ICE' && <p>얼음량: {item.options.iceAmount}</p>}
+                      {item.options.topping !== '기본' && <p>토핑: {item.options.topping}</p>}
                     </div>
-                    <div className={style.checkout_item_totalPrice}>
-                      총 금액{" "}
-                      <span className={style.checkout_item_totalPrice_money}>
-                        {(
-                          row.amount *
-                          parseInt(
-                            row.price.replace(/,/g, "").replace("원", "")
-                          )
-                        ).toLocaleString()}
+                    <div className={style.order_item_price_info}>
+                      <span className={style.order_item_quantity}>{item.mount}개</span>
+                      <span className={style.order_item_price}>
+                        {item.price.toLocaleString()}원
                       </span>
-                      원
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
             <OrderMethods />
             <hr />
           </div>

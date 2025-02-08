@@ -41,7 +41,7 @@ const fruitTea = [
   },
   {
     name: "스트로베리 버진 모히또",
-    image: "/img/Fruit Tea/Strawberry Virgin mojito.png",
+    image: "/img/Fruit Tea/Strawberry Virgin Mojito.png",
   },
 ];
 

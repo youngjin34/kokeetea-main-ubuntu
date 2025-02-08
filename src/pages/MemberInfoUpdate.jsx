@@ -27,20 +27,21 @@ const MemberInfoUpdate = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) {
+        const email = localStorage.getItem("email");
+        
+        if (!token || !email) {
           console.error("토큰이 없습니다");
           return;
         }
 
         const response = await fetch(
-          "http://localhost:8080/kokee/member_info",
+          `http://localhost:8080/kokee/get_member/${email}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            credentials: "include",
           }
         );
 
@@ -54,8 +55,8 @@ const MemberInfoUpdate = () => {
           ...prev,
           name: userData.realName || "",
           id: userData.userName || "",
-          email: userData.email || "",
           phoneNumber: userData.phoneNumber || "",
+          email: userData.email || "",
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다:", error);
