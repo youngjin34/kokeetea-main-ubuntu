@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./Register.module.css";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 const IdInput = ({ value, onChangeUserId, validId }) => (
   <div className={style.FormGroup}>
@@ -101,13 +101,13 @@ const PhoneInput = ({ value, onChange }) => {
     if (numberOnly.length <= 11) {
       const phone2 = numberOnly.slice(3, 7);
       const phone3 = numberOnly.slice(7, 11);
-      
+
       const event = {
         target: {
           name: "phoneNumber",
           value: numberOnly,
           phone2: phone2,
-          phone3: phone3
+          phone3: phone3,
         },
       };
       onChange(event);
@@ -197,7 +197,7 @@ const Register = () => {
     emailId: "",
     emailDomain: "",
     termsChecked: false,
-    privacyChecked: false
+    privacyChecked: false,
   });
 
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
@@ -254,56 +254,61 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // 모든 필수 항목 검사
-    if (!formData.userId || !formData.password || !formData.passwordConfirm || 
-        !formData.name || !formData.phoneNumber || !formData.emailId || 
-        !formData.emailDomain) {
-      alert('모든 필수 항목을 입력해주세요.');
+    if (
+      !formData.userId ||
+      !formData.password ||
+      !formData.passwordConfirm ||
+      !formData.name ||
+      !formData.phoneNumber ||
+      !formData.emailId ||
+      !formData.emailDomain
+    ) {
+      alert("모든 필수 항목을 입력해주세요.");
       return;
     }
 
     // 비밀번호 일치 여부 확인
     if (formData.password !== formData.passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     // 약관 동의 체크
     if (!formData.termsChecked || !formData.privacyChecked) {
-      alert('필수 약관에 모두 동의해주세요.');
+      alert("필수 약관에 모두 동의해주세요.");
       return;
     }
 
     // 전화번호 분리
     const phone2 = formData.phoneNumber.slice(3, 7);
     const phone3 = formData.phoneNumber.slice(7, 11);
+    console.log(phone2);
+    console.log(phone3);
 
     try {
-      const response = await axios.post("http://localhost:8080/kokee/join", {
-        userId: formData.userId,
-        userPw: formData.password,
-        userPwCheck: formData.passwordConfirm,
-        userName: formData.name,
-        phone02: phone2,
-        phone03: phone3,
-        email01: formData.emailId,
-        email02: formData.emailDomain,
-        role: "user",
-        membership: "SILVER",
-        couponCount: 0,
-        stampCount: 0,
-        termsAgreed: true
+      const email = `${formData.emailId}@${formData.emailDomain}`; // 이메일 합치기
+      const phone = `010-${phone2}-${phone3}`;
+
+      const response = await axios.post("http://localhost:8080/api/members", {
+        user_name: formData.userId,
+        password: formData.password,
+        real_name: formData.name,
+        phone: phone,
+        email: email,
       });
 
-      if (response.data === "success") {
+      if (response.status === 200) {
         localStorage.setItem("phoneNumber", formData.phoneNumber);
         alert("회원가입을 환영합니다. 메인페이지로 이동합니다.");
         navigate("/");
       }
     } catch (error) {
-      if (error.response?.data === "failed") {
-        alert("입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요.");
+      if (response.status === 400) {
+        alert(
+          "입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요."
+        );
       } else {
         alert("알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.");
       }
@@ -312,97 +317,100 @@ const Register = () => {
 
   return (
     <div className={style.Container}>
-        <div className={style.FormContainer}>
-          <h2 className={style.FormTitle}>회원가입</h2>
+      <div className={style.FormContainer}>
+        <h2 className={style.FormTitle}>회원가입</h2>
 
-          <div className={style.RequiredFieldNotice}>
-            <span className={style.required}>*</span> 표시는 필수 입력
-            사항입니다.
-          </div>
+        <div className={style.RequiredFieldNotice}>
+          <span className={style.required}>*</span> 표시는 필수 입력 사항입니다.
+        </div>
 
-          <form className={style.Form}>
-            <IdInput
-              value={formData.userId}
-              onChangeUserId={onChangeUserId}
-              validId={validId}
-            />
+        <form className={style.Form}>
+          <IdInput
+            value={formData.userId}
+            onChangeUserId={onChangeUserId}
+            validId={validId}
+          />
 
-            <PasswordInput
-              value={formData.password}
-              confirmValue={formData.passwordConfirm}
-              onChangeUserPw={onChangeUserPw}
-              onConfirmChange={handleChange}
-              validPw={validPw}
-            />
+          <PasswordInput
+            value={formData.password}
+            confirmValue={formData.passwordConfirm}
+            onChangeUserPw={onChangeUserPw}
+            onConfirmChange={handleChange}
+            validPw={validPw}
+          />
 
-            <NameInput value={formData.name} onChange={handleChange} />
+          <NameInput value={formData.name} onChange={handleChange} />
 
-            <PhoneInput value={formData.phoneNumber} onChange={handleChange} />
+          <PhoneInput value={formData.phoneNumber} onChange={handleChange} />
 
-            <EmailInput
-              emailId={formData.emailId}
-              emailDomain={formData.emailDomain}
-              onChange={handleChange}
-              onDomainChange={handleEmailDomainChange}
-            />
+          <EmailInput
+            emailId={formData.emailId}
+            emailDomain={formData.emailDomain}
+            onChange={handleChange}
+            onDomainChange={handleEmailDomainChange}
+          />
 
-            <div>
-              <h3 className={style.AgreementTitle}>약관동의</h3>
-              <div className={style.FormFooter}>
-                <div className={style.AgreementItem}>
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={formData.termsChecked}
-                    onChange={(e) => setFormData((prev) => ({
+          <div>
+            <h3 className={style.AgreementTitle}>약관동의</h3>
+            <div className={style.FormFooter}>
+              <div className={style.AgreementItem}>
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={formData.termsChecked}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
                       ...prev,
-                      termsChecked: e.target.checked
-                    }))}
-                    className={style.checkbox}
-                  />
-                  <span className={style.requiredText}>[필수]</span> 이용약관에
-                  동의합니다.
-                  <button
-                    type="button"
-                    className={style.ViewTermsButton}
-                    onClick={() => setIsTermsModalOpen(true)}
-                  >
-                    이용약관 보기
-                  </button>
-                </div>
-                <div className={style.AgreementItem}>
-                  <input
-                    type="checkbox"
-                    id="privacy"
-                    checked={formData.privacyChecked}
-                    onChange={(e) => setFormData((prev) => ({
+                      termsChecked: e.target.checked,
+                    }))
+                  }
+                  className={style.checkbox}
+                />
+                <span className={style.requiredText}>[필수]</span> 이용약관에
+                동의합니다.
+                <button
+                  type="button"
+                  className={style.ViewTermsButton}
+                  onClick={() => setIsTermsModalOpen(true)}
+                >
+                  이용약관 보기
+                </button>
+              </div>
+              <div className={style.AgreementItem}>
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  checked={formData.privacyChecked}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
                       ...prev,
-                      privacyChecked: e.target.checked
-                    }))}
-                    className={style.checkbox}
-                  />
-                  <span className={style.requiredText}>[필수]</span> 개인정보
-                  처리방침에 동의합니다.
-                  <button
-                    type="button"
-                    className={style.ViewTermsButton}
-                    onClick={() => setIsPrivacyModalOpen(true)}
-                  >
-                    개인정보처리방침 보기
-                  </button>
-                </div>
+                      privacyChecked: e.target.checked,
+                    }))
+                  }
+                  className={style.checkbox}
+                />
+                <span className={style.requiredText}>[필수]</span> 개인정보
+                처리방침에 동의합니다.
+                <button
+                  type="button"
+                  className={style.ViewTermsButton}
+                  onClick={() => setIsPrivacyModalOpen(true)}
+                >
+                  개인정보처리방침 보기
+                </button>
               </div>
             </div>
+          </div>
 
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className={style.SubmitButton}
-            >
-              회원가입
-            </button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className={style.SubmitButton}
+          >
+            회원가입
+          </button>
+        </form>
+      </div>
 
       {isTermsModalOpen && (
         <div className={style.modalOverlay}>

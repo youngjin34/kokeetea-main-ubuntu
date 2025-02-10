@@ -3,8 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
+import axios from "axios";
 
-function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurrentPage }) {
+function Navigation({
+  isLogined,
+  setIsLogined,
+  fontColor,
+  currentPage,
+  setCurrentPage,
+}) {
   const navigate = useNavigate();
 
   const [headerLogined, setHeaderLogined] = useState(false);
@@ -17,7 +24,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
 
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
@@ -161,66 +168,39 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
 
   // 홈으로 이동하는 함수를 단순화
   const handleLogoClick = () => {
-    if (window.location.pathname === '/') {
+    if (window.location.pathname === "/") {
       // 현재 홈페이지에 있을 경우 첫 번째 섹션으로 스크롤
-      const homeComponent = document.getElementById('section-0');
+      const homeComponent = document.getElementById("section-0");
       if (homeComponent) {
-        homeComponent.scrollIntoView({ behavior: 'smooth' });
+        homeComponent.scrollIntoView({ behavior: "smooth" });
         setCurrentPage(0);
       }
     } else {
       // 다른 페이지에 있을 경우 홈페이지로 이동하면서 state 전달
-      navigate('/', { state: { currentPage: 0 } });
+      navigate("/", { state: { currentPage: 0 } });
     }
   };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  // Navigation.jsx에서 장바구니 카운트를 상태로 관리
-  const [cartCount, setCartCount] = useState(() => {
-    // 초기값을 즉시 계산
-    return parseInt(localStorage.getItem('cartCount') || '0');
-  });
-
-  useEffect(() => {
-    // localStorage 변경 감지 - 필수적인 경우만 유지
-    const handleStorageChange = (e) => {
-      if (e.key === 'cartCount') {
-        setCartCount(parseInt(e.newValue || '0'));
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
 
   // syncCartData 함수 최적화
   const syncCartData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/kokee/carts', {
-        method: 'GET',
+      const response = await axios.get("http://localhost:8080/api/carts", {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      
-      if (!response.ok) throw new Error('장바구니 데이터를 불러오는데 실패했습니다.');
-      
-      const data = await response.json();
-      localStorage.setItem('cart', JSON.stringify(data));
-      // 카트 카운트 직접 업데이트
-      const newCount = data.length;
-      localStorage.setItem('cartCount', newCount.toString());
-      setCartCount(newCount);
-      return data;
+
+      setCartCount(response.data.cart_count);
     } catch (error) {
       console.error("장바구니 동기화 실패:", error);
       return [];
     }
   };
+
+  useEffect(() => {
+    syncCartData();
+  }, []);
 
   // 기존 state 선언부 근처에 ref 추가
   const notificationRef = useRef(null);
@@ -229,7 +209,7 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        notificationRef.current && 
+        notificationRef.current &&
         !notificationRef.current.contains(event.target) &&
         isNotificationModalOpen
       ) {
@@ -238,11 +218,11 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
     };
 
     if (isNotificationModalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isNotificationModalOpen]);
 
@@ -520,36 +500,39 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
             </div>
           </div>
         </div>
+
         <div className="inner">
           <ul className={`${style.header_top}`}>
             {headerLogined && (
               <>
                 <li>
-                  <Link to="/cart" style={{ color: fontColor }} className={style.cart_icon}>
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="20" 
-                      height="20" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
+                  <Link
+                    to="/cart"
+                    style={{ color: fontColor }}
+                    className={style.cart_icon}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
                       stroke={fontColor === "black" ? "#000" : "#fff"}
                       strokeWidth="1.5"
-                      strokeLinecap="round" 
+                      strokeLinecap="round"
                       strokeLinejoin="round"
                     >
                       <circle cx="9" cy="21" r="1"></circle>
                       <circle cx="20" cy="21" r="1"></circle>
                       <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    <span className={style.cart_count}>
-                      {cartCount}
-                    </span>
+                    <span className={style.cart_count}>{cartCount}</span>
                   </Link>
                 </li>
                 <li>
-                  <div 
-                    onClick={toggleNotificationModal} 
-                    style={{ color: fontColor, cursor: 'pointer' }} 
+                  <div
+                    onClick={toggleNotificationModal}
+                    style={{ color: fontColor, cursor: "pointer" }}
                     className={style.notification_icon}
                     ref={notificationRef}
                   >
@@ -581,32 +564,54 @@ function Navigation({ isLogined, setIsLogined, fontColor, currentPage, setCurren
                 </li>
               </>
             )}
+
             {headerLogined ? (
               <li onClick={logoutFunction}>
-                <Link to="#" style={{ color: fontColor }} className={style.user_menu_text}>
+                <Link
+                  to="#"
+                  style={{ color: fontColor }}
+                  className={style.user_menu_text}
+                >
                   LOGOUT
                 </Link>
               </li>
             ) : (
               <>
                 <li>
-                  <Link onClick={toggleLoginModal} style={{ color: fontColor }} className={style.login_join_text}>
+                  <Link
+                    onClick={toggleLoginModal}
+                    style={{ color: fontColor }}
+                    className={style.login_join_text}
+                  >
                     LOGIN
                   </Link>
                 </li>
-                <li className={style.menu_divider} style={{ color: fontColor }}>|</li>
+                <li className={style.menu_divider} style={{ color: fontColor }}>
+                  |
+                </li>
                 <li>
-                  <Link to="/register" style={{ color: fontColor }} className={style.login_join_text}>
+                  <Link
+                    to="/register"
+                    style={{ color: fontColor }}
+                    className={style.login_join_text}
+                  >
                     JOIN
                   </Link>
                 </li>
               </>
             )}
+
             {headerLogined && (
               <>
-                <li className={style.menu_divider} style={{ color: fontColor }}>|</li>
+                <li className={style.menu_divider} style={{ color: fontColor }}>
+                  |
+                </li>
                 <li>
-                  <Link to="/mypage" style={{ color: fontColor }} className={style.user_menu_text}>
+                  <Link
+                    to="/mypage"
+                    style={{ color: fontColor }}
+                    className={style.user_menu_text}
+                  >
                     MY PAGE
                   </Link>
                 </li>

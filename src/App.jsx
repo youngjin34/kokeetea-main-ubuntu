@@ -1,7 +1,13 @@
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import style from "./App.module.css";
 import Header from "./components/Header";
@@ -33,9 +39,9 @@ function AppContent() {
 
   useEffect(() => {
     if (location.state?.currentPage !== undefined) {
-      const homeComponent = document.getElementById('section-0');
+      const homeComponent = document.getElementById("section-0");
       if (homeComponent) {
-        homeComponent.scrollIntoView({ behavior: 'smooth' });
+        homeComponent.scrollIntoView({ behavior: "smooth" });
       }
     }
   }, [location]);
@@ -61,7 +67,7 @@ function App() {
     }
   }, []);
 
-  return (  
+  return (
     <BrowserRouter>
       <Header
         currentPage={currentPage}
@@ -69,7 +75,7 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
-      <FloatingButtons setCurrentPage={setCurrentPage} />
+      {currentPage !== 0 && <FloatingButtons setCurrentPage={setCurrentPage} />}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -84,7 +90,12 @@ function App() {
       />
       <div className={`${style.App}`}>
         <Routes>
-          <Route path="/" element={<Home currentPage={currentPage} setCurrentPage={setCurrentPage} />} />
+          <Route
+            path="/"
+            element={
+              <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            }
+          />
           <Route path="/menupage" element={<MenuPage />} />
           <Route path="/kokeestory" element={<KokeeStory />} />
           <Route path="/affiliated" element={<Affiliated />} />
@@ -96,7 +107,10 @@ function App() {
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
           <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login setIsLogined={setIsLogined} />} />
+          <Route
+            path="/login"
+            element={<Login setIsLogined={setIsLogined} />}
+          />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/orderhistory" element={<OrderHistory />} />
