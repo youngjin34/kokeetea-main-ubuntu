@@ -39,13 +39,17 @@ const MyPage = () => {
         'Content-Type': 'application/json'
       };
 
-      const membershipResponse = await axios.get('http://localhost:8080/api/members/about/membership', {
-        headers: headers,
-      });
+      // 멤버십 정보 가져오기
+      const membershipResponse = await axios.get(
+        'http://localhost:8080/api/members/about/membership',
+        { headers }
+      );
       
-      const couponResponse = await axios.get('http://localhost:8080/api/members/about/gaeggul', {
-        headers: headers,
-      });
+      // 쿠폰/스탬프 정보 가져오기
+      const couponResponse = await axios.get(
+        'http://localhost:8080/api/members/about/gaeggul',
+        { headers }
+      );
 
       if (membershipResponse.status !== 200 || couponResponse.status !== 200) {
         throw new Error('데이터를 불러오는데 실패했습니다.');
@@ -54,15 +58,25 @@ const MyPage = () => {
       const membershipData = membershipResponse.data;
       const couponData = couponResponse.data;
 
+      // 등급 계산 로직 추가
+      const calculateMembershipLevel = (totalAmount) => {
+        if (totalAmount >= 400000) return 'DIAMOND';
+        if (totalAmount >= 300000) return 'RED';
+        if (totalAmount >= 200000) return 'GOLD';
+        return 'SILVER';
+      };
+
+      const currentLevel = calculateMembershipLevel(membershipData.total_payment_amount);
+
       setMembershipInfo({
-        grade: membershipData.membership_name || '-',
+        grade: currentLevel, // 계산된 등급 사용
         couponCount: couponData.coupons?.length || 0,
         stampCount: couponData.stamp || 0
       });
     } catch (error) {
       console.error('멤버십 정보를 불러오는데 실패했습니다:', error);
       setMembershipInfo({
-        grade: '-',
+        grade: 'SILVER', // 기본 등급을 SILVER로 설정
         couponCount: 0,
         stampCount: 0
       });
