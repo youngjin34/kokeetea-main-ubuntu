@@ -13,6 +13,7 @@ const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const itemsPerPage = 10;
+  const [totalPages, setTotalPages] = useState(1);
   
   const categories = [
     "전체",
@@ -27,32 +28,36 @@ const FAQ = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchNotices();
-    checkAdminStatus();
-  }, []);
+  }, [currentPage, selectedCategory]);
 
   const fetchNotices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8080/kokee/notice/list");
-      setNotices(response.data);
+      const response = await axios.get("http://localhost:8080/api/faqs", {
+        params: {
+          page: currentPage - 1,
+          size: itemsPerPage,
+          category: selectedCategory === "전체" ? null : selectedCategory
+        }
+      });
+      
+      // 응답 데이터 매핑
+      const mappedFaqs = response.data.faqs.map(faq => ({
+        id: faq.id,
+        title: faq.title,
+        category: faq.category,
+        content: faq.content,
+        date: new Date(faq.date).toLocaleDateString(),
+        view: faq.view
+      }));
+      
+      setNotices(mappedFaqs);
+      setTotalPages(response.data.total_page);
     } catch (error) {
       setError(error.message);
+      console.error("FAQ 조회 실패:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const checkAdminStatus = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setIsAdmin(response.data.isAdmin);
-      }
-    } catch (error) {
-      console.error('Admin check failed:', error);
     }
   };
 
@@ -137,16 +142,16 @@ const FAQ = () => {
               <>
                 <div className={style.TableHeader}>
                   <div className={style.HeaderNo}>번호</div>
+                  <div className={style.HeaderCategory}>카테고리</div>
                   <div className={style.HeaderSubject}>주제</div>
-                  <div className={style.HeaderTitle}>제목</div>
                   <div className={style.HeaderDate}>작성일</div>
-                  <div className={style.HeaderViews}>조회수</div>
                 </div>
 
                 {currentItems.map((notice) => (
                   <React.Fragment key={notice.id}>
                     <div className={style.TableRow}>
                       <div className={style.RowNo}>{notice.id}</div>
+                      <div className={style.RowCategory}>{notice.category}</div>
                       <div
                         className={style.RowTitle}
                         onClick={() => handleTitleClick(notice.id)}
@@ -154,11 +159,11 @@ const FAQ = () => {
                         {notice.title}
                       </div>
                       <div className={style.RowDate}>{notice.date}</div>
-                      <div className={style.RowEmail}>{notice.email}</div>
+                      <div className={style.RowViews}>{notice.view}</div>
                     </div>
                     {expandedNotice === notice.id && (
                       <div className={style.ContentRow}>
-                        <div className={style.Content}>{notice.text}</div>
+                        <div className={style.Content}>{notice.content}</div>
                       </div>
                     )}
                   </React.Fragment>

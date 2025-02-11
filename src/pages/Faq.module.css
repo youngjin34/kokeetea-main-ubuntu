@@ -118,7 +118,8 @@
 }
 
 .Content {
-  padding: 20px 40px;
+  margin: 10px 0;
+  padding: 20px;
   color: #666;
   line-height: 1.6;
   border-bottom: 1px solid #eee;

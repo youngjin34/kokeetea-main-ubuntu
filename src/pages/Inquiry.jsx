@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import style from "./Inquiry.module.css";
+import axios from "axios";
 
 const Inquiry = () => {
   // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
@@ -39,44 +40,69 @@ const Inquiry = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const fullEmail =
-      formData.emailId && formData.emailDomain
-        ? `${formData.emailId}@${formData.emailDomain}`
-        : "";
+    
+    // 필수 필드 검증
+    if (!formData.name || !formData.phone || !formData.title || !formData.content || !formData.type) {
+      alert('모든 필수 항목을 입력해주세요.');
+      return;
+    }
 
-    const submitData = {
-      ...formData,
-      email: fullEmail,
-    };
+    const fullEmail = formData.emailId && formData.emailDomain
+      ? `${formData.emailId}@${formData.emailDomain}`
+      : "";
 
     try {
-      const response = await fetch('http://localhost:8080/api/inquiries', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submitData)
-      });
-
-      if (!response.ok) {
-        throw new Error('문의 등록에 실패했습니다.');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요한 서비스입니다.');
+        return;
       }
 
-      alert('문의가 성공적으로 등록되었습니다.');
-      
-      const clearForm = {
-        type: "문의",
-        name: "",
-        phone: "",
-        emailId: "",
-        emailDomain: "",
-        title: "",
-        content: "",
+      const submitData = {
+        category: formData.type,
+        title: formData.title,
+        text: formData.content,
+        date: new Date().toISOString().split('T')[0],
+        writerName: formData.name,
+        phoneNumber: formData.phone,
+        email: fullEmail
       };
-      setFormData(clearForm);
+
+      console.log('전송 데이터:', submitData);
+
+      const response = await axios.post('http://localhost:8080/api/questions', submitData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        withCredentials: true
+      });
+
+      if (response.status === 200) {
+        alert('문의가 성공적으로 등록되었습니다.');
+        
+        setFormData({
+          type: "문의",
+          name: "",
+          phone: "",
+          emailId: "",
+          emailDomain: "",
+          title: "",
+          content: "",
+        });
+      }
     } catch (error) {
       console.error('Error:', error);
-      alert('문의 등록 중 오류가 발생했습니다.');
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        if (error.response.status === 401 || error.response.status === 403) {
+          alert('로그인이 필요하거나 권한이 없습니다.');
+        } else {
+          alert('문의 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
+      } else {
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -86,6 +112,17 @@ const Inquiry = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const { value } = e.target;
+    const onlyNums = value.replace(/[^0-9]/g, '');
+    if (onlyNums.length <= 11) {
+      setFormData(prev => ({
+        ...prev,
+        phone: onlyNums
+      }));
+    }
   };
 
   return (
@@ -149,9 +186,9 @@ const Inquiry = () => {
                   type="text"
                   maxLength="11"
                   className={style.PhoneInput}
-                  onChange={(e) =>
-                    (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-                  }
+                  value={formData.phone}
+                  onChange={handlePhoneChange}
+                  placeholder="하이픈(-) 없이 입력해주세요."
                 />
               </div>
             </div>
