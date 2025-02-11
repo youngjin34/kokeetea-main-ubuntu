@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import style from "./Faq.module.css";
 
-const FAQ = () => {
+const FAQ = ({ isLogined }) => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const FAQ = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const itemsPerPage = 10;
   const [totalPages, setTotalPages] = useState(1);
-  
+
   const categories = [
     "전체",
     "이벤트/프로모션",
@@ -22,7 +22,7 @@ const FAQ = () => {
     "결제/환불",
     "매장문의",
     "딜리버리",
-    "기타"
+    "기타",
   ];
 
   useEffect(() => {
@@ -37,20 +37,20 @@ const FAQ = () => {
         params: {
           page: currentPage - 1,
           size: itemsPerPage,
-          category: selectedCategory === "전체" ? null : selectedCategory
-        }
+          category: selectedCategory === "전체" ? null : selectedCategory,
+        },
       });
-      
+
       // 응답 데이터 매핑
-      const mappedFaqs = response.data.faqs.map(faq => ({
+      const mappedFaqs = response.data.faqs.map((faq) => ({
         id: faq.id,
         title: faq.title,
         category: faq.category,
         content: faq.content,
         date: new Date(faq.date).toLocaleDateString(),
-        view: faq.view
+        view: faq.view,
       }));
-      
+
       setNotices(mappedFaqs);
       setTotalPages(response.data.total_page);
     } catch (error) {
@@ -62,8 +62,11 @@ const FAQ = () => {
   };
 
   const filteredList = notices.filter((notice) => {
-    const matchesSearch = notice.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "전체" || notice.category === selectedCategory;
+    const matchesSearch = notice.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "전체" || notice.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -114,9 +117,7 @@ const FAQ = () => {
         <div className={style.menu_title}>
           <span className={style.underline}>FAQ</span>
         </div>
-        <p className={style.menu_content}>
-          궁금하신 내용을 확인해보세요.
-        </p>
+        <p className={style.menu_content}>궁금하신 내용을 확인해보세요.</p>
 
         <div className={style.FormContainer}>
           <div className={style.CategoryContainer}>
@@ -124,7 +125,9 @@ const FAQ = () => {
               <button
                 key={category}
                 className={`${style.CategoryButton} ${
-                  selectedCategory === category ? style.CategoryButtonActive : ""
+                  selectedCategory === category
+                    ? style.CategoryButtonActive
+                    : ""
                 }`}
                 onClick={() => setSelectedCategory(category)}
               >
@@ -194,7 +197,9 @@ const FAQ = () => {
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
                   className={
-                    currentPage === pageNum ? style.ActivePage : style.PageButton
+                    currentPage === pageNum
+                      ? style.ActivePage
+                      : style.PageButton
                   }
                 >
                   {pageNum}
@@ -212,7 +217,9 @@ const FAQ = () => {
               </button>
               <button
                 onClick={() =>
-                  handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
+                  handlePageChange(
+                    Math.ceil(filteredList.length / itemsPerPage)
+                  )
                 }
                 className={style.PageButton}
                 disabled={
@@ -223,19 +230,23 @@ const FAQ = () => {
               </button>
             </div>
             <div className={style.ButtonContainer}>
-              <button 
-                className={style.InquiryButton}
-                onClick={() => {
-                  window.location.href = '/inquiry'; // 1:1 문의 페이지로 이동
-                }}
-              >
-                1:1 문의하기
-              </button>
-              
+              {isLogined && (
+                <button
+                  className={style.InquiryButton}
+                  onClick={() => {
+                    window.location.href = "/inquiry"; // 1:1 문의 페이지로 이동
+                  }}
+                >
+                  1:1 문의하기
+                </button>
+              )}
+
               {isAdmin && (
-                <button 
+                <button
                   className={style.WriteButton}
-                  onClick={() => {/* 글쓰기 페이지로 이동하는 로직 */}}
+                  onClick={() => {
+                    /* 글쓰기 페이지로 이동하는 로직 */
+                  }}
                 >
                   작성하기
                 </button>

@@ -40,11 +40,6 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
       );
 
       if (result.status === 200) {
-        // localStorage에 저장
-        localStorage.setItem("userName", userName);
-        localStorage.setItem("realname", result.data.name);
-        localStorage.setItem("email", result.data.email);
-        localStorage.setItem("phoneNumber", result.data.phoneNumber);
         localStorage.setItem("token", result.data.token);
 
         toast(`${result.data.name}님 환영합니다!`, {

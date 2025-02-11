@@ -6,7 +6,7 @@ import { Tooltip } from "react-tooltip";
 
 import style from "./MenuPage.module.css";
 
-function MenuPage() {
+function MenuPage({ isLogined }) {
   const [products, setProducts] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택
   const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
@@ -14,7 +14,11 @@ function MenuPage() {
   const modalRef = useRef(null);
 
   const [branches, setBranches] = useState([]); // 브랜치 데이터를 상태로 저장
+  // 브랜치 변경시 카트 비워지게 하기 위함
+  const [cartItems, setCartItems] = useState([]);
   const [selectedBranchId, setSelectedBranchId] = useState(1); // 선택된 브랜치 ID 상태
+
+  const [previousBranchId, setPreviousBranchId] = useState(selectedBranchId);
 
   // 각 옵션에 대한 상태 관리
   const [temp, setTemp] = useState("ICE");
@@ -27,30 +31,48 @@ function MenuPage() {
   const [sizeId, setSizeId] = useState(3);
   const [sugarId, setSugarId] = useState(9);
   const [iceAmountId, setIceAmountId] = useState(13);
-  const [toppingId, setToppingId] = useState([]);
+  const [toppingId, setToppingId] = useState([15]);
 
   const toppingOptions = [
-    { name: "타피오카 펄", id: 15 },
-    { name: "화이트 펄", id: 16 },
-    { name: "밀크폼", id: 17 },
-    { name: "코코넛", id: 18 },
-    { name: "알로에", id: 19 },
+    { name: "타피오카 펄", id: 16 },
+    { name: "화이트 펄", id: 17 },
+    { name: "밀크폼", id: 18 },
+    { name: "코코넛", id: 19 },
+    { name: "알로에", id: 20 },
   ];
 
   const handleToppingChange = (e, item, itemId) => {
     if (e.target.checked) {
-      setTopping((prev) =>
-        prev.includes("기본")
-          ? [item]
-          : [...prev.filter((t) => t !== "기본"), item]
-      );
-      setToppingId((prev) => [...prev, itemId]);
+      // '기본'을 선택할 때 '기본'만 선택되도록 하고, toppingId에 15만 추가
+      if (item === "기본") {
+        setTopping(["기본"]); // '기본'만 선택된 상태로 설정
+        setToppingId([15]); // '추가 안 함'에 해당하는 id: 15만 설정
+      } else {
+        setTopping(
+          (prev) =>
+            prev.includes("기본")
+              ? [item] // '기본'이 선택된 경우에는 다른 토핑을 초기화하고 현재 토핑만 추가
+              : [...prev.filter((t) => t !== "기본"), item] // '기본'을 제외한 토핑 선택
+        );
+        setToppingId((prev) => {
+          // '기본'을 포함하지 않으면 기존 토핑들에 id를 추가
+          if (prev.includes(15))
+            return [...prev.filter((id) => id !== 15), itemId];
+          return [...prev, itemId];
+        });
+      }
     } else {
+      // 체크 해제 시 해당 토핑을 제거
       setTopping((prev) => {
         const newToppings = prev.filter((t) => t !== item);
-        return newToppings.length === 0 ? ["기본"] : newToppings;
+        return newToppings.length === 0 ? ["기본"] : newToppings; // 토핑이 없으면 '기본'을 다시 추가
       });
       setToppingId((prev) => prev.filter((id) => id !== itemId));
+
+      // '기본'이 해제되면 id: 15를 제거
+      if (item === "기본" && !e.target.checked) {
+        setToppingId([15]); // '추가 안 함'만 남기기
+      }
     }
   };
 
@@ -77,7 +99,6 @@ function MenuPage() {
         const response = await axios.get(
           `http://localhost:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
         );
-        console.log(response.data);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -91,7 +112,6 @@ function MenuPage() {
     const fetchBranchDate = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/branches");
-        console.log(response.data);
         setBranches(response.data); // 받아온 데이터로 상태 설정
       } catch (error) {
         console.error(error);
@@ -101,11 +121,37 @@ function MenuPage() {
     fetchBranchDate();
   }, []);
 
+  // 장바구니 데이터를 가져오는 useEffect
+  // 브랜치명 바뀔 떄 때문에 필요
+  const fetchCartData = async () => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const response = await axios.get("http://localhost:8080/api/carts", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // 서버에서 가져온 데이터를 cartItems에 저장
+        setCartItems(response.data.items);
+      } catch (error) {
+        console.error("장바구니 데이터 가져오기 실패:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isLogined) {
+      fetchCartData(); // 로그인 상태일 때만 장바구니 개수 조회
+    }
+  }, [isLogined]);
+
   // 드롭다운에서 브랜치 선택 시 처리
   const handleBranchChange = (event) => {
-    const branchId = event.target.value; // 선택된 브랜치의 id
-    setSelectedBranchId(branchId); // 선택된 브랜치 ID 상태 업데이트
-    console.log(`선택된 브랜치 ID: ${branchId}`); // 선택된 ID 확인용 콘솔
+    setPreviousBranchId(selectedBranchId); // 현재 선택된 브랜치 저장
+    setSelectedBranchId(event.target.value); // 새 브랜치로 변경
   };
 
   const toggleModal = (product = null) => {
@@ -214,6 +260,18 @@ function MenuPage() {
     const token = localStorage.getItem("token");
 
     if (token) {
+      // 장바구니가 비어있지 않고 브랜치가 변경된 경우 확인
+      if (cartItems.length > 0 && selectedBranchId !== previousBranchId) {
+        const isConfirmed = window.confirm(
+          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+        );
+        if (!isConfirmed) {
+          return; // 사용자가 취소하면 장바구니에 추가하지 않음
+        } else {
+          setCartItems([]); // 장바구니 비우기
+        }
+      }
+
       try {
         const response = await axios.post(
           "http://localhost:8080/api/carts",
@@ -234,6 +292,7 @@ function MenuPage() {
         if (response.status === 200) {
           alert("장바구니에 추가되었습니다.");
           toggleModal();
+          window.location.reload();
         } else {
           alert("장바구니 추가에 실패했습니다.");
         }
@@ -313,12 +372,36 @@ function MenuPage() {
     }
   }, [size, temp, sugar, iceAmount, topping, quantity, selectedProduct]);
 
-  const handleDirectOrder = (product) => {
+  // 바로 주문
+  const handleDirectOrder = async (product) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
       alert("로그인이 필요한 서비스입니다.");
       return;
+    }
+
+    if (token) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/carts",
+          {
+            product_id: product.id,
+            quantity: 1,
+            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            branch_id: selectedBranchId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("장바구니 추가 실패:", error);
+        alert("장바구니 추가에 실패했습니다.");
+      }
     }
 
     const orderItem = {
@@ -742,6 +825,9 @@ function MenuPage() {
                           onChange={(e) => {
                             if (e.target.checked) {
                               setTopping(["기본"]); // 추가안함 선택시 다른 모든 토핑 해제
+                              setToppingId([15]); // '추가 안 함'만 선택되도록
+                            } else {
+                              setToppingId([15]); // '추가 안 함' 해제시 toppingId 초기화
                             }
                           }}
                         />

@@ -11,11 +11,12 @@ const Notice = () => {
   useEffect(() => {
     async function getNotice() {
       try {
-        const result = await axios.get(
-          `http://localhost:8080/kokee/notice/list`
-        );
-        setNoticeList(result.data);
-        setNotice(result.data[index].title);
+        const result = await axios.get(`http://localhost:8080/api/notices`);
+
+        console.log(result.data.notices);
+
+        setNoticeList(result.data.notices);
+        setNotice(result.data.notices[index].title);
       } catch (error) {
         console.log(error);
       }

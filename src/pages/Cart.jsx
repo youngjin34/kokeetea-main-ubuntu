@@ -30,13 +30,15 @@ const Cart = () => {
       const items = response.data.items || [];
       setCartItems(items);
 
+      console.log(items);
+
       if (items.length === 0) {
         setError(""); // 404가 아닌 정상 응답일 때는 에러 메시지 X
       }
     } catch (error) {
       console.error("장바구니 데이터 로드 실패:", error);
 
-      // 🔥 404 에러일 경우 빈 배열로 처리해서 오류 방지
+      // 404 에러일 경우 빈 배열로 처리해서 오류 방지
       if (error.response && error.response.status === 404) {
         setCartItems([]);
         setError(""); // 404일 때는 오류 메시지를 보여주지 않음
@@ -224,16 +226,20 @@ const Cart = () => {
                             <p>얼음량: {item.options[3]?.name}</p>
                           )}
                           <div>
-                            <p>토핑:</p>
-                            {item.options
-                              .filter(
-                                (option) =>
-                                  option.id >= 15 &&
-                                  option.id <= 20 &&
-                                  option.name !== "추가 안 함"
-                              ) // '추가 안 함'은 제외
-                              .map((option) => option.name)
-                              .join(", ")}
+                            <span>토핑: </span>
+                            {item.options.some(
+                              (option) => option.name === "추가 안 함"
+                            )
+                              ? "추가 안 함"
+                              : item.options
+                                  .filter(
+                                    (option) =>
+                                      option.id >= 15 &&
+                                      option.id <= 20 &&
+                                      option.name !== "추가 안 함"
+                                  )
+                                  .map((option) => option.name)
+                                  .join(", ")}
                           </div>
                         </div>
                         <div className={style.cart_item_bottom}>
