@@ -30,6 +30,8 @@ const Cart = () => {
       const items = response.data.items || [];
       setCartItems(items);
 
+      console.log(items);
+
       if (items.length === 0) {
         setError(""); // 404가 아닌 정상 응답일 때는 에러 메시지 X
       }
@@ -225,15 +227,19 @@ const Cart = () => {
                           )}
                           <div>
                             <span>토핑: </span>
-                            {item.options
-                              .filter(
-                                (option) =>
-                                  option.id >= 15 &&
-                                  option.id <= 20 &&
-                                  option.name !== "추가 안 함"
-                              ) // '추가 안 함'은 제외
-                              .map((option) => option.name)
-                              .join(", ")}
+                            {item.options.some(
+                              (option) => option.name === "추가 안 함"
+                            )
+                              ? "추가 안 함"
+                              : item.options
+                                  .filter(
+                                    (option) =>
+                                      option.id >= 15 &&
+                                      option.id <= 20 &&
+                                      option.name !== "추가 안 함"
+                                  )
+                                  .map((option) => option.name)
+                                  .join(", ")}
                           </div>
                         </div>
                         <div className={style.cart_item_bottom}>

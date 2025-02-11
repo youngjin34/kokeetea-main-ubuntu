@@ -187,9 +187,7 @@ function Navigation({
   };
 
   useEffect(() => {
-    if (isLogined) {
-      fetchCartCount(); // 로그인 상태일 때만 장바구니 개수 조회
-    }
+    fetchCartCount(); // 로그인 상태일 때만 장바구니 개수 조회
   }, []);
 
   // 기존 state 선언부 근처에 ref 추가

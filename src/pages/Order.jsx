@@ -7,7 +7,6 @@ function Order() {
   const navigate = useNavigate();
   const [selectedPickupMethod, setSelectedPickupMethod] =
     useState("매장(다회용컵)");
-  const [selectedCoupon, setSelectedCoupon] = useState("");
   const pickupMethods = [
     "매장(다회용컵)",
     "테이크아웃(일회용컵)",
@@ -15,11 +14,11 @@ function Order() {
   ];
 
   const [cartItems, setCartItems] = useState([]);
-  const [availableCoupons, setAvailableCoupons] = useState(["5000"]);
-  const [membershipInfo, setMembershipInfo] = useState({
-    stamps: 0,
-    level: "",
-  });
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [selectedCoupon, setSelectedCoupon] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0); // 쿠폰 할인 금액
+
+  console.log(cartItems);
 
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -51,6 +50,8 @@ function Order() {
           }
         );
 
+        console.log(cartResponse.data);
+
         setCartItems(cartResponse.data.items);
         setBranchName(cartResponse.data.branch_name);
         setTotalPrice(cartResponse.data.total_price);
@@ -63,30 +64,18 @@ function Order() {
 
         // 사용 가능한 쿠폰 가져오기
         const couponsResponse = await axios.get(
-          `http://localhost:8080/api/members/about/coupon`,
+          `http://localhost:8080/api/members/coupons`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log(couponsResponse.data);
-
-        setAvailableCoupons([...couponsResponse.data.coupons]);
-
-        // 멤버십 정보 가져오기
-        const membershipResponse = await axios.get(
-          `http://localhost:8080/api/members/about/membership`,
-          {
-            headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        setMembershipInfo(membershipResponse.data);
+        console.log(couponsResponse);
+
+        setAvailableCoupons([...couponsResponse.data]);
 
         // 적립금 정보 가져오기
         const memberResponse = await axios.get(
@@ -106,7 +95,6 @@ function Order() {
         // 에러 발생 시 기본값 설정
         setCartItems([]);
 
-        setMembershipInfo({ stamps: 0, level: "BASIC" });
         setPoints(0);
       }
     };
@@ -119,22 +107,44 @@ function Order() {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // calculateTotalPrice 수정
+  // 총 결제 금액 계산
   const calculateTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price, 0);
+    return cartItems.reduce((total, item) => total + item.total_item_price, 0);
   };
 
   const handlePickupMethodClick = (method) => {
     setSelectedPickupMethod(method);
   };
 
+  // 쿠폰 변경 핸들러
   const handleCouponChange = (event) => {
-    setSelectedCoupon(event.target.value);
+    const selectedCouponId = event.target.value;
+    const totalPrice = calculateTotalPrice();
+
+    const coupon = availableCoupons.find(
+      (c) => String(c.id) === selectedCouponId
+    );
+    let newDiscount = coupon ? coupon.discount_price : 0;
+
+    if (newDiscount > totalPrice - usePoints) {
+      alert(`총 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
+      return; // 변경 막기
+    }
+
+    setSelectedCoupon(selectedCouponId);
+    setDiscountAmount(newDiscount);
   };
 
-  const calculateDiscount = (couponId) => {
-    return usePoints;
+  // 총 할인 금액 계산
+  const calculateDiscount = () => {
+    const totalDiscount = discountAmount + usePoints;
+    return totalDiscount > calculateTotalPrice()
+      ? calculateTotalPrice()
+      : totalDiscount;
   };
+
+  // 최종 결제 금액 계산
+  const finalPayment = calculateTotalPrice() - calculateDiscount();
 
   const [selectedMethod, setSelectedMethod] = useState("신용카드");
 
@@ -166,6 +176,7 @@ function Order() {
         {
           payment_method: methodMapping[selectedMethod],
           point: usePoints,
+          coupon_id: selectedCoupon,
         },
         {
           headers: {
@@ -196,20 +207,22 @@ function Order() {
     navigate("/cart");
   };
 
-  // 적립금 입력 핸들러
+  // 적립금 변경 핸들러
   const handlePointsChange = (e) => {
     const value = parseInt(e.target.value) || 0;
     const totalPrice = calculateTotalPrice();
+    const maxUsablePoints = totalPrice - discountAmount; // 쿠폰 적용 후 남은 금액
 
     if (value > points) {
       alert("보유 적립금을 초과할 수 없습니다.");
-      setUsePoints(points);
-    } else if (value > totalPrice) {
-      alert("결제 금액을 초과할 수 없습니다.");
-      setUsePoints(totalPrice);
-    } else {
-      setUsePoints(value);
+      return; // 변경 막기
     }
+    if (value > maxUsablePoints) {
+      alert(`총 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
+      return; // 변경 막기
+    }
+
+    setUsePoints(value);
   };
 
   // 적립금 전액 사용 핸들러
@@ -263,7 +276,7 @@ function Order() {
             <select onChange={handleCouponChange} value={selectedCoupon}>
               <option value="">적용할 쿠폰을 선택하세요</option>
               {availableCoupons.map((coupon, index) => (
-                <option key={index} value={coupon}>
+                <option key={index} value={coupon.id}>
                   {coupon.product_name}
                 </option>
               ))}
@@ -278,9 +291,9 @@ function Order() {
               />
               <span>쿠폰 할인 금액</span>
             </div>
-            {/* <span className={style.discount_price_money}>
-              {availableCoupons[0]} 원
-            </span> */}
+            <span className={style.discount_price_money}>
+              {discountAmount} 원
+            </span>
           </div>
         </div>
 
@@ -360,17 +373,21 @@ function Order() {
                       {item.options[3] && (
                         <p>얼음량: {item.options[3]?.name}</p>
                       )}
-                      <div>
+                      <div className={style.topping_list}>
                         <span>토핑: </span>
-                        {item.options
-                          .filter(
-                            (option) =>
-                              option.id >= 15 &&
-                              option.id <= 20 &&
-                              option.name !== "추가 안 함"
-                          ) // '추가 안 함'은 제외
-                          .map((option) => option.name)
-                          .join(", ")}
+                        {item.options.some(
+                          (option) => option.name === "추가 안 함"
+                        )
+                          ? "추가 안 함"
+                          : item.options
+                              .filter(
+                                (option) =>
+                                  option.id >= 15 &&
+                                  option.id <= 20 &&
+                                  option.name !== "추가 안 함"
+                              )
+                              .map((option) => option.name)
+                              .join(", ")}
                       </div>
                     </div>
                     <div className={style.order_item_price_info}>
@@ -407,7 +424,9 @@ function Order() {
               {selectedCoupon !== "사용 안 함" && ( // 쿠폰을 사용했을 경우에만 쿠폰할인 표시
                 <div className={style.order_summary_detail}>
                   <span className={style.order_summary_item}>쿠폰 할인</span>
-                  <span className={style.order_summary_discount}>원</span>
+                  <span className={style.order_summary_discount}>
+                    {discountAmount} 원
+                  </span>
                 </div>
               )}
               <div className={style.order_summary_detail}>
@@ -425,12 +444,8 @@ function Order() {
               <div className={style.order_summary_line}></div> {/*구분선 추가*/}
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>최종 결제금액</span>
-
                 <span className={style.order_summary_finalPrice}>
-                  {(
-                    calculateTotalPrice() - calculateDiscount()
-                  ).toLocaleString()}
-                  원
+                  {finalPayment}원
                 </span>
               </div>
               <div className={style.payment}>

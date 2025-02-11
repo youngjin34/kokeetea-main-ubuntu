@@ -41,7 +41,7 @@ const fruitTea = [
   },
   {
     name: "스트로베리 버진 모히또",
-    image: "/img/Fruit Tea/Strawberry Virgin Mojito.png",
+    image: "/img/Fruit Tea/Strawberry Virgin mojito.png",
   },
 ];
 
@@ -57,7 +57,7 @@ const iceBlended = [
   },
   {
     name: "망고 패션프루트",
-    image: "/img/Ice Blended/Mango  Passionfruit.png",
+    image: "/img/Ice Blended/Mango Passionfruit.png",
   },
   {
     name: "망고",

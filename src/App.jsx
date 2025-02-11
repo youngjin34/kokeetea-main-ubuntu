@@ -55,14 +55,20 @@ function AppContent() {
   );
 }
 
+function FlotingButtonsContent() {
+  const location = useLocation();
+
+  return <>{location.pathname === "/" && <FloatingButtons />}</>;
+}
+
 function App() {
   const [isLogined, setIsLogined] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     // 로컬 스토리지에서 로그인 상태 확인
-    const email = localStorage.getItem("email");
-    if (email) {
+    const token = localStorage.getItem("token");
+    if (token) {
       setIsLogined(true);
     }
   }, []);
@@ -75,7 +81,9 @@ function App() {
         isLogined={isLogined}
         setIsLogined={setIsLogined}
       />
-      {currentPage !== 0 && <FloatingButtons setCurrentPage={setCurrentPage} />}
+      {currentPage !== 0 && (
+        <FlotingButtonsContent setCurrentPage={setCurrentPage} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -96,12 +104,15 @@ function App() {
               <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
             }
           />
-          <Route path="/menupage" element={<MenuPage />} />
+          <Route
+            path="/menupage"
+            element={<MenuPage isLogined={isLogined} />}
+          />
           <Route path="/kokeestory" element={<KokeeStory />} />
           <Route path="/affiliated" element={<Affiliated />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/inquiry" element={<Inquiry />} />
-          <Route path="/faq" element={<Faq />} />
+          <Route path="/faq" element={<Faq isLogined={isLogined} />} />
           <Route path="/store" element={<Store />} />
           <Route path="/order" element={<Order />} />
           <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />

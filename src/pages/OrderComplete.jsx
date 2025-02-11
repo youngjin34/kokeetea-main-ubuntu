@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./OrderComplete.module.css";
 
-const OrderComplete = ({ orderItems = [] }) => {
+const OrderComplete = () => {
   const navigate = useNavigate();
 
   const pickupTime = new Date(Date.now() + 5 * 60000);
