@@ -40,13 +40,6 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
       );
 
       if (result.status === 200) {
-        const userData = {
-          userName: userName,
-          name: result.data.name,
-          email: result.data.email,
-          phoneNumber: result.data.phoneNumber,
-        };
-
         // localStorage에 저장
         localStorage.setItem("userName", userName);
         localStorage.setItem("realname", result.data.name);

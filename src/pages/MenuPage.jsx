@@ -251,9 +251,8 @@ function MenuPage() {
     }
 
     const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
 
-    if (!token || !email) {
+    if (!token) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
@@ -270,7 +269,6 @@ function MenuPage() {
         iceAmount: iceAmount,
         topping: topping.join(","),
         price: totalPrice,
-        email: email,
       },
     };
 
@@ -317,9 +315,8 @@ function MenuPage() {
 
   const handleDirectOrder = (product) => {
     const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
 
-    if (!token || !email) {
+    if (!token) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
@@ -334,7 +331,6 @@ function MenuPage() {
         iceAmount: "보통",
         topping: "기본",
         price: totalPrice,
-        email: email,
       },
     };
 
@@ -397,18 +393,16 @@ function MenuPage() {
       </div>
 
       {/* 브랜치 드롭다운 */}
-      <div>
-        <label htmlFor="branchSelect">브랜치 선택:</label>
+      <div className={style.branchSelectWrapper}>
         <select
           id="branchSelect"
-          value={selectedBranchId} // 선택된 ID를 value로 설정
-          onChange={handleBranchChange} // 드롭다운에서 값이 변경될 때 처리
+          value={selectedBranchId}
+          onChange={handleBranchChange}
+          className={style.branchSelect} // 추가된 스타일 적용
         >
-          <option value="">브랜치를 선택하세요</option>
           {branches.map((branch) => (
             <option key={branch.id} value={branch.id}>
-              {/* id는 value로, name은 option에 표시 */}
-              {branch.name} {/* 서버에서 가져온 브랜치명 표시 */}
+              {branch.name}
             </option>
           ))}
         </select>
@@ -757,6 +751,7 @@ function MenuPage() {
                           (+0원)
                         </span>
                       </label>
+
                       {toppingOptions.map(({ name, id }) => (
                         <label key={id} className={style.sub_radio_style}>
                           <input

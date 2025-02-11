@@ -24,7 +24,9 @@ function Navigation({
 
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(
+    parseInt(localStorage.getItem("cartCount")) || 0
+  );
 
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
@@ -66,16 +68,6 @@ function Navigation({
 
   // 알림 관련 state 추가
   const [notificationCount, setNotificationCount] = useState(0);
-
-  // getNotificationIcon 함수 추가 (기존 아이콘 getter 함수들 근처에 추가)
-  const getNotificationIcon = () => {
-    if (isHovered || fontColor === "black") {
-      return "./img/notification_black.png";
-    }
-    return currentPage % 2 === 0
-      ? "./img/notification_white.png"
-      : "./img/notification_black.png";
-  };
 
   // 알림 모달 상태 추가 (상단 state 선언부에 추가)
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
@@ -181,8 +173,7 @@ function Navigation({
     }
   };
 
-  // syncCartData 함수 최적화
-  const syncCartData = async () => {
+  const fetchCartCount = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/carts", {
         headers: {
@@ -190,16 +181,15 @@ function Navigation({
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      setCartCount(response.data.cart_count);
+      setCartCount(response.data.cart_count); // DB에서 가져온 개수 설정
     } catch (error) {
-      console.error("장바구니 동기화 실패:", error);
-      return [];
+      console.error("장바구니 개수 불러오기 실패:", error);
+      setCartCount(0); // 실패하면 0으로 초기화
     }
   };
 
   useEffect(() => {
-    syncCartData();
+    fetchCartCount(); // 페이지 로드 시 장바구니 개수 조회
   }, []);
 
   // 기존 state 선언부 근처에 ref 추가
