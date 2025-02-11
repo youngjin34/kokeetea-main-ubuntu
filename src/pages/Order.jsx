@@ -211,7 +211,7 @@ function Order() {
       }
 
       alert("주문이 완료되었습니다.");
-      navigate("/orderlist"); // 주문 완료 후 이동할 페이지
+      navigate("/ordercomplete"); // 주문 완료 후 이동할 페이지
     } catch (error) {
       console.error("주문 처리 실패:", error);
       alert("주문 처리에 실패했습니다.");
