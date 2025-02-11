@@ -395,7 +395,7 @@ function Order() {
                         {item.quantity}개
                       </span>
                       <span className={style.order_item_price}>
-                        {item.price * item.quantity}원
+                        {(item.price * item.quantity).toLocaleString()}원
                       </span>
                     </div>
                   </div>
@@ -445,7 +445,7 @@ function Order() {
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>최종 결제금액</span>
                 <span className={style.order_summary_finalPrice}>
-                  {finalPayment}원
+                  {finalPayment.toLocaleString()}원
                 </span>
               </div>
               <div className={style.payment}>

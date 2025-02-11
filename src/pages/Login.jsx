@@ -41,6 +41,10 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
 
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);
+        
+        setIsLogined(true);
+        setHeaderLogined(true);
+        onLoginSuccess?.();
 
         toast(`${result.data.name}님 환영합니다!`, {
           position: "top-right",
@@ -54,8 +58,7 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
           transition: Slide,
         });
 
-        window.location.reload();
-        handleLoginSuccess();
+        navigate("/");
       }
     } catch (error) {
       toast("아이디와 비밀번호를 확인해주세요", {
@@ -72,34 +75,28 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
     }
   };
 
-  const checkAdminStatus = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsAdmin(false);
-        return;
-      }
+  // const checkAdminStatus = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       setIsAdmin(false);
+  //       return;
+  //     }
 
-      const response = await axios.get(
-        "http://localhost:8080/kokee/member/check-admin",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  //     const response = await axios.get(
+  //       "http://localhost:8080/kokee/member/check-admin",
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
 
-      setIsAdmin(response.data.isAdmin);
-      localStorage.setItem("isAdmin", response.data.isAdmin);
-    } catch (error) {
-      console.error("관리자 확인 실패:", error);
-      setIsAdmin(false);
-    }
-  };
-
-  const handleLoginSuccess = () => {
-    setIsLogined(true);
-    setHeaderLogined(true);
-    onLoginSuccess?.();
-  };
+  //     setIsAdmin(response.data.isAdmin);
+  //     localStorage.setItem("isAdmin", response.data.isAdmin);
+  //   } catch (error) {
+  //     console.error("관리자 확인 실패:", error);
+  //     setIsAdmin(false);
+  //   }
+  // };
 
   return (
     <div className={style.pageContainer}>

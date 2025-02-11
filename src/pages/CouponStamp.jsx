@@ -132,6 +132,16 @@ const CouponStamp = () => {
       const memberData = memberResponse.data;
       const pointData = pointResponse.data;
 
+      // 등급 계산 로직 추가
+      const calculateMembershipLevel = (totalAmount) => {
+        if (totalAmount >= 400000) return 'DIAMOND';
+        if (totalAmount >= 300000) return 'RED';
+        if (totalAmount >= 200000) return 'GOLD';
+        return 'SILVER';
+      };
+
+      const currentLevel = calculateMembershipLevel(membershipData.total_payment_amount);
+
       const getNextLevelInfo = (currentLevel, totalAmount) => {
         const levels = {
           'SILVER': { next: 'GOLD', required: 200000 },
@@ -140,7 +150,7 @@ const CouponStamp = () => {
           'DIAMOND': { next: 'DIAMOND', required: 400000 }
         };
 
-        const currentLevelInfo = levels[currentLevel.toUpperCase()];
+        const currentLevelInfo = levels[currentLevel];
         if (!currentLevelInfo) return { nextLevel: 'GOLD', remaining: 200000 };
 
         const required = currentLevelInfo.required;
@@ -153,13 +163,13 @@ const CouponStamp = () => {
       };
 
       const nextLevelInfo = getNextLevelInfo(
-        membershipData.membership_name,
+        currentLevel,
         membershipData.total_payment_amount
       );
 
       setUserData({
         realName: memberData.realName || "고객",
-        memberLevel: membershipData.membership_name || "SILVER",
+        memberLevel: currentLevel, // 계산된 등급 사용
         nextLevelAmount: nextLevelInfo.remaining,
         nextLevel: nextLevelInfo.nextLevel,
         points: pointData.current_point || 0,
@@ -171,34 +181,18 @@ const CouponStamp = () => {
 
     } catch (error) {
       console.error('사용자 정보를 불러오는데 실패했습니다:', error);
-      setUserData({
-        realName: '고객',
-        memberLevel: 'SILVER',
-        nextLevelAmount: 50000,
-        nextLevel: 'GOLD',
-        points: 0,
-        orderCount: 0,
-        totalOrderAmount: 0,
-        stamps: 0,
-        coupons: []
-      });
     }
   };
 
   const calculateProgress = (totalAmount) => {
-    const getLevelThreshold = (level) => {
-      switch (level.toUpperCase()) {
-        case 'SILVER': return 200000;
-        case 'GOLD': return 300000;
-        case 'RED': return 400000;
-        case 'DIAMOND': return 400000;
-        default: return 200000;
-      }
-    };
-
-    const threshold = getLevelThreshold(userData.memberLevel);
-    const progress = (totalAmount / threshold) * 100;
-    return Math.min(progress, 100);
+    // 전체 등급 범위 설정
+    const totalRange = 400000; // 최대 등급(DIAMOND)까지의 금액
+    
+    // 현재 금액의 전체 진행률 계산
+    const progress = (totalAmount / totalRange) * 100;
+    
+    // 0~100 사이의 값으로 제한
+    return Math.min(Math.max(progress, 0), 100);
   };
 
   useEffect(() => {

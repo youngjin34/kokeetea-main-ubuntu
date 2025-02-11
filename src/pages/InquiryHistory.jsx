@@ -71,19 +71,15 @@ const InquiryHistory = () => {
         id: inquiry.id,
         subject: "1:1문의",
         title: inquiry.title,
-        content: inquiry.content,
-        date: new Date(inquiry.date).toLocaleDateString('ko-KR', {
+        content: inquiry.text,
+        date: new Date(inquiry.created_date).toLocaleDateString('ko-KR', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit'
-        }).replace(/\. /g, '.').replace('.', ''),
-        status: inquiry.answer ? "답변완료" : "답변대기",
-        reply: inquiry.answer,
-        replyDate: inquiry.answerDate ? new Date(inquiry.answerDate).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }).replace(/\. /g, '.').replace('.', '') : null
+        }).replace(/\. /g, '-').slice(0, -1),
+        status: inquiry.answered ? "답변완료" : "답변대기",
+        reply: null,
+        replyDate: null
       }));
 
       setOrders(mappedInquiries);
@@ -105,8 +101,38 @@ const InquiryHistory = () => {
     navigate(path);
   };
 
-  const handleTitleClick = (order) => {
-    setSelectedInquiry(selectedInquiry?.id === order.id ? null : order);
+  const handleTitleClick = async (order) => {
+    try {
+      if (selectedInquiry?.id === order.id) {
+        setSelectedInquiry(null);
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:8080/api/questions/${order.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // 상세 정보로 업데이트
+      const detailData = {
+        ...order,
+        content: response.data.text,
+        reply: response.data.feedback_text,
+        replyDate: response.data.feedback_date ?
+          new Date(response.data.feedback_date).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).replace(/\. /g, '-').slice(0, -1) : null
+      };
+
+      setSelectedInquiry(detailData);
+    } catch (error) {
+      console.error("문의 상세 조회 실패:", error);
+      alert("문의 상세 내용을 불러오는데 실패했습니다.");
+    }
   };
 
   // handleDateSearch 수정

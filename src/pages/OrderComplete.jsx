@@ -14,8 +14,8 @@ const OrderComplete = () => {
 
   const orderId = localStorage.getItem("orderId");
   const branchName = localStorage.getItem("branchName");
-  const finalPrice = localStorage.getItem("finalPrice");
-  const totalPrice = localStorage.getItem("totalPrice");
+  const finalPrice = parseInt(localStorage.getItem("finalPrice")) || 0;
+  const totalPrice = parseInt(localStorage.getItem("totalPrice")) || 0;
 
   return (
     <div className={styles.container}>
@@ -41,11 +41,11 @@ const OrderComplete = () => {
           <div className={styles.paymentInfo}>
             <div className={styles.subtotal}>
               <span>상품 금액</span>
-              <span>{totalPrice} 원</span>
+              <span>{totalPrice.toLocaleString()}원</span>
             </div>
             <div className={styles.totalAmount}>
               <span>총 결제금액</span>
-              <span className={styles.highlight}>{finalPrice} 원</span>
+              <span className={styles.highlight}>{finalPrice.toLocaleString()}원</span>
             </div>
           </div>
         </div>

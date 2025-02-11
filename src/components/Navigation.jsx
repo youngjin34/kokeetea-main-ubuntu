@@ -14,7 +14,6 @@ function Navigation({
 }) {
   const navigate = useNavigate();
 
-  const [headerLogined, setHeaderLogined] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -78,8 +77,12 @@ function Navigation({
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const isLoggedIn = !!localStorage.getItem("realname");
-      setHeaderLogined(isLoggedIn);
+      const token = localStorage.getItem("token");
+      if (token) {
+        setIsLogined(true);
+      } else {
+        setIsLogined(false);
+      }
     };
 
     checkLoginStatus();
@@ -102,13 +105,12 @@ function Navigation({
       document.removeEventListener("mousedown", handleClickOutside);
       window.removeEventListener("storage", checkLoginStatus);
     };
-  }, [isModalOpen, isLogined]);
+  }, [setIsLogined, isModalOpen]);
 
   function logoutFunction() {
     localStorage.clear();
-    setIsLogined(!isLogined);
+    setIsLogined(false);
     navigate("/");
-    window.location.reload();
   }
 
   const toggleModal = () => {
@@ -126,7 +128,6 @@ function Navigation({
   // 로그인 성공 핸들러 수정
   const handleLoginSuccess = async () => {
     toggleLoginModal();
-    setHeaderLogined(true);
     setIsLogined(true);
     // 로그인 성공 시 즉시 장바구니 데이터 동기화
     await syncCartData();
@@ -491,7 +492,7 @@ function Navigation({
 
         <div className="inner">
           <ul className={`${style.header_top}`}>
-            {headerLogined && (
+            {isLogined && (
               <>
                 <li>
                   <Link
@@ -553,7 +554,7 @@ function Navigation({
               </>
             )}
 
-            {headerLogined ? (
+            {isLogined ? (
               <li onClick={logoutFunction}>
                 <Link
                   to="#"
@@ -589,7 +590,7 @@ function Navigation({
               </>
             )}
 
-            {headerLogined && (
+            {isLogined && (
               <>
                 <li className={style.menu_divider} style={{ color: fontColor }}>
                   |
@@ -645,7 +646,6 @@ function Navigation({
             <Login
               onClose={toggleLoginModal}
               setIsLogined={setIsLogined}
-              setHeaderLogined={setHeaderLogined}
               onLoginSuccess={handleLoginSuccess}
             />
           </div>

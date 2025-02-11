@@ -561,7 +561,7 @@ input::-webkit-inner-spin-button {
   color: #666;
   background: #f8f8f8;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .order_item_price_info {

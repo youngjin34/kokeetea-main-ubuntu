@@ -158,7 +158,7 @@ function MenuPage({ isLogined }) {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
 
-    if (!token || !email) {
+    if ((!token || !email) && !isLogined) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
@@ -497,13 +497,13 @@ function MenuPage({ isLogined }) {
             <div
               key={product.product.id}
               className={`${style.MenuItem} ${
-                !isLoggedIn ? style.disabled : ""
+                !isLoggedIn && !isLogined ? style.disabled : ""
               }`}
               data-tooltip-id={
-                !isLoggedIn ? `login-tooltip-${product.product.id}` : ""
-              } //<Tooltip/> 요소와 연결할 ID
-              data-tooltip-content="로그인이 필요한 서비스입니다." //말풍선에 들어갈 콘텐츠
-              data-tooltip-place="top" // 말풍선 위치
+                !isLoggedIn && !isLogined ? `login-tooltip-${product.product.id}` : ""
+              }
+              data-tooltip-content="로그인이 필요한 서비스입니다."
+              data-tooltip-place="top"
             >
               <img src={product.product.image_url} alt={product.product.name} />
               <h3>{product.product.name}</h3>
