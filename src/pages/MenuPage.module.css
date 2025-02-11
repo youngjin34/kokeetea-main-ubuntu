@@ -41,6 +41,54 @@
   padding-bottom: 30px;
 }
 
+/* ------------------- 브랜치 드롭다운 --------------------- */
+/* 드롭다운 기본 스타일 */
+.branchSelect {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  appearance: none; /* 기본 UI 제거 (아이콘 직접 추가 가능) */
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* 드롭다운 호버 효과 */
+.branchSelect:hover {
+  border-color: #ba274a;
+}
+
+/* 포커스 효과 (선택 시) */
+.branchSelect:focus {
+  outline: none;
+  border-color: #ba274a;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* 드롭다운 아이콘 추가 (배경 이미지 활용) */
+.branchSelectWrapper {
+  position: relative;
+  display: inline-block;
+  float: right;
+  width: 100%;
+  max-width: 150px;
+}
+
+.branchSelectWrapper::after {
+  content: "▼"; /* 아이콘 (유니코드 삼각형) */
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #ba274a;
+  font-size: 14px;
+  pointer-events: none; /* 클릭 영향 없음 */
+}
+
 /* ------------------ 카테고리 버튼 ------------------- */
 .MenuTabs {
   display: flex;

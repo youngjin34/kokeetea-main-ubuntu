@@ -30,14 +30,19 @@ const Cart = () => {
       const items = response.data.items || [];
       setCartItems(items);
 
-      // 장바구니가 비어 있으면 에러 메시지 설정
       if (items.length === 0) {
-        setError("장바구니가 비어있습니다. 메뉴를 추가해주세요.");
+        setError(""); // 404가 아닌 정상 응답일 때는 에러 메시지 X
       }
     } catch (error) {
       console.error("장바구니 데이터 로드 실패:", error);
-      setError("장바구니 데이터를 불러오는 데 실패했습니다.");
-      setCartItems([]); // 오류 발생 시 장바구니는 비어있음
+
+      // 🔥 404 에러일 경우 빈 배열로 처리해서 오류 방지
+      if (error.response && error.response.status === 404) {
+        setCartItems([]);
+        setError(""); // 404일 때는 오류 메시지를 보여주지 않음
+      } else {
+        setError("장바구니 데이터를 불러오는 데 실패했습니다.");
+      }
     } finally {
       setLoading(false);
     }
@@ -152,7 +157,7 @@ const Cart = () => {
         <h1 className={style.cart_title}>장바구니</h1>
         <div className={style.cart_menu_container}>
           <div className={style.cart_items}>
-            {error || cartItems.length === 0 ? (
+            {cartItems.length === 0 ? (
               <div className={style.empty_cart}>
                 <h2>장바구니가 비어있습니다</h2>
                 <p>원하는 메뉴를 장바구니에 담아보세요!</p>
