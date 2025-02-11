@@ -271,7 +271,7 @@ const Cart = () => {
                             </button>
                           </div>
                           <div className={style.cart_item_price}>
-                            {item.total_item_price}원
+                            {item.total_item_price.toLocaleString()}원
                           </div>
                         </div>
                       </div>
