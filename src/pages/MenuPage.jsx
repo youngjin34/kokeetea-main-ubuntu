@@ -2,25 +2,60 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Tooltip } from "react-tooltip";
+
 import style from "./MenuPage.module.css";
 
 function MenuPage() {
   const [products, setProducts] = useState([]);
-  const [filteredMenu, setFilteredMenu] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택
   const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
   const [isModalOpen, setModalOpen] = useState(false);
   const modalRef = useRef(null);
 
+  const [branches, setBranches] = useState([]); // 브랜치 데이터를 상태로 저장
+  const [selectedBranchId, setSelectedBranchId] = useState(1); // 선택된 브랜치 ID 상태
+
   // 각 옵션에 대한 상태 관리
   const [temp, setTemp] = useState("ICE");
   const [size, setSize] = useState("Regular");
-  const [iceAmount, setIceAmount] = useState("보통");
   const [sugar, setSugar] = useState("70%");
-  const [quantity, setQuantity] = useState(0);
-
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [iceAmount, setIceAmount] = useState("보통");
   const [topping, setTopping] = useState(["기본"]);
+
+  const [tempId, setTempId] = useState(1);
+  const [sizeId, setSizeId] = useState(3);
+  const [sugarId, setSugarId] = useState(9);
+  const [iceAmountId, setIceAmountId] = useState(13);
+  const [toppingId, setToppingId] = useState([]);
+
+  const toppingOptions = [
+    { name: "타피오카 펄", id: 15 },
+    { name: "화이트 펄", id: 16 },
+    { name: "밀크폼", id: 17 },
+    { name: "코코넛", id: 18 },
+    { name: "알로에", id: 19 },
+  ];
+
+  const handleToppingChange = (e, item, itemId) => {
+    if (e.target.checked) {
+      setTopping((prev) =>
+        prev.includes("기본")
+          ? [item]
+          : [...prev.filter((t) => t !== "기본"), item]
+      );
+      setToppingId((prev) => [...prev, itemId]);
+    } else {
+      setTopping((prev) => {
+        const newToppings = prev.filter((t) => t !== item);
+        return newToppings.length === 0 ? ["기본"] : newToppings;
+      });
+      setToppingId((prev) => prev.filter((id) => id !== itemId));
+    }
+  };
+
+  const [quantity, setQuantity] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const navigate = useNavigate();
 
@@ -36,33 +71,42 @@ function MenuPage() {
     setIsLoggedIn(token && email);
   }, []);
 
-  // 카테고리별 제품을 필터링하는 함수
-  const filterByCategory = (category) => {
-    const filtered = products.filter(
-      (product) => product.pdCategory === category
-    );
-    setFilteredMenu(filtered);
-  };
-
-  // 메뉴 클릭 시 카테고리별 필터링
-  const selectedMenuClick = (menu) => {
-    setSelectedMenu(menu);
-    filterByCategory(menu);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/selecttea");
+        const response = await axios.get(
+          `http://localhost:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
+        );
+        console.log(response.data);
         setProducts(response.data);
-        filterByCategory("Cold Cloud");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    const fetchBranchDate = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/branches");
+        console.log(response.data);
+        setBranches(response.data); // 받아온 데이터로 상태 설정
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBranchDate();
   }, []);
+
+  // 드롭다운에서 브랜치 선택 시 처리
+  const handleBranchChange = (event) => {
+    const branchId = event.target.value; // 선택된 브랜치의 id
+    setSelectedBranchId(branchId); // 선택된 브랜치 ID 상태 업데이트
+    console.log(`선택된 브랜치 ID: ${branchId}`); // 선택된 ID 확인용 콘솔
+  };
 
   const toggleModal = (product = null) => {
     const token = localStorage.getItem("token");
@@ -77,7 +121,10 @@ function MenuPage() {
       setQuantity(1);
       setSelectedProduct(product);
       setModalOpen(true);
-      if (product.pdCategory.includes("Ice Blended") || product.pdCategory.includes("Cold Cloud")) {
+      if (
+        selectedMenu.includes("Ice Blended") ||
+        selectedMenu.includes("Cold Cloud")
+      ) {
         setTemp("ICE");
       } else {
         setTemp("ICE");
@@ -87,7 +134,6 @@ function MenuPage() {
       setSugar("70%");
       setIceAmount("보통");
       setTopping(["기본"]);
-
     } else {
       setModalOpen(false);
       setSize("Regular");
@@ -109,12 +155,6 @@ function MenuPage() {
       setIceAmount("보통"); // ICE 선택 시 기본값으로 설정
     }
   }, [temp]);
-
-  useEffect(() => {
-    if (products.length > 0) {
-      filterByCategory(selectedMenu);
-    }
-  }, [products, selectedMenu]);
 
   // 바깥쪽 클릭 시 모달 닫기
   const handleOutsideClick = (e) => {
@@ -172,38 +212,26 @@ function MenuPage() {
     }
 
     const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
 
-    const cartItem = {
-      product_name: selectedProduct.pdName,
-      price: totalPrice,
-      mount: quantity,
-      email: email,
-      temp: temp,
-      size: size,
-      sugar: sugar,
-      iceAmount: iceAmount,
-      topping: topping.join(","),
-      image: selectedProduct.image,
-    };
-
-    if (token && email) {
+    if (token) {
       try {
-        const response = await fetch("http://localhost:8080/kokee/carts", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const response = await axios.post(
+          "http://localhost:8080/api/carts",
+          {
+            product_id: selectedProduct.id,
+            quantity: quantity,
+            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            branch_id: selectedBranchId,
           },
-          body: JSON.stringify(cartItem),
-        });
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (!response.ok) {
-          throw new Error("장바구니 추가 실패");
-        }
-
-        const result = await response.text();
-        if (result === "success") {
+        if (response.status === 200) {
           alert("장바구니에 추가되었습니다.");
           toggleModal();
         } else {
@@ -262,10 +290,14 @@ function MenuPage() {
 
     // 토핑 옵션 가격 계산 수정
     if (!topping.includes("기본")) {
-      topping.forEach(item => {
+      topping.forEach((item) => {
         if (item === "타피오카 펄" || item === "화이트 펄") {
           optionPrice += 500;
-        } else if (item === "밀크폼" || item === "코코넛" || item === "알로에") {
+        } else if (
+          item === "밀크폼" ||
+          item === "코코넛" ||
+          item === "알로에"
+        ) {
           optionPrice += 1000;
         }
       });
@@ -326,15 +358,15 @@ function MenuPage() {
           className={`${style.menu} ${
             selectedMenu === "Cold Cloud" ? style.active : ""
           }`}
-          onClick={() => selectedMenuClick("Cold Cloud")}
+          onClick={() => setSelectedMenu("Cold Cloud")}
         >
           Cold Cloud
         </span>
         <span
           className={`${style.menu} ${
-            selectedMenu === "KOKEE Fruit Tea" ? style.active : ""
+            selectedMenu === "Fruit Tea" ? style.active : ""
           }`}
-          onClick={() => selectedMenuClick("KOKEE Fruit Tea")}
+          onClick={() => setSelectedMenu("Fruit Tea")}
         >
           Fruit Tea
         </span>
@@ -342,7 +374,7 @@ function MenuPage() {
           className={`${style.menu} ${
             selectedMenu === "Ice Blended" ? style.active : ""
           }`}
-          onClick={() => selectedMenuClick("Ice Blended")}
+          onClick={() => setSelectedMenu("Ice Blended")}
         >
           Ice Blended
         </span>
@@ -350,7 +382,7 @@ function MenuPage() {
           className={`${style.menu} ${
             selectedMenu === "Milk Tea" ? style.active : ""
           }`}
-          onClick={() => selectedMenuClick("Milk Tea")}
+          onClick={() => setSelectedMenu("Milk Tea")}
         >
           Milk Tea
         </span>
@@ -358,45 +390,72 @@ function MenuPage() {
           className={`${style.menu} ${
             selectedMenu === "Signature" ? style.active : ""
           }`}
-          onClick={() => selectedMenuClick("Signature")}
+          onClick={() => setSelectedMenu("Signature")}
         >
           Signature
         </span>
       </div>
+
+      {/* 브랜치 드롭다운 */}
+      <div>
+        <label htmlFor="branchSelect">브랜치 선택:</label>
+        <select
+          id="branchSelect"
+          value={selectedBranchId} // 선택된 ID를 value로 설정
+          onChange={handleBranchChange} // 드롭다운에서 값이 변경될 때 처리
+        >
+          <option value="">브랜치를 선택하세요</option>
+          {branches.map((branch) => (
+            <option key={branch.id} value={branch.id}>
+              {/* id는 value로, name은 option에 표시 */}
+              {branch.name} {/* 서버에서 가져온 브랜치명 표시 */}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className={style.MenuItems}>
-        {filteredMenu.map((product, index) => (
+        {products.map((product, index) => (
           <div key={index}>
             <div
-              key={product.pdId}
+              key={product.product.id}
               className={`${style.MenuItem} ${
                 !isLoggedIn ? style.disabled : ""
               }`}
+              data-tooltip-id={
+                !isLoggedIn ? `login-tooltip-${product.product.id}` : ""
+              } //<Tooltip/> 요소와 연결할 ID
+              data-tooltip-content="로그인이 필요한 서비스입니다." //말풍선에 들어갈 콘텐츠
+              data-tooltip-place="top" // 말풍선 위치
             >
-              <img src={product.image} alt={product.pdName} />
-              <h3>{product.pdName}</h3>
-              <p>{product.pdPrice.toLocaleString()} 원</p>
+              <img src={product.product.image_url} alt={product.product.name} />
+              <h3>{product.product.name}</h3>
+              <p>{product.product.price} 원</p>
 
               {/* 영양정보 오버레이 추가 */}
               <div className={style.nutrition_overlay}>
                 <div className={style.nutrition_info}>
                   <h4>영양정보</h4>
-                  <p>칼로리: {product.calories || "300"} kcal</p>
-                  <p>당류: {product.sugar || "30"}g</p>
-                  <p>카페인: {product.caffeine || "150"}mg</p>
-                  <p>나트륨: {product.sodium || "120"}mg</p>
+                  <p>칼로리: {product.product.calories || "300"} kcal</p>
+                  <p>당류: {product.product.sugar || "30"}g</p>
+                  <p>카페인: {product.product.caffeine || "150"}mg</p>
+                  <p>나트륨: {product.product.sodium || "120"}mg</p>
                 </div>
               </div>
             </div>
+
+            <Tooltip id={`menu-tooltip-${product.id}`} />
+
             <div className={style.button_container}>
               <button
                 className={style.menu_order_btn}
-                onClick={() => toggleModal(product)}
+                onClick={() => toggleModal(product.product)}
               >
                 <img src="/public/img/cart.png" /> 옵션선택
               </button>
               <button
                 className={`${style.menu_order_btn} ${style.direct_order_btn}`}
-                onClick={() => handleDirectOrder(product)}
+                onClick={() => handleDirectOrder(product.product)}
               >
                 바로주문
               </button>
@@ -411,22 +470,27 @@ function MenuPage() {
             <div className={style.modal_left}>
               <div className={style.product_image_container}>
                 <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.pdName}
+                  src={selectedProduct.image_url}
+                  alt={selectedProduct.name}
                   className={style.modalImage}
                 />
               </div>
               <div className={style.product_info}>
-                <h2 className={style.product_name}>{selectedProduct.pdName}</h2>
+                <h2 className={style.product_name}>{selectedProduct.name}</h2>
                 <p className={style.product_price}>
-                  {(selectedProduct.pdPrice + calculateOptionPrice()).toLocaleString()}원
+                  {(
+                    selectedProduct.price + calculateOptionPrice()
+                  ).toLocaleString()}
+                  원
                   <br />
                   <span className={style.option_price}>
-                    (기본 {selectedProduct.pdPrice.toLocaleString()}원 + 옵션 {calculateOptionPrice().toLocaleString()}원)
+                    (기본 {selectedProduct.price}원 + 옵션{" "}
+                    {calculateOptionPrice().toLocaleString()}원)
                   </span>
                 </p>
                 <p className={style.product_description}>
-                  {selectedProduct.pdDescription || "신선한 재료로 만든 프리미엄 음료"}
+                  {selectedProduct.pdDescription ||
+                    "신선한 재료로 만든 프리미엄 음료"}
                 </p>
               </div>
             </div>
@@ -435,30 +499,43 @@ function MenuPage() {
                 <div className={style.option}>
                   <h3>온도</h3>
                   <div className={style.temp_option}>
-                    {(!selectedProduct.pdCategory.includes("Ice Blended") &&
-                  !selectedProduct.pdCategory.includes("Cold Cloud")) && (
-                    <label className={`${style.radio_style} ${style.hot_option}`}>
-                      <input
-                        type="radio"
-                        name="temp"
-                        value="HOT"
-                        checked={temp === "HOT"}
-                        onChange={() => setTemp("HOT")}
-                      />
-                      <span>HOT 🔥</span>
-                    </label>
-                    )}
-                    <label className={`${style.radio_style} ${style.ice_option}`}
-                    style={{
-                      width: (selectedProduct.pdCategory.includes("Ice Blended") ||
-                      selectedProduct.pdCategory.includes("Cold Cloud")) ? "100%" : "50%",
-                    }}>
+                    {!selectedMenu.includes("Ice Blended") &&
+                      !selectedMenu.includes("Cold Cloud") && (
+                        <label
+                          className={`${style.radio_style} ${style.hot_option}`}
+                        >
+                          <input
+                            type="radio"
+                            name="temp"
+                            value="HOT"
+                            checked={temp === "HOT"}
+                            onChange={() => {
+                              setTemp("HOT");
+                              setTempId(1);
+                            }}
+                          />
+                          <span>HOT 🔥</span>
+                        </label>
+                      )}
+                    <label
+                      className={`${style.radio_style} ${style.ice_option}`}
+                      style={{
+                        width:
+                          selectedMenu.includes("Ice Blended") ||
+                          selectedMenu.includes("Cold Cloud")
+                            ? "100%"
+                            : "50%",
+                      }}
+                    >
                       <input
                         type="radio"
                         name="temp"
                         value="ICE"
                         checked={temp === "ICE"}
-                        onChange={() => setTemp("ICE")}
+                        onChange={() => {
+                          setTemp("ICE");
+                          setTempId(2);
+                        }}
                       />
                       <span>ICE ❄️</span>
                     </label>
@@ -474,7 +551,10 @@ function MenuPage() {
                           name="size"
                           value="Regular"
                           checked={size === "Regular"}
-                          onChange={() => setSize("Regular")}
+                          onChange={() => {
+                            setSize("Regular");
+                            setSizeId(3);
+                          }}
                         />
                         <span>Regular</span>
                       </label>
@@ -484,7 +564,10 @@ function MenuPage() {
                           name="size"
                           value="Large"
                           checked={size === "Large"}
-                          onChange={() => setSize("Large")}
+                          onChange={() => {
+                            setSize("Large");
+                            setSizeId(4);
+                          }}
                         />
                         <span>
                           Large
@@ -498,7 +581,10 @@ function MenuPage() {
                           name="size"
                           value="Kokee-Large"
                           checked={size === "Kokee-Large"}
-                          onChange={() => setSize("Kokee-Large")}
+                          onChange={() => {
+                            setSize("Kokee-Large");
+                            setSizeId(5);
+                          }}
                         />
                         <span>
                           Kokee-Large
@@ -517,7 +603,10 @@ function MenuPage() {
                           name="sugar"
                           value="0%"
                           checked={sugar === "0%"}
-                          onChange={() => setSugar("0%")}
+                          onChange={() => {
+                            setSugar("0%");
+                            setSugarId(6);
+                          }}
                         />
                         <span>0%</span>
                       </label>
@@ -527,7 +616,10 @@ function MenuPage() {
                           name="sugar"
                           value="30%"
                           checked={sugar === "30%"}
-                          onChange={() => setSugar("30%")}
+                          onChange={() => {
+                            setSugar("30%");
+                            setSugarId(7);
+                          }}
                         />
                         <span>30%</span>
                       </label>
@@ -537,7 +629,10 @@ function MenuPage() {
                           name="sugar"
                           value="50%"
                           checked={sugar === "50%"}
-                          onChange={() => setSugar("50%")}
+                          onChange={() => {
+                            setSugar("50%");
+                            setSugarId(8);
+                          }}
                         />
                         <span>50%</span>
                       </label>
@@ -547,7 +642,10 @@ function MenuPage() {
                           name="sugar"
                           value="70%"
                           checked={sugar === "70%"}
-                          onChange={() => setSugar("70%")}
+                          onChange={() => {
+                            setSugar("70%");
+                            setSugarId(9);
+                          }}
                         />
                         <span>70%</span>
                       </label>
@@ -557,7 +655,10 @@ function MenuPage() {
                           name="sugar"
                           value="100%"
                           checked={sugar === "100%"}
-                          onChange={() => setSugar("100%")}
+                          onChange={() => {
+                            setSugar("100%");
+                            setSugarId(10);
+                          }}
                         />
                         <span>100%</span>
                       </label>
@@ -572,39 +673,63 @@ function MenuPage() {
                           name="iceAmount"
                           value="없음"
                           checked={iceAmount === "없음"}
-                          onChange={() => setIceAmount("없음")}
+                          onChange={() => {
+                            setIceAmount("없음");
+                            setIceAmountId(11);
+                          }}
                         />
                         <span>없음</span>
                       </label>
-                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
+                      <label
+                        className={`${style.sub_radio_style} ${
+                          temp === "HOT" ? style.disabled : ""
+                        }`}
+                      >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="적게"
                           checked={iceAmount === "적게"}
-                          onChange={() => setIceAmount("적게")}
+                          onChange={() => {
+                            setIceAmount("적게");
+                            setIceAmountId(12);
+                          }}
                           disabled={temp === "HOT"}
                         />
                         <span>적게</span>
                       </label>
-                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
+                      <label
+                        className={`${style.sub_radio_style} ${
+                          temp === "HOT" ? style.disabled : ""
+                        }`}
+                      >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="보통"
                           checked={iceAmount === "보통"}
-                          onChange={() => setIceAmount("보통")}
+                          onChange={() => {
+                            setIceAmount("보통");
+                            setIceAmountId(13);
+                          }}
                           disabled={temp === "HOT"}
                         />
                         <span>보통</span>
                       </label>
-                      <label className={`${style.sub_radio_style} ${temp === "HOT" ? style.disabled : ""}`}>
+                      <label
+                        className={`${style.sub_radio_style} ${
+                          temp === "HOT" ? style.disabled : ""
+                        }`}
+                      >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="많이"
                           checked={iceAmount === "많이"}
-                          onChange={() => setIceAmount("많이")}
+                          onChange={() => {
+                            setIceAmount("많이");
+                            setIceAmountId(14);
+                          }}
                           disabled={temp === "HOT"}
                         />
                         <span>많이</span>
@@ -632,30 +757,21 @@ function MenuPage() {
                           (+0원)
                         </span>
                       </label>
-                      {["타피오카 펄", "화이트 펄", "밀크폼", "코코넛", "알로에"].map((item) => (
-                        <label key={item} className={style.sub_radio_style}>
+                      {toppingOptions.map(({ name, id }) => (
+                        <label key={id} className={style.sub_radio_style}>
                           <input
                             type="checkbox"
                             name="topping"
-                            value={item}
-                            checked={topping.includes(item)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setTopping((prev) => 
-                                  prev.includes("기본") ? [item] : [...prev.filter(t => t !== "기본"), item]
-                                );
-                              } else {
-                                setTopping((prev) => {
-                                  const newToppings = prev.filter(t => t !== item);
-                                  return newToppings.length === 0 ? ["기본"] : newToppings;
-                                });
-                              }
-                            }}
+                            value={name}
+                            checked={topping.includes(name)}
+                            onChange={(e) => handleToppingChange(e, name, id)}
                           />
                           <span>
-                            {item}
+                            {name}
                             <br />
-                            {(item === "타피오카 펄" || item === "화이트 펄") ? "(+500원)" : "(+1000원)"}
+                            {name === "타피오카 펄" || name === "화이트 펄"
+                              ? "(+500원)"
+                              : "(+1000원)"}
                           </span>
                         </label>
                       ))}
@@ -663,21 +779,31 @@ function MenuPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className={style.modal_bottom}>
                 <div className={style.quantity_container}>
                   <h3>수량</h3>
                   <div className={style.quantity_btn}>
-                    <button onClick={() => setQuantity(Math.max(quantity - 1, 1))}>-</button>
+                    <button
+                      onClick={() => setQuantity(Math.max(quantity - 1, 1))}
+                    >
+                      -
+                    </button>
                     <span>{quantity}</span>
                     <button onClick={() => setQuantity(quantity + 1)}>+</button>
                   </div>
                 </div>
                 <div className={style.button_group}>
-                  <button className={`${style.modal_button} ${style.cart_button}`} onClick={addToCart}>
+                  <button
+                    className={`${style.modal_button} ${style.cart_button}`}
+                    onClick={addToCart}
+                  >
                     담기
                   </button>
-                  <button className={`${style.modal_button} ${style.order_button}`} onClick={orderNow}>
+                  <button
+                    className={`${style.modal_button} ${style.order_button}`}
+                    onClick={orderNow}
+                  >
                     주문하기
                   </button>
                 </div>

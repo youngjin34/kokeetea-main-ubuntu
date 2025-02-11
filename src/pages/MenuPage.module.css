@@ -158,7 +158,6 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 8px;
-
 }
 
 .nutrition_info {
@@ -175,7 +174,7 @@
 }
 
 .nutrition_info p {
-  color: #666;
+  color: black;
   text-align: center;
   padding-top: 10px;
 }
@@ -250,7 +249,7 @@
 .modal_left {
   width: 35%;
   padding: 30px;
-  border-right: 1px solid #E5D5DA;
+  border-right: 1px solid #e5d5da;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -309,7 +308,6 @@
 .option_scroll {
   overflow-y: auto;
   flex-grow: 1;
-
 }
 
 .option_scroll::-webkit-scrollbar {
@@ -327,7 +325,6 @@
 }
 
 .modal_bottom {
-
   padding-top: 20px;
   margin-top: auto;
 }
@@ -337,7 +334,6 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-
 }
 
 .quantity_container h3 {
