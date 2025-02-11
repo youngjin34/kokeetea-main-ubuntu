@@ -4,29 +4,24 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Order() {
-  // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const navigate = useNavigate();
   const [selectedPickupMethod, setSelectedPickupMethod] =
     useState("매장(다회용컵)");
   const [selectedCoupon, setSelectedCoupon] = useState("");
-  const [stamps, setStamps] = useState(0);
   const pickupMethods = [
     "매장(다회용컵)",
     "테이크아웃(일회용컵)",
     "테이크아웃(텀블러)",
   ];
 
-  // 하드코딩된 데이터 대신 상태 추가
   const [cartItems, setCartItems] = useState([]);
-  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [availableCoupons, setAvailableCoupons] = useState(["5000"]);
   const [membershipInfo, setMembershipInfo] = useState({
     stamps: 0,
     level: "",
   });
+
+  const [totalPrice, setTotalPrice] = useState(0);
 
   // 상태 추가
   const [points, setPoints] = useState(0);
@@ -56,9 +51,11 @@ function Order() {
           }
         );
 
-        console.log(cartResponse.data);
         setCartItems(cartResponse.data.items);
         setBranchName(cartResponse.data.branch_name);
+        setTotalPrice(cartResponse.data.total_price);
+
+        localStorage.setItem("totalPrice", cartResponse.data.total_price);
 
         if (!cartResponse) {
           throw new Error("장바구니 데이터 로딩 실패");
@@ -73,6 +70,8 @@ function Order() {
             },
           }
         );
+
+        console.log(couponsResponse.data);
 
         setAvailableCoupons([...couponsResponse.data.coupons]);
 
@@ -106,7 +105,7 @@ function Order() {
         alert("데이터 로딩에 실패했습니다.");
         // 에러 발생 시 기본값 설정
         setCartItems([]);
-        setAvailableCoupons(["적용할 쿠폰을 선택하세요"]);
+
         setMembershipInfo({ stamps: 0, level: "BASIC" });
         setPoints(0);
       }
@@ -133,21 +132,20 @@ function Order() {
     setSelectedCoupon(event.target.value);
   };
 
-  const calculateDiscount = () => {
-    if (
-      !selectedCoupon ||
-      selectedCoupon === "적용할 쿠폰을 선택하세요" ||
-      selectedCoupon === "사용 안 함"
-    ) {
-      return 0;
-    }
-    // 쿠폰 할인 로직 구현
-    return 0; // 임시 반환값
+  const calculateDiscount = (couponId) => {
+    return usePoints;
   };
 
   const [selectedMethod, setSelectedMethod] = useState("신용카드");
 
   const paymentMethods = ["신용카드", "계좌이체", "간편결제"];
+
+  // 결제 방식 매핑
+  const methodMapping = {
+    신용카드: "CREDIT_CARD",
+    계좌이체: "ACCOUNT_TRANSFER",
+    간편결제: "SIMPLE_PAY",
+  };
 
   const handleMethodClick = (method) => {
     setSelectedMethod(method);
@@ -156,42 +154,38 @@ function Order() {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem("token");
-      const email = localStorage.getItem("email");
 
-      if (!token || !email) {
+      if (!token) {
         alert("로그인이 필요합니다.");
         return;
       }
 
-      // 주문 데이터 준비
-      const orderData = cartItems.map((item) => ({
-        productName: item.productName,
-        mount: item.mount,
-        price: item.price,
-        branchName: branchName, // 선택된 지점
-        email: email,
-        options: item.options,
-      }));
-
       // 주문 데이터 전송
-      const response = await fetch(
-        `http://localhost:8080/kokee/orders/${email}`,
+      const response = await axios.post(
+        `http://localhost:8080/api/orders`,
         {
-          method: "POST",
+          payment_method: methodMapping[selectedMethod],
+          point: usePoints,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(orderData),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("주문 처리 실패");
-      }
+      console.log(response.data);
 
+      localStorage.setItem("orderId", response.data.id);
+      localStorage.setItem("branchName", response.data.branch_name);
+
+      const finalPrice = totalPrice - calculateDiscount();
+
+      localStorage.setItem("finalPrice", finalPrice);
       alert("주문이 완료되었습니다.");
-      navigate("/orderlist"); // 주문 완료 후 이동할 페이지
+      navigate("/ordercomplete"); // 주문 완료 후 이동할 페이지
+      window.location.reload();
     } catch (error) {
       console.error("주문 처리 실패:", error);
       alert("주문 처리에 실패했습니다.");
@@ -270,7 +264,7 @@ function Order() {
               <option value="">적용할 쿠폰을 선택하세요</option>
               {availableCoupons.map((coupon, index) => (
                 <option key={index} value={coupon}>
-                  {coupon}
+                  {coupon.product_name}
                 </option>
               ))}
             </select>
@@ -284,9 +278,9 @@ function Order() {
               />
               <span>쿠폰 할인 금액</span>
             </div>
-            <span className={style.discount_price_money}>
-              - {calculateDiscount().toLocaleString()}원
-            </span>
+            {/* <span className={style.discount_price_money}>
+              {availableCoupons[0]} 원
+            </span> */}
           </div>
         </div>
 
@@ -353,31 +347,38 @@ function Order() {
             </h2>
             <div className={style.order_items}>
               {cartItems.map((item) => (
-                <div key={item.id} className={style.order_item}>
+                <div key={item.cart_id} className={style.order_item}>
                   <div className={style.order_item_image}>
-                    <img src={item.image_url} alt={item.productName} />
+                    <img src={item.image_url} alt={item.name} />
                   </div>
                   <div className={style.order_item_details}>
-                    <h3 className={style.order_item_name}>
-                      {item.productName}
-                    </h3>
+                    <h3 className={style.order_item_name}>{item.name}</h3>
                     <div className={style.order_item_options}>
-                      <p>온도: {item.options.temp}</p>
-                      <p>사이즈: {item.options.size}</p>
-                      <p>당도: {item.options.sugar}</p>
-                      {item.options.temp === "ICE" && (
-                        <p>얼음량: {item.options.iceAmount}</p>
+                      <p>온도: {item.options[0].name}</p>
+                      <p>사이즈: {item.options[1].name}</p>
+                      <p>당도: {item.options[2].name}</p>
+                      {item.options[3] && (
+                        <p>얼음량: {item.options[3]?.name}</p>
                       )}
-                      {item.options.topping !== "기본" && (
-                        <p>토핑: {item.options.topping}</p>
-                      )}
+                      <div>
+                        <span>토핑: </span>
+                        {item.options
+                          .filter(
+                            (option) =>
+                              option.id >= 15 &&
+                              option.id <= 20 &&
+                              option.name !== "추가 안 함"
+                          ) // '추가 안 함'은 제외
+                          .map((option) => option.name)
+                          .join(", ")}
+                      </div>
                     </div>
                     <div className={style.order_item_price_info}>
                       <span className={style.order_item_quantity}>
-                        {item.mount}개
+                        {item.quantity}개
                       </span>
                       <span className={style.order_item_price}>
-                        {item.price.toLocaleString()}원
+                        {item.price * item.quantity}원
                       </span>
                     </div>
                   </div>
@@ -387,35 +388,40 @@ function Order() {
             <OrderMethods />
             <hr />
           </div>
+
           <div>
             <div className={style.checkout_summary}>
               <h3 className={style.order_summary_title}>총 주문금액</h3>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문수량</span>
                 <span className={style.order_summary_count}>
-                  {calculateTotalAmount()}개
+                  {calculateTotalAmount()} 개
                 </span>
               </div>
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>총 주문금액</span>
                 <span className={style.order_summary_price}>
-                  {calculateTotalPrice().toLocaleString()}원
-                </span>
-              </div>
-              <div className={style.order_summary_detail}>
-                <span className={style.order_summary_item}>할인 금액</span>
-                <span className={style.order_summary_discount}>
-                  {calculateDiscount().toLocaleString()}원
+                  {calculateTotalPrice().toLocaleString()} 원
                 </span>
               </div>
               {selectedCoupon !== "사용 안 함" && ( // 쿠폰을 사용했을 경우에만 쿠폰할인 표시
                 <div className={style.order_summary_detail}>
-                  <span className={style.order_summary_item}>쿠폰할인</span>
-                  <span className={style.order_summary_discount}>
-                    - {calculateDiscount().toLocaleString()}원
-                  </span>
+                  <span className={style.order_summary_item}>쿠폰 할인</span>
+                  <span className={style.order_summary_discount}>원</span>
                 </div>
               )}
+              <div className={style.order_summary_detail}>
+                <span className={style.order_summary_item}>적립금 할인</span>
+                <span className={style.order_summary_discount}>
+                  {usePoints} 원
+                </span>
+              </div>
+              <div className={style.order_summary_detail}>
+                <span className={style.order_summary_item}>총 할인 금액</span>
+                <span className={style.order_summary_discount}>
+                  {calculateDiscount().toLocaleString()} 원
+                </span>
+              </div>
               <div className={style.order_summary_line}></div> {/*구분선 추가*/}
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>최종 결제금액</span>

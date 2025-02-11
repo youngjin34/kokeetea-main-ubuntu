@@ -1,3 +1,9 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .Container {
   padding-top: 180px;
   width: 70%;
@@ -63,10 +69,9 @@
   font-weight: 600;
   align-items: center;
   display: flex;
-  border-bottom: 2px solid #E5D5DA;
+  border-bottom: 2px solid #e5d5da;
   padding-bottom: 10px;
   color: #000000;
-
 }
 
 .checkout_order_title_span {
@@ -110,10 +115,9 @@
   display: flex;
   align-items: center;
   padding: 10px 0 10px 0;
-  border-bottom: 1px solid #E5D5DA;
+  border-bottom: 1px solid #e5d5da;
   height: 120px;
 }
-
 
 .checkout_item_image {
   margin-right: 15px;
@@ -177,7 +181,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 0;
-  border-top: 2px solid #E5D5DA;
+  border-top: 2px solid #e5d5da;
   padding-top: 50px;
 }
 
@@ -230,12 +234,11 @@
 .checkout_coupon {
   font-size: 18px;
   font-weight: 600;
-  border-top: 2px solid #E5D5DA;
+  border-top: 2px solid #e5d5da;
   padding-top: 50px;
   color: #666666;
   margin-top: 0;
   margin-bottom: 10px;
-
 }
 
 .select_coupon {
@@ -335,10 +338,9 @@
 .payment {
   display: flex;
   gap: 10px;
-  border-top: 1px solid #E5D5DA;
+  border-top: 1px solid #e5d5da;
   padding-top: 20px;
 }
-
 
 .payment_button,
 .payment_cancel_button {
@@ -380,7 +382,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 50px;
-  border-top: 2px solid #E5D5DA;
+  border-top: 2px solid #e5d5da;
   padding-top: 50px;
 }
 
@@ -408,7 +410,6 @@
   font-weight: 600;
   font-size: 1.2rem;
 }
-
 
 .payment_method_button.active {
   background-color: #ffffff;
@@ -495,7 +496,6 @@
   font-weight: 600;
 }
 
-
 .close_button:hover {
   background-color: #a32342;
 }
@@ -505,7 +505,7 @@
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .section_title {
@@ -525,7 +525,7 @@
   display: flex;
   gap: 20px;
   padding: 16px;
-  border: 1px solid #E5D5DA;
+  border: 1px solid #e5d5da;
   border-radius: 8px;
   background: #fff;
 }
@@ -606,7 +606,7 @@
 
 .points_section {
   background: #fff;
-  border-top: 2px solid #E5D5DA;
+  border-top: 2px solid #e5d5da;
 }
 
 .points_section h3 {
@@ -647,14 +647,14 @@
 }
 
 .points_input {
-  width: 120px;
+  width: 100px;
   height: 30px;
-  border: 1px solid #E5D5DA;
+  border: 1px solid #e5d5da;
   border-radius: 4px;
   text-align: right;
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
-  padding: 0 !important;
+  padding: 0 10px;
 }
 
 .points_unit {

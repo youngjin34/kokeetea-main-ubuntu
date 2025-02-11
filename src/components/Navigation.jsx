@@ -24,9 +24,7 @@ function Navigation({
 
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  const [cartCount, setCartCount] = useState(
-    parseInt(localStorage.getItem("cartCount")) || 0
-  );
+  const [cartCount, setCartCount] = useState(0);
 
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
@@ -189,7 +187,9 @@ function Navigation({
   };
 
   useEffect(() => {
-    fetchCartCount(); // 페이지 로드 시 장바구니 개수 조회
+    if (isLogined) {
+      fetchCartCount(); // 로그인 상태일 때만 장바구니 개수 조회
+    }
   }, []);
 
   // 기존 state 선언부 근처에 ref 추가

@@ -14,7 +14,11 @@ function MenuPage() {
   const modalRef = useRef(null);
 
   const [branches, setBranches] = useState([]); // 브랜치 데이터를 상태로 저장
+  // 브랜치 변경시 카트 비워지게 하기 위함
+  const [cartItems, setCartItems] = useState([]);
   const [selectedBranchId, setSelectedBranchId] = useState(1); // 선택된 브랜치 ID 상태
+
+  const [previousBranchId, setPreviousBranchId] = useState(selectedBranchId);
 
   // 각 옵션에 대한 상태 관리
   const [temp, setTemp] = useState("ICE");
@@ -77,7 +81,6 @@ function MenuPage() {
         const response = await axios.get(
           `http://localhost:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
         );
-        console.log(response.data);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -91,7 +94,6 @@ function MenuPage() {
     const fetchBranchDate = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/branches");
-        console.log(response.data);
         setBranches(response.data); // 받아온 데이터로 상태 설정
       } catch (error) {
         console.error(error);
@@ -101,11 +103,34 @@ function MenuPage() {
     fetchBranchDate();
   }, []);
 
+  // 장바구니 데이터를 가져오는 useEffect
+  useEffect(() => {
+    const fetchCartData = async () => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:8080/api/carts", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          // 서버에서 가져온 데이터를 cartItems에 저장
+          setCartItems(response.data.items);
+        } catch (error) {
+          console.error("장바구니 데이터 가져오기 실패:", error);
+        }
+      }
+    };
+
+    fetchCartData();
+  }, []);
+
   // 드롭다운에서 브랜치 선택 시 처리
   const handleBranchChange = (event) => {
-    const branchId = event.target.value; // 선택된 브랜치의 id
-    setSelectedBranchId(branchId); // 선택된 브랜치 ID 상태 업데이트
-    console.log(`선택된 브랜치 ID: ${branchId}`); // 선택된 ID 확인용 콘솔
+    setPreviousBranchId(selectedBranchId); // 현재 선택된 브랜치 저장
+    setSelectedBranchId(event.target.value); // 새 브랜치로 변경
   };
 
   const toggleModal = (product = null) => {
@@ -214,6 +239,18 @@ function MenuPage() {
     const token = localStorage.getItem("token");
 
     if (token) {
+      // 장바구니가 비어있지 않고 브랜치가 변경된 경우 확인
+      if (cartItems.length > 0 && selectedBranchId !== previousBranchId) {
+        const isConfirmed = window.confirm(
+          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+        );
+        if (!isConfirmed) {
+          return; // 사용자가 취소하면 장바구니에 추가하지 않음
+        } else {
+          setCartItems([]); // 장바구니 비우기
+        }
+      }
+
       try {
         const response = await axios.post(
           "http://localhost:8080/api/carts",
@@ -234,6 +271,7 @@ function MenuPage() {
         if (response.status === 200) {
           alert("장바구니에 추가되었습니다.");
           toggleModal();
+          window.location.reload();
         } else {
           alert("장바구니 추가에 실패했습니다.");
         }
@@ -313,12 +351,36 @@ function MenuPage() {
     }
   }, [size, temp, sugar, iceAmount, topping, quantity, selectedProduct]);
 
-  const handleDirectOrder = (product) => {
+  // 바로 주문
+  const handleDirectOrder = async (product) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
       alert("로그인이 필요한 서비스입니다.");
       return;
+    }
+
+    if (token) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/carts",
+          {
+            product_id: product.id,
+            quantity: 1,
+            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            branch_id: selectedBranchId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("장바구니 추가 실패:", error);
+        alert("장바구니 추가에 실패했습니다.");
+      }
     }
 
     const orderItem = {

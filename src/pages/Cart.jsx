@@ -36,7 +36,7 @@ const Cart = () => {
     } catch (error) {
       console.error("장바구니 데이터 로드 실패:", error);
 
-      // 🔥 404 에러일 경우 빈 배열로 처리해서 오류 방지
+      // 404 에러일 경우 빈 배열로 처리해서 오류 방지
       if (error.response && error.response.status === 404) {
         setCartItems([]);
         setError(""); // 404일 때는 오류 메시지를 보여주지 않음
@@ -224,7 +224,7 @@ const Cart = () => {
                             <p>얼음량: {item.options[3]?.name}</p>
                           )}
                           <div>
-                            <p>토핑:</p>
+                            <span>토핑: </span>
                             {item.options
                               .filter(
                                 (option) =>
