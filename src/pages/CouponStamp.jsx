@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import style from "./CouponStamp.module.css";
+import axios from "axios";
 
 const levelData = [
   { level: "silver", text: "Silver" },
@@ -12,6 +13,10 @@ const levelData = [
 const ProgressBar = ({ progress }) => {
   return (
     <div className={style.progressBar}>
+      <div 
+        className={style.progressFill} 
+        style={{ width: `${progress}%` }}
+      />
       <div className={style.levelMarkers}>
         {levelData.map((level) => (
           <span
@@ -30,7 +35,6 @@ const CouponStamp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [activeTab, setActiveTab] = useState("membership");
   const [userData, setUserData] = useState({
     realName: '',
     memberLevel: '',
@@ -42,8 +46,6 @@ const CouponStamp = () => {
     stamps: 0,
     coupons: []
   });
-  const [coupons, setCoupons] = useState([]);
-  const [stamps, setStamps] = useState(0);
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -84,75 +86,95 @@ const CouponStamp = () => {
 
   const levelInfo = getLevelInfo(userData.memberLevel);
 
-  const fetchCouponStampData = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/kokee/coupon_stamp', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('쿠폰/스탬프 정보를 불러오는데 실패했습니다.');
-      }
-      
-      const data = await response.json();
-      setCoupons(data.coupons);
-      setStamps(data.stamps);
-    } catch (error) {
-      console.error('쿠폰/스탬프 데이터 로딩 실패:', error);
-    }
-  };
-
-  const calculateProgress = (totalAmount) => {
-    const silverToGold = 50000;
-    const goldToRed = 100000;
-    const redToDiamond = 200000;
-
-    const progress = (totalAmount / userData.nextLevelAmount) * 100;
-    return Math.min(progress, 100);
-  };
-
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const email = localStorage.getItem("email");
-
-      const response = await fetch(
-        `http://localhost:8080/kokee/get_member/${email}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("사용자 정보를 불러오는데 실패했습니다");
+      
+      if (!token) {
+        console.error("토큰이 없습니다");
+        navigate('/login');
+        return;
       }
 
-      const userData = await response.json();
-      
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+
+      // 멤버십 정보 가져오기
+      const membershipResponse = await axios.get(
+        'http://localhost:8080/api/members/about/membership',
+        config
+      );
+
+      // 쿠폰/스탬프 정보 가져오기
+      const couponResponse = await axios.get(
+        'http://localhost:8080/api/members/about/gaeggul',
+        config
+      );
+
+      // 멤버 정보 가져오기
+      const memberResponse = await axios.get(
+        'http://localhost:8080/api/members/about',
+        config
+      );
+
+      // 포인트 정보 가져오기
+      const pointResponse = await axios.get(
+        'http://localhost:8080/api/members/current-point',
+        config
+      );
+
+      const membershipData = membershipResponse.data;
+      const couponData = couponResponse.data;
+      const memberData = memberResponse.data;
+      const pointData = pointResponse.data;
+
+      const getNextLevelInfo = (currentLevel, totalAmount) => {
+        const levels = {
+          'SILVER': { next: 'GOLD', required: 200000 },
+          'GOLD': { next: 'RED', required: 300000 },
+          'RED': { next: 'DIAMOND', required: 400000 },
+          'DIAMOND': { next: 'DIAMOND', required: 400000 }
+        };
+
+        const currentLevelInfo = levels[currentLevel.toUpperCase()];
+        if (!currentLevelInfo) return { nextLevel: 'GOLD', remaining: 200000 };
+
+        const required = currentLevelInfo.required;
+        const remaining = Math.max(required - totalAmount, 0);
+
+        return {
+          nextLevel: currentLevelInfo.next,
+          remaining: remaining
+        };
+      };
+
+      const nextLevelInfo = getNextLevelInfo(
+        membershipData.membership_name,
+        membershipData.total_payment_amount
+      );
+
       setUserData({
-        realName: userData.realName || "고객",
-        memberLevel: userData.memberLevel || "silver",
-        nextLevelAmount: userData.nextLevelAmount || 0,
-        nextLevel: userData.nextLevel || "GOLD",
-        points: userData.points || 0,
-        orderCount: userData.orderCount || 0,
-        totalOrderAmount: userData.totalOrderAmount || 0,
-        stamps: userData.stamps || 0,
-        coupons: userData.coupons || []
+        realName: memberData.realName || "고객",
+        memberLevel: membershipData.membership_name || "SILVER",
+        nextLevelAmount: nextLevelInfo.remaining,
+        nextLevel: nextLevelInfo.nextLevel,
+        points: pointData.current_point || 0,
+        orderCount: membershipData.total_purchase_count || 0,
+        totalOrderAmount: membershipData.total_payment_amount || 0,
+        stamps: couponData.stamp || 0,
+        coupons: couponData.coupons || []
       });
 
     } catch (error) {
       console.error('사용자 정보를 불러오는데 실패했습니다:', error);
-      // 기본 값 설정
       setUserData({
         realName: '고객',
-        memberLevel: 'silver',
-        nextLevelAmount: 0,
+        memberLevel: 'SILVER',
+        nextLevelAmount: 50000,
         nextLevel: 'GOLD',
         points: 0,
         orderCount: 0,
@@ -163,13 +185,25 @@ const CouponStamp = () => {
     }
   };
 
+  const calculateProgress = (totalAmount) => {
+    const getLevelThreshold = (level) => {
+      switch (level.toUpperCase()) {
+        case 'SILVER': return 200000;
+        case 'GOLD': return 300000;
+        case 'RED': return 400000;
+        case 'DIAMOND': return 400000;
+        default: return 200000;
+      }
+    };
+
+    const threshold = getLevelThreshold(userData.memberLevel);
+    const progress = (totalAmount / threshold) * 100;
+    return Math.min(progress, 100);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    fetchCouponStampData();
   }, []);
 
   return (
@@ -205,7 +239,7 @@ const CouponStamp = () => {
               </div>
               <div className={style.stat}>
                 <div className={style.statLabel}>주문 횟수</div>
-                <div className={style.statValue}>{userData.orderCount}회</div>
+                <div className={style.statValue}>{userData.orderCount.toLocaleString()}회</div>
               </div>
               <div className={style.stat}>
                 <div className={style.statLabel}>누적 주문 금액</div>

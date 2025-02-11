@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./OrderHistory.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const OrderHistory = () => {
   useEffect(() => {
@@ -13,89 +14,67 @@ const OrderHistory = () => {
   const [endDate, setEndDate] = useState("");
   const currentPath = window.location.pathname;
   const [orders, setOrders] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [userToken, setUserToken] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Get user info from localStorage instead of context
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserId(user.id);
-      setUserToken(user.token);
-    }
-  }, []);
-
-  const filterOrdersByPeriod = (orders, selectedPeriod, start, end) => {
-    // 날짜 입력으로 필터링하는 경우
-    if (start && end) {
-      const startDateTime = new Date(start);
-      const endDateTime = new Date(end);
-      endDateTime.setHours(23, 59, 59);
-
-      return orders.filter(order => {
-        const orderDate = new Date(order.date.replace(/\./g, '-'));
-        return orderDate >= startDateTime && orderDate <= endDateTime;
-      });
-    }
-
-    // 기간별 필터링 로직
-    const today = new Date();
-    let filterDate = new Date();
-    
-    switch (selectedPeriod) {
-      case "1개월":
-        filterDate.setMonth(today.getMonth() - 1);
-        break;
-      case "3개월":
-        filterDate.setMonth(today.getMonth() - 3);
-        break;
-      case "1년":
-        filterDate.setFullYear(today.getFullYear() - 1);
-        break;
-      default:
-        return orders;
-    }
-
-    return orders.filter(order => {
-      const orderDate = new Date(order.date.replace(/\./g, '-'));
-      return orderDate >= filterDate && orderDate <= today;
-    });
-  };
-
-  const fetchOrders = async () => {
-    if (!userId || !userToken) return;
-    
+  const fetchOrders = async (start, end) => {
+    setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${userToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('주문 내역을 불러오는데 실패했습니다.');
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("로그인이 필요합니다.");
       }
 
-      const data = await response.json();
-      const filteredOrders = filterOrdersByPeriod(data, period, startDate, endDate);
-      setOrders(filteredOrders);
+      const response = await axios.get(
+        `http://localhost:8080/api/orders/history`,
+        {
+          params: {
+            startDate: start,
+            endDate: end,
+            size: 10,
+            page: 0
+          },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setOrders(response.data.orders);
     } catch (error) {
-      console.error('Error fetching orders:', error);
-      alert('주문 내역을 불러오는데 실패했습니다.');
+      console.error("주문 내역 조회 실패:", error);
+      setError("주문 내역을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (userId) {
-      fetchOrders();
+  const handlePeriodClick = (newPeriod) => {
+    setPeriod(newPeriod);
+    setStartDate("");
+    setEndDate("");
+    
+    const end = new Date();
+    let start = new Date();
+    
+    switch(newPeriod) {
+      case "1개월":
+        start.setMonth(end.getMonth() - 1);
+        break;
+      case "3개월":
+        start.setMonth(end.getMonth() - 3);
+        break;
+      case "1년":
+        start.setFullYear(end.getFullYear() - 1);
+        break;
+      default:
+        return;
     }
-  }, [period, startDate, endDate, userId]);
-
-  const handleNavigation = (path) => {
-    navigate(path);
+    
+    fetchOrders(
+      start.toISOString().split('T')[0],
+      end.toISOString().split('T')[0]
+    );
   };
 
   const handleDateSearch = () => {
@@ -107,13 +86,7 @@ const OrderHistory = () => {
       alert("시작일이 종료일보다 늦을 수 없습니다.");
       return;
     }
-    fetchOrders();
-  };
-
-  const handlePeriodClick = (newPeriod) => {
-    setPeriod(newPeriod);
-    setStartDate("");
-    setEndDate("");
+    fetchOrders(startDate, endDate);
   };
 
   const handleDateInput = (e, type) => {
@@ -123,6 +96,22 @@ const OrderHistory = () => {
       setEndDate(e.target.value);
     }
     setPeriod("");
+  };
+
+  useEffect(() => {
+    // 초기 로드시 최근 1개월 데이터 조회
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(end.getMonth() - 1);
+    
+    fetchOrders(
+      start.toISOString().split('T')[0],
+      end.toISOString().split('T')[0]
+    );
+  }, []);
+
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   return (
@@ -163,26 +152,39 @@ const OrderHistory = () => {
               </button>
             </div>
 
-            <table className={style.orderTable}>
-              <thead>
-                <tr>
-                  <th>주문번호</th>
-                  <th>주문일자</th>
-                  <th>매장명</th>
-                  <th>내역</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.date}</td>
-                    <td>{order.status}</td>
-                    <td>{order.details}</td>
+            {loading && <div className={style.loading}>로딩 중...</div>}
+            {error && <div className={style.error}>{error}</div>}
+            {!loading && !error && (
+              <table className={style.orderTable}>
+                <thead>
+                  <tr>
+                    <th>주문번호</th>
+                    <th>주문일자</th>
+                    <th>매장명</th>
+                    <th>주문내역</th>
+                    <th>결제금액</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {orders.map((order) => (
+                    <tr key={order.orderId}>
+                      <td>{order.orderId}</td>
+                      <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                      <td>{order.branchName}</td>
+                      <td>{order.items.map(item => `${item.productName}(${item.quantity})`).join(', ')}</td>
+                      <td>{order.totalAmount.toLocaleString()}원</td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan="5" className={style.noOrders}>
+                        주문 내역이 없습니다.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
         <div className={style.sideNav}>

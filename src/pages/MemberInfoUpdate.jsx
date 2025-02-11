@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./MemberInfoUpdate.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const MemberInfoUpdate = () => {
   useEffect(() => {
@@ -27,17 +28,16 @@ const MemberInfoUpdate = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        const email = localStorage.getItem("email");
         
-        if (!token || !email) {
+        if (!token) {
           console.error("토큰이 없습니다");
+          navigate('/login');
           return;
         }
 
-        const response = await fetch(
-          `http://localhost:8080/kokee/get_member/${email}`,
+        const response = await axios.get(
+          `http://localhost:8080/api/members/about`,
           {
-            method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -45,26 +45,28 @@ const MemberInfoUpdate = () => {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("서버 응답 실패");
-        }
-
-        const userData = await response.json();
+        const userData = response.data;
+        console.log("받아온 사용자 데이터:", userData);
 
         setFormData((prev) => ({
           ...prev,
-          name: userData.realName || "",
-          id: userData.userName || "",
-          phoneNumber: userData.phoneNumber || "",
-          email: userData.email || "",
+          name: userData.realName || "",         
+          id: userData.userName || "",             
+          phoneNumber: userData.phone || "",      
+          email: userData.email || "",             
+          smsReceive: userData.smsReceive || false,
+          emailReceive: userData.emailReceive || false,
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다:", error);
+        if (error.response) {
+          console.error("에러 응답:", error.response.data);
+        }
       }
     };
 
     fetchUserInfo();
-  }, []);
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -88,53 +90,30 @@ const MemberInfoUpdate = () => {
   const verifyCurrentPassword = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("토큰이 없습니다");
-        return;
-      }
-
-      const response = await fetch(
-        "http://localhost:8080/kokee/verify_password",
+      const response = await axios.get(
+        `http://localhost:8080/api/members/verify?password=${formData.currentPassword}`,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
-          body: JSON.stringify({
-            currentPassword: formData.currentPassword,
-          }),
         }
       );
 
-      if (response.ok) {
-        alert("현재 비밀번호가 확인되었습니다.");
+      if (response.status === 200) {
         setIsPasswordVerified(true);
-      } else {
-        alert("현재 비밀번호가 일치하지 않습니다.");
-        setIsPasswordVerified(false);
-        setFormData((prev) => ({
-          ...prev,
-          currentPassword: "",
-        }));
+        alert("비밀번호가 확인되었습니다.");
       }
     } catch (error) {
       console.error("비밀번호 확인 중 오류 발생:", error);
-      alert("비밀번호 확인 중 오류가 발생했습니다.");
+      alert("현재 비밀번호가 일치하지 않습니다.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 비밀번호 변경 시 유효성 검사
-    if (formData.newPassword || formData.confirmNewPassword) {
-      if (!isPasswordVerified) {
-        alert("현재 비밀번호를 먼저 확인해주세요.");
-        return;
-      }
-
+    if (formData.newPassword) {
       if (validPw) {
         alert("새 비밀번호가 형식에 맞지 않습니다.");
         return;
@@ -148,47 +127,43 @@ const MemberInfoUpdate = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "http://localhost:8080/kokee/update_member",
+      const response = await axios.patch(
+        "http://localhost:8080/api/members",
         {
-          method: "PUT",
+          real_name: formData.realName,
+          password: formData.newPassword || undefined,
+          phone: formData.phoneNumber,
+          email: formData.email,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
-          body: JSON.stringify({
-            ...formData,
-            password: formData.newPassword || undefined,
-          }),
         }
       );
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert("회원정보가 성공적으로 수정되었습니다.");
-        navigate("/memberinfoupdate");
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || "회원정보 수정에 실패했습니다.");
+        navigate("/mypage");
       }
     } catch (error) {
       console.error("회원정보 수정 중 오류 발생:", error);
-      alert("회원정보 수정 중 오류가 발생했습니다.");
+      const errorMessage = error.response?.data?.message || "회원정보 수정에 실패했습니다.";
+      alert(errorMessage);
     }
   };
 
   const handleWithdrawal = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "http://localhost:8080/kokee/delete_member",
+      const response = await axios.delete(
+        "http://localhost:8080/api/members",
         {
-          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
         }
       );
 
@@ -197,8 +172,7 @@ const MemberInfoUpdate = () => {
         localStorage.clear();
         navigate("/");
       } else {
-        const errorData = await response.json();
-        alert(errorData.message || "회원 탈퇴에 실패했습니다.");
+        alert("회원 탈퇴에 실패했습니다.");
       }
     } catch (error) {
       console.error("회원 탈퇴 중 오류 발생:", error);

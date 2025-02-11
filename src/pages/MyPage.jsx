@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from './MyPage.module.css';
+import axios from 'axios';
 
 const MyPage = () => {
   const [membershipInfo, setMembershipInfo] = useState({
@@ -9,22 +10,62 @@ const MyPage = () => {
     stampCount: 0
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    // 컴포넌트 마운트 시 인증 상태 확인
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    
     window.scrollTo(0, 0);
     fetchMembershipInfo();
-  }, []);
+  }, [navigate]);
 
   const fetchMembershipInfo = async () => {
     try {
-      const response = await fetch('http://localhost:8080/kokee/membership/info', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.error('토큰이 없습니다.');
+        navigate('/login');
+        return;
+      }
+
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      const membershipResponse = await axios.get('http://localhost:8080/api/members/about/membership', {
+        headers: headers,
       });
-      const data = await response.json();
-      setMembershipInfo(data);
+      
+      const couponResponse = await axios.get('http://localhost:8080/api/members/about/gaeggul', {
+        headers: headers,
+      });
+
+      if (membershipResponse.status !== 200 || couponResponse.status !== 200) {
+        throw new Error('데이터를 불러오는데 실패했습니다.');
+      }
+
+      const membershipData = membershipResponse.data;
+      const couponData = couponResponse.data;
+
+      setMembershipInfo({
+        grade: membershipData.membership_name || '-',
+        couponCount: couponData.coupons?.length || 0,
+        stampCount: couponData.stamp || 0
+      });
     } catch (error) {
       console.error('멤버십 정보를 불러오는데 실패했습니다:', error);
+      setMembershipInfo({
+        grade: '-',
+        couponCount: 0,
+        stampCount: 0
+      });
     }
   };
 

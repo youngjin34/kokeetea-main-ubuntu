@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./InquiryHistory.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const InquiryHistory = () => {
   useEffect(() => {
@@ -17,74 +18,87 @@ const InquiryHistory = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // 임시 데이터로 대체
-  const mockInquiries = [
-    {
-      id: 1,
-      subject: "1:1문의",
-      title: "메뉴 관련 문의드립니다",
-      content: "신메뉴 출시 일정이 궁금합니다.",
-      date: "2024.03.15",
-      status: "답변완료",
-      reply: "안녕하세요. 코키티입니다.\n신메뉴는 4월 초 출시 예정입니다.\n감사합니다.",
-      replyDate: "2024.03.16"
-    },
-    {
-      id: 2,
-      subject: "1:1문의",
-      title: "영업시간 문의",
-      content: "주말 영업시간이 어떻게 되나요?",
-      date: "2024.03.10",
-      status: "답변대기",
-      reply: null,
-      replyDate: null
-    }
-  ];
+  // API 호출 함수 추가
+  const fetchInquiries = async (selectedPeriod, start, end) => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("로그인이 필요합니다.");
+      }
 
-  const filterInquiriesByPeriod = (inquiries, selectedPeriod, start, end) => {
-    if (start && end) {
-      const startDateTime = new Date(start);
-      const endDateTime = new Date(end);
-      endDateTime.setHours(23, 59, 59);
+      // API 요청 파라미터 설정
+      let params = {
+        size: 10,
+        page: 0
+      };
 
-      return inquiries.filter((inquiry) => {
-        const inquiryDate = new Date(inquiry.date.replace(/\./g, '-'));
-        return inquiryDate >= startDateTime && inquiryDate <= endDateTime;
+      // 날짜 파라미터 추가
+      if (start && end) {
+        params.startDate = start;
+        params.endDate = end;
+      } else if (selectedPeriod) {
+        const today = new Date();
+        const startDate = new Date();
+        
+        switch (selectedPeriod) {
+          case "1개월":
+            startDate.setMonth(today.getMonth() - 1);
+            break;
+          case "3개월":
+            startDate.setMonth(today.getMonth() - 3);
+            break;
+          case "1년":
+            startDate.setFullYear(today.getFullYear() - 1);
+            break;
+          default:
+            break;
+        }
+        
+        params.startDate = startDate.toISOString().split('T')[0];
+        params.endDate = today.toISOString().split('T')[0];
+      }
+
+      const response = await axios.get("http://localhost:8080/api/questions", {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
+      // 응답 데이터 매핑
+      const mappedInquiries = response.data.questions.map(inquiry => ({
+        id: inquiry.id,
+        subject: "1:1문의",
+        title: inquiry.title,
+        content: inquiry.content,
+        date: new Date(inquiry.date).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).replace(/\. /g, '.').replace('.', ''),
+        status: inquiry.answer ? "답변완료" : "답변대기",
+        reply: inquiry.answer,
+        replyDate: inquiry.answerDate ? new Date(inquiry.answerDate).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).replace(/\. /g, '.').replace('.', '') : null
+      }));
+
+      setOrders(mappedInquiries);
+      setError(null);
+    } catch (err) {
+      console.error("문의 내역 조회 실패:", err);
+      setError("문의 내역을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
-
-    const today = new Date();
-    let filterDate = new Date();
-
-    switch (selectedPeriod) {
-      case "1개월":
-        filterDate.setMonth(today.getMonth() - 1);
-        break;
-      case "3개월":
-        filterDate.setMonth(today.getMonth() - 3);
-        break;
-      case "1년":
-        filterDate.setFullYear(today.getFullYear() - 1);
-        break;
-      default:
-        return inquiries;
-    }
-
-    return inquiries.filter((inquiry) => {
-      const inquiryDate = new Date(inquiry.date.replace(/\./g, '-'));
-      return inquiryDate >= filterDate && inquiryDate <= today;
-    });
   };
 
+  // useEffect 수정
   useEffect(() => {
-    // 실제 API 호출 대신 임시 데이터 사용
-    const filteredData = filterInquiriesByPeriod(
-      mockInquiries,
-      period,
-      startDate,
-      endDate
-    );
-    setOrders(filteredData);
+    fetchInquiries(period, startDate, endDate);
   }, [period, startDate, endDate]);
 
   const handleNavigation = (path) => {
@@ -95,6 +109,7 @@ const InquiryHistory = () => {
     setSelectedInquiry(selectedInquiry?.id === order.id ? null : order);
   };
 
+  // handleDateSearch 수정
   const handleDateSearch = () => {
     if (!startDate || !endDate) {
       alert("시작일과 종료일을 모두 선택해주세요.");
@@ -104,14 +119,7 @@ const InquiryHistory = () => {
       alert("시작일이 종료일보다 늦을 수 없습니다.");
       return;
     }
-    // 실제 API 호출 대신 임시 데이터 사용
-    const filteredData = filterInquiriesByPeriod(
-      mockInquiries,
-      period,
-      startDate,
-      endDate
-    );
-    setOrders(filteredData);
+    fetchInquiries("", startDate, endDate);
   };
 
   const handlePeriodClick = (newPeriod) => {
@@ -131,37 +139,28 @@ const InquiryHistory = () => {
     setPeriod("");
   };
 
-  // 삭제 기능도 백엔드 연동으로 수정
+  // handleDelete 수정
   const handleDelete = async (inquiryId) => {
     if (window.confirm("문의를 삭제하시겠습니까?")) {
       try {
-        const response = await fetch(
-          `http://localhost:8080/kokee/inquiries/${inquiryId}`,
+        const token = localStorage.getItem("token");
+        const response = await axios.delete(
+          `http://localhost:8080/api/questions/${inquiryId}`,
           {
-            method: "DELETE",
             headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+              Authorization: `Bearer ${token}`
+            }
           }
         );
 
-        if (!response.ok) {
-          throw new Error("문의 삭제에 실패했습니다.");
+        if (response.status === 200) {
+          // 삭제 성공 시 목록 새로고침
+          fetchInquiries(period, startDate, endDate);
+          setSelectedInquiry(null);
         }
-
-        // 삭제 성공 시 목록 새로고침
-        // 실제 API 호출 대신 임시 데이터 사용
-        const filteredData = filterInquiriesByPeriod(
-          mockInquiries,
-          period,
-          startDate,
-          endDate
-        );
-        setOrders(filteredData);
-        setSelectedInquiry(null);
       } catch (err) {
-        alert(err.message);
+        console.error("문의 삭제 실패:", err);
+        alert("문의 삭제에 실패했습니다.");
       }
     }
   };

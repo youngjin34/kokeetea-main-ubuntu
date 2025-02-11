@@ -107,19 +107,19 @@
 }
 
 .silver {
-  background: linear-gradient(135deg, #C0C0C0);
+  background: linear-gradient(135deg, #C0C0C0, #E8E8E8);
 }
 
 .gold {
-  background: linear-gradient(135deg, #FFC000);
+  background: linear-gradient(135deg, #FFD700, #FFC000);
 }
 
 .red {
-  background: linear-gradient(135deg, #ba274a);
+  background: linear-gradient(135deg, #ba274a, #d4365c);
 }
 
 .diamond {
-  background: linear-gradient(135deg, #00C3FF);
+  background: linear-gradient(135deg, #00C3FF, #40E0FF);
 }
 
 .levelDetails {
@@ -211,6 +211,7 @@
   color: #666;
   text-transform: uppercase;
   font-weight: 600;
+  background: none;
 }
 
 .progressText {
