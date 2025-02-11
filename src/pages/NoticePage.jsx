@@ -8,102 +8,83 @@ const Notice = () => {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedNotice, setExpandedNotice] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSearchTerm, setActiveSearchTerm] = useState("");
   const itemsPerPage = 10;
   
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchNotices();
-    checkAdminStatus();
-  }, []);
+    fetchNotices(currentPage - 1);
+  }, [currentPage, activeSearchTerm]);
 
-  const fetchNotices = async () => {
+  const fetchNotices = async (page) => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8080/kokee/notice/list");
-      setNotices(response.data);
+      const response = await axios.get(`http://localhost:8080/api/notices`, {
+        params: {
+          page: page,
+          size: itemsPerPage,
+          title: activeSearchTerm
+        }
+      });
+      
+      const mappedNotices = response.data.notices.map(notice => ({
+        id: notice.id,
+        title: notice.title,
+        content: notice.text,
+        createdAt: new Date(notice.date).toLocaleDateString(),
+        views: notice.view
+      }));
+      
+      setNotices(mappedNotices);
+      setTotalPages(response.data.total_page);
+      setError("");
     } catch (error) {
-      setError(error.message);
+      setError("공지사항이 없습니다.");
     } finally {
       setLoading(false);
     }
   };
 
-  const checkAdminStatus = async () => {
+  const handleTitleClick = async (noticeId) => {
+    if (expandedNotice === noticeId) {
+      setExpandedNotice(null);
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setIsAdmin(false);
-        return;
+      const response = await axios.get(`http://localhost:8080/api/notices/${noticeId}`);
+      
+      // 응답 데이터 구조 확인을 위한 로그
+      console.log('상세 조회 응답:', response.data);
+      
+      // 확장된 공지사항 ID 설정
+      setExpandedNotice(noticeId);
+      setNotices(prevNotices => 
+        prevNotices.map(notice => 
+          notice.id === noticeId 
+            ? { 
+                ...notice,
+                content: response.data.text, 
+                views: response.data.view    
+              }
+            : notice
+        )
+      );
+
+    } catch (error) {
+      console.error("공지사항 상세 조회 실패:", error);
+      if (error.response) {
+        console.error("에러 응답:", error.response.data);
       }
-      
-      const response = await axios.get('http://localhost:8080/kokee/member/check-admin', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      setIsAdmin(response.data.isAdmin);
-    } catch (error) {
-      console.error('관리자 확인 실패:', error);
-      setIsAdmin(false);
     }
   };
-
-  const addNotice = async (noticeData) => {
-    try {
-      setLoading(true);
-      await axios.post("http://localhost:8080/kokee/notice/add", {
-        subject: noticeData.title,
-        content: noticeData.text,
-        email: noticeData.email
-      });
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateNotice = async (id, noticeData) => {
-    try {
-      setLoading(true);
-      await axios.put(`http://localhost:8080/kokee/notice/update/${id}`, {
-        subject: noticeData.title,
-        content: noticeData.text
-      });
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteNotice = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`http://localhost:8080/kokee/notice/delete/${id}`);
-      await fetchNotices();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredList = notices.filter((notice) =>
-    notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -111,35 +92,38 @@ const Notice = () => {
   };
 
   const getPageNumbers = () => {
-    const totalPages = Math.ceil(filteredList.length / itemsPerPage);
-    const current = currentPage;
     const pages = [];
-
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      if (current <= 3) {
+      if (currentPage <= 3) {
         for (let i = 1; i <= 5; i++) {
           pages.push(i);
         }
-      } else if (current >= totalPages - 2) {
+      } else if (currentPage >= totalPages - 2) {
         for (let i = totalPages - 4; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
-        for (let i = current - 2; i <= current + 2; i++) {
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
           pages.push(i);
         }
       }
     }
-
     return pages;
   };
 
-  const handleTitleClick = (noticeId) => {
-    setExpandedNotice(expandedNotice === noticeId ? null : noticeId);
+  const handleSearch = () => {
+    setActiveSearchTerm(searchTerm);
+    setCurrentPage(1);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -170,9 +154,13 @@ const Notice = () => {
                   placeholder="검색어를 입력하세요"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyPress}
                   className={style.SearchInput}
                 />
-                <button className={style.SearchButton}>
+                <button 
+                  className={style.SearchButton}
+                  onClick={handleSearch}
+                >
                   <BiSearch size={20} />
                 </button>
               </div>
@@ -184,7 +172,7 @@ const Notice = () => {
               <div className={style.Loading}>로딩중...☕</div>
             ) : error ? (
               <div className={style.Error}>{error}</div>
-            ) : (
+            ) : notices && notices.length > 0 ? (
               <>
                 <div className={style.TableHeader}>
                   <div className={style.HeaderNo}>번호</div>
@@ -193,7 +181,7 @@ const Notice = () => {
                   <div className={style.HeaderViews}>조회수</div>
                 </div>
 
-                {currentItems.map((notice) => (
+                {notices.map((notice) => (
                   <React.Fragment key={notice.id}>
                     <div className={style.TableRow}>
                       <div className={style.RowNo}>{notice.id}</div>
@@ -203,77 +191,57 @@ const Notice = () => {
                       >
                         {notice.title}
                       </div>
-                      <div className={style.RowDate}>{notice.date}</div>
-                      <div className={style.RowEmail}>{notice.email}</div>
+                      <div className={style.RowDate}>{notice.createdAt}</div>
+                      <div className={style.RowViews}>{notice.views}</div>
                     </div>
                     {expandedNotice === notice.id && (
                       <div className={style.ContentRow}>
-                        <div className={style.Content}>{notice.text}</div>
+                        <div className={style.Content} 
+                             style={{ 
+                               whiteSpace: 'pre-wrap',    // 줄바꿈 보존
+                               padding: '20px',           // 여백 추가
+                               backgroundColor: '#f9f9f9', // 배경색 추가
+                               margin: '10px 0',          // 상하 여백
+                               borderRadius: '5px'        // 모서리 둥글게
+                             }}>
+                          {notice.content}
+                        </div>
                       </div>
                     )}
                   </React.Fragment>
                 ))}
               </>
+            ) : (
+              <div className={style.NoData}>등록된 공지사항이 없습니다.</div>
+
+
             )}
           </div>
 
-          <div className={style.Pagination}>
-            <button
-              onClick={() => handlePageChange(1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              «
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={style.PageButton}
-              disabled={currentPage === 1}
-            >
-              ‹
-            </button>
-
-            {getPageNumbers().map((pageNum) => (
+          {notices && notices.length > 0 && (
+            <div className={style.Pagination}>
               <button
-                key={pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                className={
-                  currentPage === pageNum ? style.ActivePage : style.PageButton
-                }
+                onClick={() => handlePageChange(1)}
+                className={style.PageButton}
+                disabled={currentPage === 1}
               >
-                {pageNum}
+                «
               </button>
-            ))}
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              ›
-            </button>
-            <button
-              onClick={() =>
-                handlePageChange(Math.ceil(filteredList.length / itemsPerPage))
-              }
-              className={style.PageButton}
-              disabled={
-                currentPage === Math.ceil(filteredList.length / itemsPerPage)
-              }
-            >
-              »
-            </button>
-          </div>
-
-          {isAdmin && (
-            <div className={style.WriteButtonContainer}>
-              <button 
-                className={style.WriteButton}
-                onClick={() => navigate('/notice/write')}
+              {getPageNumbers().map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={currentPage === pageNum ? style.ActivePage : style.PageButton}
+                >
+                  {pageNum}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(totalPages)}
+                className={style.PageButton}
+                disabled={currentPage === totalPages}
               >
-                작성하기
+                »
               </button>
             </div>
           )}

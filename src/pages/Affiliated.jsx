@@ -6,11 +6,11 @@ const Affiliated = () => {
   const [formData, setFormData] = useState({
     consultationType: "가맹상담",
     name: "",
-    phoneCarrier: "",
+    phoneCarrier: "SKT",
     phoneNumber: "",
-    desiredLocation: "",
+    desiredLocation: "서울",
     inquiryContent: "",
-    agreement: ""
+    agreement: "동의함"
   });
 
   useEffect(() => {
@@ -19,33 +19,80 @@ const Affiliated = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    
+    if (name === 'phoneNumber') {
+      // 숫자만 입력 가능하도록
+      const onlyNums = value.replace(/[^0-9]/g, '');
+      if (onlyNums.length <= 11) {
+        setFormData(prevState => ({
+          ...prevState,
+          [name]: onlyNums
+        }));
+      }
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // 유효성 검사 강화
+    if (!formData.name || !formData.phoneNumber || 
+        !formData.desiredLocation || !formData.inquiryContent || 
+        formData.agreement === "동의안함") {
+      alert("모든 필수 항목을 입력하고 이용약관에 동의해주세요.");
+      return;
+    }
+
+    // 전화번호 형식 검사 (10자리 또는 11자리)
+    if (!/^[0-9]{10,11}$/.test(formData.phoneNumber)) {
+      alert("올바른 전화번호 형식이 아닙니다.");
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:8080/kokee/affiliated/request', formData);
+      // 전화번호 형식 변환 (하이픈 추가)
+      const formattedPhone = formData.phoneNumber.replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+      
+      const requestData = {
+        category: formData.consultationType,
+        name: formData.name,
+        phone: formattedPhone,  // 형식이 변환된 전화번호
+        location: formData.desiredLocation,
+        content: formData.inquiryContent
+      };
+
+      const response = await axios.post("http://localhost:8080/api/affiliated", requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
       if (response.status === 200) {
-        alert('문의가 성공적으로 접수되었습니다.');
-        // 폼 초기화
+        alert("가맹 문의가 성공적으로 접수되었습니다.");
+        
         setFormData({
           consultationType: "가맹상담",
           name: "",
-          phoneCarrier: "",
+          phoneCarrier: "SKT",
           phoneNumber: "",
           desiredLocation: "",
           inquiryContent: "",
-          agreement: ""
+          agreement: "동의함"
         });
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('문의 접수 중 오류가 발생했습니다.');
+      console.error("Error submitting form:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(error.response.data.message || "문의 접수 중 오류가 발생했습니다. 다시 시도해주세요.");
+      } else {
+        alert("문의 접수 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
@@ -132,19 +179,39 @@ const Affiliated = () => {
                   onChange={handleInputChange}
                   maxLength="11"
                   className={style.PhoneInput}
+                  placeholder="하이픈(-) 없이 입력해주세요."
                 />
               </div>
             </div>
 
             <div className={style.FormGroup}>
               <label>희망 지역</label>
-              <input 
-                type="text" 
-                name="desiredLocation"
-                value={formData.desiredLocation}
-                onChange={handleInputChange}
-                placeholder="희망 지역을 입력해주세요." 
-              />
+              <select
+              value={formData.desiredLocation}
+              onChange={(e) => setFormData(prevState => ({
+                ...prevState,
+                desiredLocation: e.target.value
+              }))}
+              className={style.select_input}
+            >
+              <option value="서울">서울특별시</option>
+              <option value="부산">부산광역시</option>
+              <option value="대구">대구광역시</option>
+              <option value="인천">인천광역시</option>
+              <option value="광주">광주광역시</option>
+              <option value="대전">대전광역시</option>
+              <option value="울산">울산광역시</option>
+              <option value="세종">세종특별자치시</option>
+              <option value="경기">경기도</option>
+              <option value="강원">강원도</option>
+              <option value="충북">충청북도</option>
+              <option value="충남">충청남도</option>
+              <option value="전북">전라북도</option>
+              <option value="전남">전라남도</option>
+              <option value="경북">경상북도</option>
+              <option value="경남">경상남도</option>
+              <option value="제주">제주특별자치도</option>
+            </select>
             </div>
 
             <div className={style.FormGroup}>
