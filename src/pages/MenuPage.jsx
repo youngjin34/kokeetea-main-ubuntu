@@ -507,7 +507,7 @@ function MenuPage({ isLogined }) {
             >
               <img src={product.product.image_url} alt={product.product.name} />
               <h3>{product.product.name}</h3>
-              <p>{product.product.price} 원</p>
+              <p>{product.product.price.toLocaleString()} 원</p>
 
               {/* 영양정보 오버레이 추가 */}
               <div className={style.nutrition_overlay}>
@@ -561,7 +561,7 @@ function MenuPage({ isLogined }) {
                   원
                   <br />
                   <span className={style.option_price}>
-                    (기본 {selectedProduct.price}원 + 옵션{" "}
+                    (기본 {selectedProduct.price.toLocaleString()}원 + 옵션{" "}
                     {calculateOptionPrice().toLocaleString()}원)
                   </span>
                 </p>
@@ -649,7 +649,7 @@ function MenuPage({ isLogined }) {
                         <span>
                           Large
                           <br />
-                          (+1000원)
+                          (+1,000원)
                         </span>
                       </label>
                       <label className={style.sub_radio_style}>
@@ -666,7 +666,7 @@ function MenuPage({ isLogined }) {
                         <span>
                           Kokee-Large
                           <br />
-                          (+1500원)
+                          (+1,500원)
                         </span>
                       </label>
                     </div>
@@ -852,7 +852,7 @@ function MenuPage({ isLogined }) {
                             <br />
                             {name === "타피오카 펄" || name === "화이트 펄"
                               ? "(+500원)"
-                              : "(+1000원)"}
+                              : "(+1,000원)"}
                           </span>
                         </label>
                       ))}
