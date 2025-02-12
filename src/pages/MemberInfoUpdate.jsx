@@ -3,7 +3,7 @@ import style from "./MemberInfoUpdate.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const MemberInfoUpdate = () => {
+const MemberInfoUpdate = ({ setIsLogined }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -25,8 +25,6 @@ const MemberInfoUpdate = () => {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
 
   const [withdrawalPaassword, setWithdrawalPaassword] = useState("");
-
-  console.log(formData);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -50,7 +48,6 @@ const MemberInfoUpdate = () => {
         );
 
         const userData = response.data;
-        console.log("받아온 사용자 데이터:", userData);
 
         setFormData((prev) => ({
           ...prev,
@@ -182,11 +179,11 @@ const MemberInfoUpdate = () => {
           },
         }
       );
-      console.log(response);
 
       if (response.status === 200) {
         alert("회원 탈퇴가 완료되었습니다.");
         localStorage.clear();
+        setIsLogined(false);
         navigate("/");
       } else {
         alert("회원 탈퇴에 실패했습니다.");

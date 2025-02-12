@@ -120,7 +120,15 @@ function App() {
             <Route path="/faq" element={<Faq isLogined={isLogined} />} />
             <Route path="/store" element={<Store />} />
             <Route path="/order" element={<Order />} />
-            <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
+            <Route
+              path="/memberinfoupdate"
+              element={
+                <MemberInfoUpdate
+                  isLogined={isLogined}
+                  setIsLogined={setIsLogined}
+                />
+              }
+            />
             <Route
               path="/FranchisePromotion"
               element={<FranchisePromotion />}
