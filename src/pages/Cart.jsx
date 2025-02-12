@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import style from "./Cart.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { CartContext } from "../components/CartContext";
 
 const token = localStorage.getItem("token");
 
@@ -17,6 +18,8 @@ const Cart = () => {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
+  const { fetchCartCount } = useContext(CartContext);
+
   const fetchCartData = async () => {
     setLoading(true);
     try {
@@ -29,8 +32,6 @@ const Cart = () => {
 
       const items = response.data.items || [];
       setCartItems(items);
-
-      console.log(items);
 
       if (items.length === 0) {
         setError(""); // 404가 아닌 정상 응답일 때는 에러 메시지 X
@@ -70,6 +71,8 @@ const Cart = () => {
           },
         });
       }
+
+      await fetchCartCount();
 
       await fetchCartData(); // 이 함수 내에서 cartCount가 업데이트됨
       setSelectedItems([]);

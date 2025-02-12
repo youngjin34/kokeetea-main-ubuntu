@@ -29,7 +29,7 @@ const OrderHistory = () => {
 
       const startDate = new Date(start);
       const endDate = new Date(end);
-      
+
       if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
         throw new Error("유효하지 않은 날짜 형식입니다.");
       }
@@ -42,22 +42,24 @@ const OrderHistory = () => {
             endDate: end,
             size: 10,
             page: currentPage,
-            sort: "date,desc"
+            sort: "date,desc",
           },
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       if (response.data) {
-        const mappedOrders = response.data.orders.map(order => ({
+        const mappedOrders = response.data.orders.map((order) => ({
           ...order,
-          total_amount: parseInt(order.subtotal || order.total_amount || order.total_price || 0)
+          total_amount: parseInt(
+            order.subtotal || order.total_amount || order.total_price || 0
+          ),
         }));
         setOrders(mappedOrders);
         setTotalPages(response.data.total_page || 1);
-        console.log('응답 데이터:', response.data);
+        console.log("응답 데이터:", response.data);
       } else {
         setError("주문 내역 데이터를 불러올 수 없습니다.");
       }
@@ -66,7 +68,7 @@ const OrderHistory = () => {
       if (error.response?.status === 400) {
         setError("잘못된 날짜 범위입니다.");
       } else {
-        setError("주문 내역을 불러오는데 실패했습니다.");
+        setError("주문 내역이 없습니다.");
       }
     } finally {
       setLoading(false);
@@ -77,11 +79,11 @@ const OrderHistory = () => {
     setPeriod(newPeriod);
     setStartDate("");
     setEndDate("");
-    
+
     const end = new Date();
     let start = new Date();
-    
-    switch(newPeriod) {
+
+    switch (newPeriod) {
       case "1개월":
         start.setMonth(end.getMonth() - 1);
         break;
@@ -94,11 +96,11 @@ const OrderHistory = () => {
       default:
         return;
     }
-    
+
     const formatDate = (date) => {
-      return date.toISOString().split('T')[0];
+      return date.toISOString().split("T")[0];
     };
-    
+
     fetchOrders(formatDate(start), formatDate(end));
   };
 
@@ -126,7 +128,7 @@ const OrderHistory = () => {
   };
 
   const handleDateInput = (e, type) => {
-    if (type === 'start') {
+    if (type === "start") {
       setStartDate(e.target.value);
     } else {
       setEndDate(e.target.value);
@@ -142,10 +144,10 @@ const OrderHistory = () => {
     const end = new Date();
     const start = new Date();
     start.setMonth(end.getMonth() - 1);
-    
+
     fetchOrders(
-      start.toISOString().split('T')[0],
-      end.toISOString().split('T')[0]
+      start.toISOString().split("T")[0],
+      end.toISOString().split("T")[0]
     );
   }, [currentPage]);
 
@@ -164,29 +166,29 @@ const OrderHistory = () => {
               {["1개월", "3개월", "1년"].map((p) => (
                 <button
                   key={p}
-                  className={`${style.periodButton} ${period === p ? style.active : ''}`}
+                  className={`${style.periodButton} ${
+                    period === p ? style.active : ""
+                  }`}
                   onClick={() => handlePeriodClick(p)}
                 >
                   {p}
                 </button>
               ))}
-              <span style={{marginLeft: '70px'}}>일자별</span>
-              <input 
-                type="date" 
-                className={style.dateInput} 
+              <span style={{ marginLeft: "70px" }}>일자별</span>
+              <input
+                type="date"
+                className={style.dateInput}
                 value={startDate}
-                onChange={(e) => handleDateInput(e, 'start')}
-              /> -
-              <input 
-                type="date" 
-                className={style.dateInput} 
+                onChange={(e) => handleDateInput(e, "start")}
+              />{" "}
+              -
+              <input
+                type="date"
+                className={style.dateInput}
                 value={endDate}
-                onChange={(e) => handleDateInput(e, 'end')}
+                onChange={(e) => handleDateInput(e, "end")}
               />
-              <button 
-                className={style.searchButton}
-                onClick={handleDateSearch}
-              >
+              <button className={style.searchButton} onClick={handleDateSearch}>
                 조회
               </button>
             </div>
@@ -213,10 +215,12 @@ const OrderHistory = () => {
                         <td>{order.branch_name}</td>
                         <td>{order.first_product_name}</td>
                         <td>
-                          {order.subtotal ? 
-                            parseInt(order.subtotal).toLocaleString() : 
-                            (order.total_amount ? 
-                              order.total_amount.toLocaleString() : '0')}원
+                          {order.subtotal
+                            ? parseInt(order.subtotal).toLocaleString()
+                            : order.total_amount
+                            ? order.total_amount.toLocaleString()
+                            : "0"}
+                          원
                         </td>
                       </tr>
                     ))}
@@ -229,7 +233,7 @@ const OrderHistory = () => {
                     )}
                   </tbody>
                 </table>
-                
+
                 {totalPages > 0 && (
                   <div className={style.PaginationContainer}>
                     <button
@@ -246,17 +250,19 @@ const OrderHistory = () => {
                     >
                       ‹
                     </button>
-                    
+
                     {[...Array(totalPages)].map((_, i) => (
                       <button
                         key={i}
                         onClick={() => handlePageChange(i)}
-                        className={`${style.PageButton} ${currentPage === i ? style.Active : ''}`}
+                        className={`${style.PageButton} ${
+                          currentPage === i ? style.Active : ""
+                        }`}
                       >
                         {i + 1}
                       </button>
                     ))}
-                    
+
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       className={style.PageButton}
@@ -277,28 +283,37 @@ const OrderHistory = () => {
             )}
           </div>
         </div>
+
         <div className={style.sideNav}>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/memberinfoupdate' ? style.active : ''}`}
-            onClick={() => handleNavigation('/memberinfoupdate')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/memberinfoupdate" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/memberinfoupdate")}
           >
             회원정보 확인 · 수정
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/couponstamp' ? style.active : ''}`}
-            onClick={() => handleNavigation('/couponstamp')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/couponstamp" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/couponstamp")}
           >
             쿠폰 · 스탬프 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/orderhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/orderhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/orderhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/orderhistory")}
           >
             주문내역 조회
           </div>
-          <div 
-            className={`${style.sideNavItem} ${currentPath === '/inquiryhistory' ? style.active : ''}`}
-            onClick={() => handleNavigation('/inquiryhistory')}
+          <div
+            className={`${style.sideNavItem} ${
+              currentPath === "/inquiryhistory" ? style.active : ""
+            }`}
+            onClick={() => handleNavigation("/inquiryhistory")}
           >
             1:1 문의 내역
           </div>

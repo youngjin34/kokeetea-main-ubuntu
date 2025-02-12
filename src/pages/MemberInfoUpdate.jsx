@@ -24,14 +24,18 @@ const MemberInfoUpdate = () => {
   const [validPw, setValidPw] = useState(false);
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
 
+  const [withdrawalPaassword, setWithdrawalPaassword] = useState("");
+
+  console.log(formData);
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        
+
         if (!token) {
           console.error("토큰이 없습니다");
-          navigate('/login');
+          navigate("/login");
           return;
         }
 
@@ -50,10 +54,10 @@ const MemberInfoUpdate = () => {
 
         setFormData((prev) => ({
           ...prev,
-          name: userData.realName || "",         
-          id: userData.userName || "",             
-          phoneNumber: userData.phone || "",      
-          email: userData.email || "",             
+          name: userData.realName || "",
+          id: userData.userName || "",
+          phoneNumber: userData.phone || "",
+          email: userData.email || "",
           smsReceive: userData.smsReceive || false,
           emailReceive: userData.emailReceive || false,
         }));
@@ -91,7 +95,9 @@ const MemberInfoUpdate = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8080/api/members/verify?password=${formData.currentPassword}`,
+        `http://localhost:8080/api/members/verify?password=${encodeURIComponent(
+          formData.currentPassword
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -102,6 +108,7 @@ const MemberInfoUpdate = () => {
 
       if (response.status === 200) {
         setIsPasswordVerified(true);
+        setWithdrawalPaassword(formData.currentPassword);
         alert("비밀번호가 확인되었습니다.");
       }
     } catch (error) {
@@ -149,16 +156,25 @@ const MemberInfoUpdate = () => {
       }
     } catch (error) {
       console.error("회원정보 수정 중 오류 발생:", error);
-      const errorMessage = error.response?.data?.message || "회원정보 수정에 실패했습니다.";
+      const errorMessage =
+        error.response?.data?.message || "회원정보 수정에 실패했습니다.";
       alert(errorMessage);
     }
   };
 
   const handleWithdrawal = async () => {
+    if (!isPasswordVerified) {
+      alert("비밀번호 확인을 먼저 해주세요.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.delete(
-        "http://localhost:8080/api/members",
+        `http://localhost:8080/api/members/${
+          formData.id
+        }?password=${encodeURIComponent(withdrawalPaassword)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -166,8 +182,9 @@ const MemberInfoUpdate = () => {
           },
         }
       );
+      console.log(response);
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert("회원 탈퇴가 완료되었습니다.");
         localStorage.clear();
         navigate("/");

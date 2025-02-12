@@ -284,8 +284,6 @@ const Register = () => {
     // 전화번호 분리
     const phone2 = formData.phoneNumber.slice(3, 7);
     const phone3 = formData.phoneNumber.slice(7, 11);
-    console.log(phone2);
-    console.log(phone3);
 
     try {
       const email = `${formData.emailId}@${formData.emailDomain}`; // 이메일 합치기
@@ -305,13 +303,9 @@ const Register = () => {
         navigate("/");
       }
     } catch (error) {
-      if (response.status === 400) {
-        alert(
-          "입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요."
-        );
-      } else {
-        alert("알수 없는 에러가 발생했습니다. 관리자에게 문의하세요.");
-      }
+      alert(
+        "입력하신 아이디와 이메일은 이미 가입된 회원 입니다.\n다른 내용으로 가입해주세요."
+      );
     }
   };
 

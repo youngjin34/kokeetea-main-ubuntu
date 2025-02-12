@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./OrderComplete.module.css";
 
 const OrderComplete = () => {
+  // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const navigate = useNavigate();
 
   const pickupTime = new Date(Date.now() + 5 * 60000);
@@ -45,7 +50,9 @@ const OrderComplete = () => {
             </div>
             <div className={styles.totalAmount}>
               <span>총 결제금액</span>
-              <span className={styles.highlight}>{finalPrice.toLocaleString()}원</span>
+              <span className={styles.highlight}>
+                {finalPrice.toLocaleString()}원
+              </span>
             </div>
           </div>
         </div>

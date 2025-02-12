@@ -32,6 +32,7 @@ import CouponStamp from "./pages/CouponStamp";
 import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
 import FloatingButtons from "./components/FloatingButtons";
+import { CartProvider } from "./components/CartContext";
 
 function AppContent() {
   const location = useLocation();
@@ -74,65 +75,73 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Header
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isLogined={isLogined}
-        setIsLogined={setIsLogined}
-      />
-      {currentPage !== 0 && (
-        <FlotingButtonsContent setCurrentPage={setCurrentPage} />
-      )}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-      <div className={`${style.App}`}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home currentPage={currentPage} setCurrentPage={setCurrentPage} />
-            }
-          />
-          <Route
-            path="/menupage"
-            element={<MenuPage isLogined={isLogined} />}
-          />
-          <Route path="/kokeestory" element={<KokeeStory />} />
-          <Route path="/affiliated" element={<Affiliated />} />
-          <Route path="/notice" element={<NoticePage />} />
-          <Route path="/inquiry" element={<Inquiry />} />
-          <Route path="/faq" element={<Faq isLogined={isLogined} />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
-          <Route path="/FranchisePromotion" element={<FranchisePromotion />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/login"
-            element={<Login setIsLogined={setIsLogined} />}
-          />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/orderhistory" element={<OrderHistory />} />
-          <Route path="/inquiryhistory" element={<InquiryHistory />} />
-          <Route path="/couponstamp" element={<CouponStamp />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/ordercomplete" element={<OrderComplete />} />
-        </Routes>
-        <AppContent />
-      </div>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Header
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          isLogined={isLogined}
+          setIsLogined={setIsLogined}
+        />
+        {currentPage !== 0 && (
+          <FlotingButtonsContent setCurrentPage={setCurrentPage} />
+        )}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <div className={`${style.App}`}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                />
+              }
+            />
+            <Route
+              path="/menupage"
+              element={<MenuPage isLogined={isLogined} />}
+            />
+            <Route path="/kokeestory" element={<KokeeStory />} />
+            <Route path="/affiliated" element={<Affiliated />} />
+            <Route path="/notice" element={<NoticePage />} />
+            <Route path="/inquiry" element={<Inquiry />} />
+            <Route path="/faq" element={<Faq isLogined={isLogined} />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/memberinfoupdate" element={<MemberInfoUpdate />} />
+            <Route
+              path="/FranchisePromotion"
+              element={<FranchisePromotion />}
+            />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/login"
+              element={<Login setIsLogined={setIsLogined} />}
+            />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/orderhistory" element={<OrderHistory />} />
+            <Route path="/inquiryhistory" element={<InquiryHistory />} />
+            <Route path="/couponstamp" element={<CouponStamp />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/ordercomplete" element={<OrderComplete />} />
+          </Routes>
+          <AppContent />
+        </div>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 

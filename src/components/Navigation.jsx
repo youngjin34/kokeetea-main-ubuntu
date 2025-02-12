@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
 import axios from "axios";
+import { CartContext } from "./CartContext";
 
 function Navigation({
   isLogined,
@@ -23,7 +24,7 @@ function Navigation({
 
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  const [cartCount, setCartCount] = useState(0);
+  const { cartCount } = useContext(CartContext); // cartCount 가져오기
 
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
@@ -108,9 +109,11 @@ function Navigation({
   }, [setIsLogined, isModalOpen]);
 
   function logoutFunction() {
-    localStorage.clear();
-    setIsLogined(false);
-    navigate("/");
+    if (window.confirm("로그아웃 하시곘습니까?")) {
+      localStorage.clear();
+      setIsLogined(false);
+      navigate("/");
+    }
   }
 
   const toggleModal = () => {
@@ -130,7 +133,6 @@ function Navigation({
     toggleLoginModal();
     setIsLogined(true);
     // 로그인 성공 시 즉시 장바구니 데이터 동기화
-    await syncCartData();
   };
 
   // 바깥쪽 클릭 시 모달 닫기
@@ -171,25 +173,6 @@ function Navigation({
       navigate("/", { state: { currentPage: 0 } });
     }
   };
-
-  const fetchCartCount = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/carts", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setCartCount(response.data.cart_count); // DB에서 가져온 개수 설정
-    } catch (error) {
-      console.error("장바구니 개수 불러오기 실패:", error);
-      setCartCount(0); // 실패하면 0으로 초기화
-    }
-  };
-
-  useEffect(() => {
-    fetchCartCount(); // 로그인 상태일 때만 장바구니 개수 조회
-  }, []);
 
   // 기존 state 선언부 근처에 ref 추가
   const notificationRef = useRef(null);

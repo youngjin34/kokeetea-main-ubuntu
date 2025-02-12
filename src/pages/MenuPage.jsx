@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Tooltip } from "react-tooltip";
 
 import style from "./MenuPage.module.css";
+import { CartContext } from "../components/CartContext";
 
 function MenuPage({ isLogined }) {
   const [products, setProducts] = useState([]);
@@ -40,6 +41,8 @@ function MenuPage({ isLogined }) {
     { name: "코코넛", id: 19 },
     { name: "알로에", id: 20 },
   ];
+
+  const { fetchCartCount } = useContext(CartContext); // fetchCartCount 사용
 
   const handleToppingChange = (e, item, itemId) => {
     if (e.target.checked) {
@@ -150,7 +153,7 @@ function MenuPage({ isLogined }) {
 
   // 드롭다운에서 브랜치 선택 시 처리
   const handleBranchChange = (event) => {
-    setPreviousBranchId(selectedBranchId); // 현재 선택된 브랜치 저장
+    setPreviousBranchId(selectedBranchId); // 현재 선택된 브랜치를 이전 브랜치로 저장
     setSelectedBranchId(event.target.value); // 새 브랜치로 변경
   };
 
@@ -260,13 +263,13 @@ function MenuPage({ isLogined }) {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // 장바구니가 비어있지 않고 브랜치가 변경된 경우 확인
-      if (cartItems.length > 0 && selectedBranchId !== previousBranchId) {
+      // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
+      if (selectedBranchId !== previousBranchId) {
         const isConfirmed = window.confirm(
           "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
         );
         if (!isConfirmed) {
-          return; // 사용자가 취소하면 장바구니에 추가하지 않음
+          return;
         } else {
           setCartItems([]); // 장바구니 비우기
         }
@@ -292,7 +295,10 @@ function MenuPage({ isLogined }) {
         if (response.status === 200) {
           alert("장바구니에 추가되었습니다.");
           toggleModal();
-          window.location.reload();
+          fetchCartCount(); // 장바구니 개수 즉시 업데이트
+
+          // 장바구니에 아이템을 추가한 후, 이전 브랜치와 현재 브랜치가 같도록 설정
+          setPreviousBranchId(selectedBranchId);
         } else {
           alert("장바구니 추가에 실패했습니다.");
         }
@@ -304,35 +310,53 @@ function MenuPage({ isLogined }) {
   };
 
   // orderNow 함수 수정
-  const orderNow = () => {
+  const orderNow = async () => {
     if (!validateOptions()) {
       return;
     }
 
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("로그인이 필요한 서비스입니다.");
-      return;
+    if (token) {
+      // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
+      if (selectedBranchId !== previousBranchId) {
+        const isConfirmed = window.confirm(
+          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+        );
+        if (!isConfirmed) {
+          return;
+        } else {
+          setCartItems([]); // 장바구니 비우기
+        }
+      }
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/carts",
+          {
+            product_id: selectedProduct.id,
+            quantity: quantity,
+            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            branch_id: selectedBranchId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          navigate("/order");
+        } else {
+          alert("장바구니 추가에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("장바구니 추가 실패:", error);
+        alert("장바구니 추가에 실패했습니다.");
+      }
     }
-
-    const orderItem = {
-      product: selectedProduct,
-      quantity: quantity,
-      options: {
-        image: selectedProduct.image,
-        name: selectedProduct.pdName,
-        size: size,
-        temp: temp,
-        sugar: sugar,
-        iceAmount: iceAmount,
-        topping: topping.join(","),
-        price: totalPrice,
-      },
-    };
-
-    localStorage.setItem("currentOrder", JSON.stringify([orderItem]));
-    navigate("/order");
   };
 
   const calculateOptionPrice = () => {
@@ -399,25 +423,11 @@ function MenuPage({ isLogined }) {
           }
         );
       } catch (error) {
-        console.error("장바구니 추가 실패:", error);
-        alert("장바구니 추가에 실패했습니다.");
+        console.error("주문 실패:", error);
+        alert("주문에 실패했습니다.");
       }
     }
 
-    const orderItem = {
-      product: product,
-      quantity: 1,
-      options: {
-        size: "Regular",
-        temp: "ICE",
-        sugar: "70%",
-        iceAmount: "보통",
-        topping: "기본",
-        price: totalPrice,
-      },
-    };
-
-    localStorage.setItem("currentOrder", JSON.stringify([orderItem]));
     navigate("/order");
   };
 
@@ -500,7 +510,9 @@ function MenuPage({ isLogined }) {
                 !isLoggedIn && !isLogined ? style.disabled : ""
               }`}
               data-tooltip-id={
-                !isLoggedIn && !isLogined ? `login-tooltip-${product.product.id}` : ""
+                !isLoggedIn && !isLogined
+                  ? `login-tooltip-${product.product.id}`
+                  : ""
               }
               data-tooltip-content="로그인이 필요한 서비스입니다."
               data-tooltip-place="top"

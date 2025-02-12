@@ -57,7 +57,7 @@ input {
   width: 94%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #E5D5DA;
+  border: 1px solid #e5d5da;
   border-radius: 5px;
 }
 
@@ -186,6 +186,18 @@ ul {
 .youtube_icon {
   width: 20px;
   height: 20px;
+}
+
+/* 화면 크기가 작을 때 햄버거 버튼을 표시 */
+@media (max-width: 780px) {
+  .header_top {
+    display: none; /* 메뉴를 숨깁니다 */
+  }
+
+  /* 메뉴가 열렸을 때 보이도록 */
+  .header_top.menu_open {
+    display: block;
+  }
 }
 
 .sec_modal {
@@ -508,7 +520,7 @@ ul {
 }
 
 .user_menu_text {
-  font-size: 14px; 
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -516,7 +528,7 @@ ul {
   font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
-  display: block; 
+  display: block;
   text-align: right;
 }
 
@@ -577,7 +589,8 @@ ul {
     justify-content: flex-end;
   }
 
-  .sns, .youtube_icon {
+  .sns,
+  .youtube_icon {
     width: 24px;
     height: 24px;
   }
@@ -608,7 +621,8 @@ ul {
     gap: 2rem;
   }
 
-  .login_join_text, .user_menu_text {
+  .login_join_text,
+  .user_menu_text {
     font-size: 0.9rem;
   }
 
@@ -665,7 +679,8 @@ ul {
     padding: 0.5rem;
   }
 
-  .login_join_text, .user_menu_text {
+  .login_join_text,
+  .user_menu_text {
     font-size: 0.8rem;
   }
 }
@@ -702,7 +717,7 @@ ul {
     color: white;
     font-size: 1.2rem;
     padding: 10px 0;
-    border-bottom: 1px solid #E5D5DA;
+    border-bottom: 1px solid #e5d5da;
   }
 }
 
@@ -839,7 +854,7 @@ ul {
 }
 
 .notification_dropdown::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -7px;
   right: 15px;

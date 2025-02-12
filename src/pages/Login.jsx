@@ -4,7 +4,7 @@ import style from "./Login.module.css";
 import axios from "axios";
 import { toast, Slide } from "react-toastify";
 
-const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
+const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
   const navigate = useNavigate();
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [userName, setUserName] = useState("");
@@ -39,14 +39,15 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
         )}`
       );
 
+      console.log(result);
+
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);
-        
+
         setIsLogined(true);
-        setHeaderLogined(true);
         onLoginSuccess?.();
 
-        toast(`${result.data.name}님 환영합니다!`, {
+        toast(`${result.data.user_name}님 환영합니다!`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -59,8 +60,11 @@ const Login = ({ onClose, setIsLogined, setHeaderLogined, onLoginSuccess }) => {
         });
 
         navigate("/");
+        window.location.reload();
       }
     } catch (error) {
+      console.error(error);
+
       toast("아이디와 비밀번호를 확인해주세요", {
         position: "top-right",
         autoClose: 3000,

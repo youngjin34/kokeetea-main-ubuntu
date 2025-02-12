@@ -18,8 +18,6 @@ function Order() {
   const [selectedCoupon, setSelectedCoupon] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0); // 쿠폰 할인 금액
 
-  console.log(cartItems);
-
   const [totalPrice, setTotalPrice] = useState(0);
 
   // 상태 추가
@@ -143,6 +141,13 @@ function Order() {
       : totalDiscount;
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const [paymentData, setPaymentData] = useState({
+    bankName: "",
+    accountNumber: "",
+    simplePay: "",
+  });
+
   // 최종 결제 금액 계산
   const finalPayment = calculateTotalPrice() - calculateDiscount();
 
@@ -164,11 +169,6 @@ function Order() {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        return;
-      }
 
       // 주문 데이터 전송
       const response = await axios.post(
@@ -346,6 +346,109 @@ function Order() {
     );
   };
 
+  // 모달 컴포넌트
+  const PaymentModal = () => {
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [selectedPay, setSelectedPay] = useState(null);
+
+    const handleCardSelect = (cardName) => {
+      setSelectedCard(cardName);
+    };
+
+    const handlePaySelect = (pay) => {
+      setSelectedPay(pay);
+    };
+
+    const closeModal = () => {
+      setShowModal(false); // 모달 닫기
+    };
+
+    return (
+      <div
+        className={style.modal}
+        onClick={(e) => e.target === e.currentTarget && closeModal()}
+      >
+        <div className={style.modal_content}>
+          <button className={style.close_button} onClick={closeModal}>
+            ×
+          </button>
+          {selectedMethod === "신용카드" && (
+            <div>
+              <h3>신용카드</h3>
+              <div className={style.card_button_container}>
+                {[
+                  { name: "KB카드", img: "/img/card/kb_card.png" },
+                  { name: "신한카드", img: "/img/card/shinhan_card.png" },
+                  { name: "우리카드", img: "/img/card/woori_card.png" },
+                  { name: "삼성카드", img: "/img/card/samsung_card.png" },
+                ].map((card) => (
+                  <button
+                    key={card.name}
+                    className={`${style.bank_button} ${
+                      selectedCard === card.name ? style.selected : ""
+                    }`}
+                    onClick={() => handleCardSelect(card.name)}
+                  >
+                    <img
+                      src={card.img}
+                      className={style.card_img}
+                      alt={card.name}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {selectedMethod === "계좌이체" && (
+            <div>
+              <h3>계좌이체</h3>
+              <label className={style.payment_label}>가상계좌</label>
+              <select className={style.passbook_select}>
+                <option>국민은행: 651234-04-017889</option>
+                <option>신한은행: 110-372-571278</option>
+                <option>우리은행: 1002-374-071289</option>
+              </select>
+              <input
+                type="text"
+                placeholder="입금자명 (미입력시 주문자명)"
+                className={style.depositor_input}
+              />
+            </div>
+          )}
+
+          {selectedMethod === "간편결제" && (
+            <div>
+              <h3>간편 결제</h3>
+              <div className={style.pay_button_container}>
+                <button
+                  className={`${style.pay_button} ${
+                    selectedPay === "naver" ? style.selected : ""
+                  }`}
+                  onClick={() => handlePaySelect("naver")}
+                >
+                  <img src="/img/pay/naver_pay.png" />
+                </button>
+                <button
+                  className={`${style.pay_button} ${
+                    selectedPay === "kakao" ? style.selected : ""
+                  }`}
+                  onClick={() => handlePaySelect("kakao")}
+                >
+                  <img src="/img/pay/kakao_pay.png" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <button onClick={handlePayment} className={style.payment_btn}>
+            결제하기
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={style.Container}>
       <div className={style.MainContent}>
@@ -457,7 +560,7 @@ function Order() {
                 </button>
                 <button
                   className={`${style.payment_button} ${style.primary_button}`}
-                  onClick={handlePayment}
+                  onClick={() => setShowModal(true)}
                 >
                   결제하기
                 </button>
@@ -465,6 +568,7 @@ function Order() {
             </div>
           </div>
         </div>
+        {showModal && <PaymentModal />}
       </div>
     </div>
   );
