@@ -115,7 +115,7 @@ const MyMenu = () => {
   };
 
   // addToCart 함수 수정
-  const addToCart = async () => {
+  const addToCart = async (item) => {
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -131,13 +131,15 @@ const MyMenu = () => {
         }
       }
 
+      const optionId = item.options.map((option) => option.id);
+
       try {
         const response = await axios.post(
           "http://localhost:8080/api/carts",
           {
-            product_id: selectedProduct.id,
+            product_id: item.product.id,
             quantity: quantity,
-            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            option_ids: optionId,
             branch_id: selectedBranchId,
           },
           {
@@ -150,7 +152,6 @@ const MyMenu = () => {
 
         if (response.status === 200) {
           alert("장바구니에 추가되었습니다.");
-          toggleModal();
           fetchCartCount(); // 장바구니 개수 즉시 업데이트
 
           // 장바구니에 아이템을 추가한 후, 이전 브랜치와 현재 브랜치가 같도록 설정
@@ -174,14 +175,13 @@ const MyMenu = () => {
       return;
     }
     const optionId = item.options.map((option) => option.id);
-    console.log(item.id);
 
     if (token) {
       try {
         const response = await axios.post(
           "http://localhost:8080/api/carts",
           {
-            product_id: item.id,
+            product_id: item.product.id,
             quantity: quantity,
             option_ids: optionId,
             branch_id: selectedBranchId,
@@ -316,7 +316,9 @@ const MyMenu = () => {
                           </button>
                           <button
                             className={`${style.my_menu_button} ${style.cart_button}`}
-                            onClick={addToCart}
+                            onClick={() => {
+                              addToCart(item);
+                            }}
                           >
                             담기
                           </button>
