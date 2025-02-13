@@ -426,17 +426,19 @@
 }
 
 .cart_button:hover {
-  background-color: #f8f8f8;
-}
-
-.order_button {
   background-color: #ba274a;
-  border: none;
   color: white;
 }
 
+.order_button {
+  background-color: white;
+  border: 1px solid #ba274a;
+  color: #ba274a;
+}
+
 .order_button:hover {
-  background-color: #a32040;
+  background-color: #ba274a;
+  color: white;
 }
 
 /* 스크롤바 스타일링 */

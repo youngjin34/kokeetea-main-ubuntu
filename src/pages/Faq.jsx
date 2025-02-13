@@ -146,7 +146,7 @@ const FAQ = ({ isLogined }) => {
                 <div className={style.TableHeader}>
                   <div className={style.HeaderNo}>번호</div>
                   <div className={style.HeaderCategory}>카테고리</div>
-                  <div className={style.HeaderSubject}>주제</div>
+                  <div className={style.HeaderSubject}>제목</div>
                   <div className={style.HeaderDate}>작성일</div>
                 </div>
 
@@ -162,7 +162,6 @@ const FAQ = ({ isLogined }) => {
                         {notice.title}
                       </div>
                       <div className={style.RowDate}>{notice.date}</div>
-                      <div className={style.RowViews}>{notice.view}</div>
                     </div>
                     {expandedNotice === notice.id && (
                       <div className={style.ContentRow}>

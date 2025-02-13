@@ -53,9 +53,7 @@ const OrderHistory = () => {
       if (response.data) {
         const mappedOrders = response.data.orders.map((order) => ({
           ...order,
-          total_amount: parseInt(
-            order.subtotal || order.total_amount || order.total_price || 0
-          ),
+          billed_amount: parseInt(order.billed_amount || 0),
         }));
         setOrders(mappedOrders);
         setTotalPages(response.data.total_page || 1);
@@ -215,12 +213,7 @@ const OrderHistory = () => {
                         <td>{order.branch_name}</td>
                         <td>{order.first_product_name}</td>
                         <td>
-                          {order.subtotal
-                            ? parseInt(order.subtotal).toLocaleString()
-                            : order.total_amount
-                            ? order.total_amount.toLocaleString()
-                            : "0"}
-                          원
+                          {order.billed_amount.toLocaleString()}원
                         </td>
                       </tr>
                     ))}

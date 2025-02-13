@@ -286,7 +286,6 @@ const CouponStamp = () => {
                   <tr>
                     <th>쿠폰 번호</th>
                     <th>쿠폰 이름</th>
-                    <th>사용기한</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -294,7 +293,6 @@ const CouponStamp = () => {
                     <tr key={coupon.id}>
                       <td>{coupon.couponNumber}</td>
                       <td>{coupon.product_name}</td>
-                      <td>{coupon.expireDate}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -162,17 +162,18 @@
 
 .backButton,
 .deleteButton {
-  padding: 8px 20px;
+  padding: 10px 10px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   transition: all 0.2s ease;
+  width: 60px;
 }
 
 .backButton {
   background-color: #ffffff;
-  border: 1px solid #808080;
-  color: #808080;
+  border: 1px solid #E5D5DA;
+  color: #666;
 }
 
 .backButton:hover {
