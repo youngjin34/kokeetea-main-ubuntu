@@ -17,10 +17,15 @@ const Notice = () => {
   const itemsPerPage = 10;
   
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchNotices(currentPage - 1);
+    
+    // 관리자 권한 확인
+    const authority = localStorage.getItem('authority');
+    setIsAdmin(authority === 'ADMIN');
   }, [currentPage, activeSearchTerm]);
 
   const fetchNotices = async (page) => {
@@ -213,8 +218,6 @@ const Notice = () => {
               </>
             ) : (
               <div className={style.NoData}>등록된 공지사항이 없습니다.</div>
-
-
             )}
           </div>
 
@@ -242,6 +245,18 @@ const Notice = () => {
                 disabled={currentPage === totalPages}
               >
                 »
+              </button>
+            </div>
+          )}
+
+          {/* 관리자용 작성 버튼 추가 */}
+          {isAdmin && (
+            <div className={style.WriteButtonWrapper}>
+              <button
+                className={style.WriteButton}
+                onClick={() => navigate('/notice/write')}
+              >
+                작성하기
               </button>
             </div>
           )}

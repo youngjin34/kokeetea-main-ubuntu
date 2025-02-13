@@ -17,6 +17,8 @@ const NoticeWrite = () => {
     }
   }, [navigate]);
 
+  window.scrollTo(0, 0);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
