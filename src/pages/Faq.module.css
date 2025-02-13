@@ -249,6 +249,10 @@
   font-size: 14px;
 }
 
+.InquiryButton:hover {
+  background-color: #a32242;
+}
+
 .PaginationContainer {
   display: flex;
   justify-content: center;

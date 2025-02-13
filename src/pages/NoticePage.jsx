@@ -222,42 +222,62 @@ const Notice = () => {
           </div>
 
           {notices && notices.length > 0 && (
-            <div className={style.Pagination}>
-              <button
-                onClick={() => handlePageChange(1)}
-                className={style.PageButton}
-                disabled={currentPage === 1}
-              >
-                «
-              </button>
-              {getPageNumbers().map((pageNum) => (
+            <div className={style.PaginationContainer}>
+              <div className={style.Pagination}>
                 <button
-                  key={pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                  className={currentPage === pageNum ? style.ActivePage : style.PageButton}
+                  onClick={() => handlePageChange(1)}
+                  className={style.PageButton}
+                  disabled={currentPage === 1}
                 >
-                  {pageNum}
+                  «
                 </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                className={style.PageButton}
-                disabled={currentPage === totalPages}
-              >
-                »
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={style.PageButton}
+                  disabled={currentPage === 1}
+                >
+                  ‹
+                </button>
 
-          {/* 관리자용 작성 버튼 추가 */}
-          {isAdmin && (
-            <div className={style.WriteButtonWrapper}>
-              <button
-                className={style.WriteButton}
-                onClick={() => navigate('/notice/write')}
-              >
-                작성하기
-              </button>
+                {getPageNumbers().map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={
+                      currentPage === pageNum
+                        ? style.ActivePage
+                        : style.PageButton
+                    }
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={style.PageButton}
+                  disabled={currentPage === totalPages}
+                >
+                  ›
+                </button>
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  className={style.PageButton}
+                  disabled={currentPage === totalPages}
+                >
+                  »
+                </button>
+              </div>
+              {isAdmin && (
+                <div className={style.ButtonContainer}>
+                  <button
+                    className={style.InquiryButton}
+                    onClick={() => navigate('/notice/write')}
+                  >
+                    작성하기
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
