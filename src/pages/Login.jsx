@@ -9,7 +9,6 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleSignUpClick = () => {
     setIsSignUpActive(true);
@@ -79,29 +78,6 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
       });
     }
   };
-
-  // const checkAdminStatus = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     if (!token) {
-  //       setIsAdmin(false);
-  //       return;
-  //     }
-
-  //     const response = await axios.get(
-  //       "http://localhost:8080/kokee/member/check-admin",
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-
-  //     setIsAdmin(response.data.isAdmin);
-  //     localStorage.setItem("isAdmin", response.data.isAdmin);
-  //   } catch (error) {
-  //     console.error("관리자 확인 실패:", error);
-  //     setIsAdmin(false);
-  //   }
-  // };
 
   return (
     <div className={style.pageContainer}>
