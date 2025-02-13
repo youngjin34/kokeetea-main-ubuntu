@@ -43,6 +43,8 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
 
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);
+        localStorage.setItem("authority", result.data.authority);
+        console.log(result.data.authority);
 
         setIsLogined(true);
         onLoginSuccess?.();
