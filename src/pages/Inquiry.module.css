@@ -235,3 +235,19 @@
     font-weight: 500;
   }
   
+  .FormGroup input:focus,
+  .FormGroup textarea:focus {
+    outline: none;
+    border: 1px solid #ba274a;
+  }
+  
+  .PhonePrefix:focus {
+    outline: none;
+    border: 1px solid #ba274a;
+  }
+  
+  .EmailSelect:focus {
+    outline: none;
+    border: 1px solid #ba274a;
+  }
+  

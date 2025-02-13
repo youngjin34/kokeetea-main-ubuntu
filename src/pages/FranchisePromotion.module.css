@@ -92,7 +92,7 @@
 .BenefitCard {
   text-align: center;
   padding: 30px;
-  border: 1px solid #eee;
+  border: 1px solid #E5D5DA;
   border-radius: 8px;
   transition: transform 0.3s ease;
 }

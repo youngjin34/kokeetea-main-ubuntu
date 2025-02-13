@@ -636,6 +636,7 @@ input::-webkit-inner-spin-button {
   font-size: 16px;
   margin: 0;
   padding: 0 10px;
+  box-sizing: border-box;
 }
 
 .points_unit {
@@ -655,6 +656,11 @@ input::-webkit-inner-spin-button {
 
 .use_all_points_btn:hover {
   background: #a02243;
+}
+
+.points_input:focus {
+  outline: none;
+  border: 1px solid #ba274a;
 }
 
 /* --------------------- 결제 모달 ----------------- */
@@ -783,14 +789,18 @@ input::-webkit-inner-spin-button {
   background: #f9f9f9;
   font-size: 14px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .depositor_input {
   border-radius: 8px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .depositor_input:focus {
-  outline-color: #ba274a;
+  outline: none;
+  border: 1px solid #ba274a;
 }
 
 .pay_button_container {
@@ -840,4 +850,20 @@ input::-webkit-inner-spin-button {
   color: white;
   font-weight: bold;
   font-size: 16px;
+}
+
+.passbook_select:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.select_coupon select:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.passbook_select,
+.select_coupon select {
+  box-sizing: border-box;
+  width: 100%;
 }

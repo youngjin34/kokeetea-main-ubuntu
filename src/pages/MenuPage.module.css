@@ -62,11 +62,8 @@
   border-color: #ba274a;
 }
 
-/* 포커스 효과 (선택 시) */
 .branchSelect:focus {
   outline: none;
-  border-color: #ba274a;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
 /* 드롭다운 아이콘 추가 (배경 이미지 활용) */

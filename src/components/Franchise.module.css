@@ -159,6 +159,11 @@
   font-size: 14px;
 }
 
+.select_input:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
 .number_input {
   padding: 8px;
   border: 1px solid #ddd;
@@ -166,6 +171,11 @@
   font-size: 14px;
   flex: 1;
   margin-bottom: 0;
+}
+
+.number_input:focus {
+  outline: none;
+  border: 1px solid #ba274a;
 }
 
 .additional_options {
@@ -239,6 +249,12 @@
 
 .form_group select {
   font-size: 18px;
+}
+
+.form_group input:focus,
+.form_group textarea:focus {
+  outline: none;
+  border: 1px solid #ba274a;
 }
 
 .cost_result small {

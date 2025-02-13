@@ -120,7 +120,7 @@
 }
 
 .FormGroup input:focus {
-  border: 2px solid #ba274a;
+  border: 1px solid #ba274a;
   outline: none;
 }
 
@@ -140,7 +140,7 @@
 }
 
 .FormGroup textarea:focus {
-  border: 2px solid #ba274a;
+  border: 1px solid #ba274a;
   outline: none;
 }
 
@@ -248,7 +248,7 @@
 }
 
 .PhonePrefix:focus {
-  border: 2px solid #ba274a;
+  border: 1px solid #ba274a;
   outline: none;
 }
 
@@ -283,6 +283,6 @@
 }
 
 .select_input:focus {
-  border: 2px solid #ba274a;
+  border: 1px solid #ba274a;
   outline: none;
 }

@@ -105,6 +105,11 @@
   filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(327deg) brightness(87%) contrast(97%);
 }
 
+.dateInput:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
 .searchButton {
   padding: 5px 15px;
   background: #333;
