@@ -475,14 +475,11 @@ function Navigation({
 
         <div className="inner">
           <ul className={`${style.header_top}`}>
-            {isLogined && (
+            {/* 장바구니 아이콘 - 관리자가 아닐 때만 표시 */}
+            {isLogined && localStorage.getItem('authority') !== 'ADMIN' && (
               <>
                 <li>
-                  <Link
-                    to="/cart"
-                    style={{ color: fontColor }}
-                    className={style.cart_icon}
-                  >
+                  <Link to="/cart" className={style.cart_icon_wrapper}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -501,52 +498,34 @@ function Navigation({
                     <span className={style.cart_count}>{cartCount}</span>
                   </Link>
                 </li>
-                <li>
-                  <div
-                    onClick={toggleNotificationModal}
-                    style={{ color: fontColor, cursor: "pointer" }}
-                    className={style.notification_icon}
-                    ref={notificationRef}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={fontColor === "black" ? "#000" : "#fff"}
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    {notificationCount > 0 && (
-                      <span className={style.notification_count}>
-                        {notificationCount}
-                      </span>
-                    )}
-                    {isNotificationModalOpen && (
-                      <div className={style.notification_dropdown}>
-                        <div>새로운 알림이 없습니다.</div>
-                      </div>
-                    )}
-                  </div>
-                </li>
               </>
             )}
 
+            {/* 로그인/로그아웃 및 관리자/마이페이지 */}
             {isLogined ? (
-              <li onClick={logoutFunction}>
-                <Link
-                  to="#"
-                  style={{ color: fontColor }}
-                  className={style.user_menu_text}
-                >
-                  LOGOUT
-                </Link>
-              </li>
+              <>
+                <li onClick={logoutFunction}>
+                  <Link
+                    to="#"
+                    style={{ color: fontColor }}
+                    className={style.user_menu_text}
+                  >
+                    LOGOUT
+                  </Link>
+                </li>
+                <li className={style.menu_divider} style={{ color: fontColor }}>
+                  |
+                </li>
+                <li>
+                  <Link
+                    to="/mypage"
+                    style={{ color: fontColor }}
+                    className={style.user_menu_text}
+                  >
+                    {localStorage.getItem('authority') === 'ADMIN' ? 'ADMIN PAGE' : 'MY PAGE'}
+                  </Link>
+                </li>
+              </>
             ) : (
               <>
                 <li>
@@ -573,49 +552,38 @@ function Navigation({
               </>
             )}
 
-            {isLogined && (
+            {/* SNS 아이콘들 - 관리자가 아닐 때만 표시 */}
+            {(!isLogined || localStorage.getItem('authority') !== 'ADMIN') && (
               <>
-                <li className={style.menu_divider} style={{ color: fontColor }}>
-                  |
+                <li>
+                  <Link to="https://ko-kr.facebook.com/luvkokeetea/">
+                    <img
+                      src={getFacebookIcon()}
+                      alt="Facebook logo"
+                      className={style.sns}
+                    />
+                  </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/mypage"
-                    style={{ color: fontColor }}
-                    className={style.user_menu_text}
-                  >
-                    MY PAGE
+                  <Link to="https://www.instagram.com/kokeetea/">
+                    <img
+                      src={getInstaIcon()}
+                      alt="Instagram logo"
+                      className={style.sns}
+                    />
+                  </Link>
+                </li>
+                <li>
+                  <Link to="https://www.youtube.com/@kokeetea2886">
+                    <img
+                      src={getYoutubeIcon()}
+                      alt="YouTube logo"
+                      className={style.youtube_icon}
+                    />
                   </Link>
                 </li>
               </>
             )}
-            <li>
-              <Link to="https://ko-kr.facebook.com/luvkokeetea/">
-                <img
-                  src={getFacebookIcon()}
-                  alt="Facebook logo"
-                  className={style.sns}
-                />
-              </Link>
-            </li>
-            <li>
-              <Link to="https://www.instagram.com/kokeetea/">
-                <img
-                  src={getInstaIcon()}
-                  alt="Instagram logo"
-                  className={style.sns}
-                />
-              </Link>
-            </li>
-            <li>
-              <Link to="https://www.youtube.com/@kokeetea2886">
-                <img
-                  src={getYoutubeIcon()}
-                  alt="YouTube logo"
-                  className={style.youtube_icon}
-                />
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
