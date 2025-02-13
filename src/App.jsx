@@ -33,6 +33,7 @@ import Cart from "./pages/Cart";
 import OrderComplete from "./pages/OrderComplete";
 import FloatingButtons from "./components/FloatingButtons";
 import { CartProvider } from "./components/CartContext";
+import MyMenu from "./pages/MyMenu";
 
 function AppContent() {
   const location = useLocation();
@@ -143,6 +144,7 @@ function App() {
             <Route path="/orderhistory" element={<OrderHistory />} />
             <Route path="/inquiryhistory" element={<InquiryHistory />} />
             <Route path="/couponstamp" element={<CouponStamp />} />
+            <Route path="/mymenu" element={<MyMenu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/ordercomplete" element={<OrderComplete />} />
           </Routes>

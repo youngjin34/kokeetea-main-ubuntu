@@ -74,7 +74,7 @@ const Cart = () => {
 
       await fetchCartCount();
 
-      await fetchCartData(); // 이 함수 내에서 cartCount가 업데이트됨
+      await fetchCartData();
       setSelectedItems([]);
     } catch (error) {
       console.error("상품 삭제 실패:", error);

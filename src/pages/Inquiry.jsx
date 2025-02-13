@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import style from "./Inquiry.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Inquiry = () => {
   // 페이지 들어왔들 때 제일 위로 이동하게 하는 코드
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     type: "문의",
@@ -40,21 +43,28 @@ const Inquiry = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // 필수 필드 검증
-    if (!formData.name || !formData.phone || !formData.title || !formData.content || !formData.type) {
-      alert('모든 필수 항목을 입력해주세요.');
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.title ||
+      !formData.content ||
+      !formData.type
+    ) {
+      alert("모든 필수 항목을 입력해주세요.");
       return;
     }
 
-    const fullEmail = formData.emailId && formData.emailDomain
-      ? `${formData.emailId}@${formData.emailDomain}`
-      : "";
+    const fullEmail =
+      formData.emailId && formData.emailDomain
+        ? `${formData.emailId}@${formData.emailDomain}`
+        : "";
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        alert('로그인이 필요한 서비스입니다.');
+        alert("로그인이 필요한 서비스입니다.");
         return;
       }
 
@@ -62,25 +72,27 @@ const Inquiry = () => {
         category: formData.type,
         title: formData.title,
         text: formData.content,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().split("T")[0],
         writerName: formData.name,
         phoneNumber: formData.phone,
-        email: fullEmail
+        email: fullEmail,
       };
 
-      console.log('전송 데이터:', submitData);
-
-      const response = await axios.post('http://localhost:8080/api/questions', submitData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        withCredentials: true
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/questions",
+        submitData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 200) {
-        alert('문의가 성공적으로 등록되었습니다.');
-        
+        alert("문의가 성공적으로 등록되었습니다.");
+
         setFormData({
           type: "문의",
           name: "",
@@ -90,18 +102,20 @@ const Inquiry = () => {
           title: "",
           content: "",
         });
+
+        navigate("/inquiryhistory");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       if (error.response) {
-        console.error('Error response:', error.response.data);
+        console.error("Error response:", error.response.data);
         if (error.response.status === 401 || error.response.status === 403) {
-          alert('로그인이 필요하거나 권한이 없습니다.');
+          alert("로그인이 필요하거나 권한이 없습니다.");
         } else {
-          alert('문의 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          alert("문의 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         }
       } else {
-        alert('서버와의 통신 중 오류가 발생했습니다.');
+        alert("서버와의 통신 중 오류가 발생했습니다.");
       }
     }
   };
@@ -116,11 +130,11 @@ const Inquiry = () => {
 
   const handlePhoneChange = (e) => {
     const { value } = e.target;
-    const onlyNums = value.replace(/[^0-9]/g, '');
+    const onlyNums = value.replace(/[^0-9]/g, "");
     if (onlyNums.length <= 11) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        phone: onlyNums
+        phone: onlyNums,
       }));
     }
   };

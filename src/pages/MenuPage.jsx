@@ -42,6 +42,9 @@ function MenuPage({ isLogined }) {
     { name: "알로에", id: 20 },
   ];
 
+  const [myMenuModal, setMyMenuModel] = useState(false);
+  const [myMenuName, setMyMenuName] = useState("");
+
   const { fetchCartCount } = useContext(CartContext); // fetchCartCount 사용
 
   const handleToppingChange = (e, item, itemId) => {
@@ -102,6 +105,7 @@ function MenuPage({ isLogined }) {
         const response = await axios.get(
           `http://localhost:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
         );
+
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -175,10 +179,12 @@ function MenuPage({ isLogined }) {
         selectedMenu.includes("Cold Cloud")
       ) {
         setTemp("ICE");
+        setTempId(2);
       } else {
         setTemp("ICE");
+        setTempId(2);
       }
-      // 모달 열 때 기본값으로 초기화
+      // 모달 열 때 기본값으로 기화
       setSize("Regular");
       setSugar("70%");
       setIceAmount("보통");
@@ -276,6 +282,8 @@ function MenuPage({ isLogined }) {
       }
 
       try {
+        console.log(tempId);
+
         const response = await axios.post(
           "http://localhost:8080/api/carts",
           {
@@ -305,6 +313,72 @@ function MenuPage({ isLogined }) {
       } catch (error) {
         console.error("장바구니 추가 실패:", error);
         alert("장바구니 추가에 실패했습니다.");
+      }
+    }
+  };
+
+  const myMenuModalHandler = () => {
+    setMyMenuModel(true);
+  };
+
+  const closeMyMenuModal = () => {
+    setMyMenuModel(false);
+    setMyMenuName(""); // 입력값 초기화
+  };
+
+  // 나만의 메뉴 담기
+  const addToMyMenu = async () => {
+    if (!validateOptions()) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
+      if (selectedBranchId !== previousBranchId) {
+        const isConfirmed = window.confirm(
+          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+        );
+        if (!isConfirmed) {
+          return;
+        } else {
+          setCartItems([]); // 장바구니 비우기
+        }
+      }
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/members/personal-products",
+          {
+            product_id: selectedProduct.id,
+            option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
+            name: myMenuName,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(response);
+
+        if (response.status === 200) {
+          alert("나만의 메뉴에 추가되었습니다.");
+          toggleModal();
+          closeMyMenuModal();
+          fetchCartCount(); // 장바구니 개수 즉시 업데이트
+
+          // 장바구니에 아이템을 추가한 후, 이전 브랜치와 현재 브랜치가 같도록 설정
+          setPreviousBranchId(selectedBranchId);
+        } else {
+          alert("나만의 메뉴 추가에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("나만의 메뉴 추가 실패:", error);
+        alert("나만의 메뉴 추가에 실패했습니다.");
       }
     }
   };
@@ -888,6 +962,12 @@ function MenuPage({ isLogined }) {
                 </div>
                 <div className={style.button_group}>
                   <button
+                    className={`${style.modal_button} ${style.my_menu_button}`}
+                    onClick={myMenuModalHandler}
+                  >
+                    나만의 메뉴
+                  </button>
+                  <button
                     className={`${style.modal_button} ${style.cart_button}`}
                     onClick={addToCart}
                   >
@@ -901,6 +981,37 @@ function MenuPage({ isLogined }) {
                   </button>
                 </div>
               </div>
+
+              {/* 나만의 메뉴 모달창 */}
+              {myMenuModal && (
+                <div className={style.modal_overlay}>
+                  <div className={style.my_menu_modal}>
+                    <div className={style.my_menu_modal_content}>
+                      <h3>나만의 메뉴 이름 입력</h3>
+                      <input
+                        type="text"
+                        value={myMenuName}
+                        onChange={(e) => setMyMenuName(e.target.value)}
+                        placeholder="메뉴 이름을 입력하세요"
+                      />
+                      <div className={style.modal_button_group}>
+                        <button
+                          className={style.cancel_button}
+                          onClick={closeMyMenuModal}
+                        >
+                          취소
+                        </button>
+                        <button
+                          className={style.confirm_button}
+                          onClick={addToMyMenu}
+                        >
+                          추가
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
