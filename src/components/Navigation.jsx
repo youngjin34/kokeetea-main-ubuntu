@@ -29,39 +29,39 @@ function Navigation({
   // 햄버거 아이콘 경로 결정
   const getHamburgerIcon = () => {
     if (isHovered || fontColor === "black" || currentPage % 2 === 1) {
-      return "./img/hamberger_black.png";
+      return "/img/hamberger_black.png";
     }
-    return "./img/hamberger_white.png";
+    return "/img/hamberger_white.png";
   };
 
   // Facebook 아이콘 경로 결정
   const getFacebookIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./img/facebook_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "/img/facebook_black.png";
     }
     return currentPage % 2 === 0
-      ? "./img/facebook_white.png"
-      : "./img/facebook_black.png";
+      ? "/img/facebook_white.png"
+      : "/img/facebook_black.png";
   };
 
   // Insta 아이콘 경로 결정
   const getInstaIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./img/insta_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "/img/insta_black.png";
     }
     return currentPage % 2 === 0
-      ? "./img/insta_white.png"
-      : "./img/insta_black.png";
+      ? "/img/insta_white.png"
+      : "/img/insta_black.png";
   };
 
   // YouTube 아이콘 경로 결정
   const getYoutubeIcon = () => {
     if (isHovered || fontColor === "black") {
-      return "./img/yutube_black.png"; // 마우스를 올렸거나 글씨 색상이 검정일 때 검은색 이미지
+      return "/img/yutube_black.png";
     }
     return currentPage % 2 === 0
-      ? "./img/yutube_white.png"
-      : "./img/yutube_black.png";
+      ? "/img/yutube_white.png"
+      : "/img/yutube_black.png";
   };
 
   // 알림 관련 state 추가
@@ -76,13 +76,19 @@ function Navigation({
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
+  // state 선언부에 isAdmin 상태 추가
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem("token");
+      const authority = localStorage.getItem("authority");
       if (token) {
         setIsLogined(true);
+        setIsAdmin(authority === "ADMIN");
       } else {
         setIsLogined(false);
+        setIsAdmin(false);
       }
     };
 
@@ -584,7 +590,7 @@ function Navigation({
                     style={{ color: fontColor }}
                     className={style.user_menu_text}
                   >
-                    MY PAGE
+                    {isAdmin ? "ADMIN PAGE" : "MY PAGE"}
                   </Link>
                 </li>
               </>
@@ -624,7 +630,7 @@ function Navigation({
         <div className={style.modal} ref={loginRef}>
           <div className={style.modalContent}>
             <div className={style.modalClose} onClick={toggleLoginModal}>
-              <img src="/public/img/close.png" alt="Close" />
+              <img src="/img/close.png" alt="Close" />
             </div>
             <Login
               onClose={toggleLoginModal}
