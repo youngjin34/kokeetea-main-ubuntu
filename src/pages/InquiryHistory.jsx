@@ -17,6 +17,8 @@ const InquiryHistory = () => {
   const currentPath = window.location.pathname;
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [replyText, setReplyText] = useState("");
 
   // API 호출 함수 추가
   const fetchInquiries = async (selectedPeriod, start, end) => {
@@ -30,7 +32,7 @@ const InquiryHistory = () => {
       // API 요청 파라미터 설정
       let params = {
         size: 10,
-        page: 0
+        page: 0,
       };
 
       // 날짜 파라미터 추가
@@ -40,7 +42,7 @@ const InquiryHistory = () => {
       } else if (selectedPeriod) {
         const today = new Date();
         const startDate = new Date();
-        
+
         switch (selectedPeriod) {
           case "1개월":
             startDate.setMonth(today.getMonth() - 1);
@@ -54,32 +56,35 @@ const InquiryHistory = () => {
           default:
             break;
         }
-        
-        params.startDate = startDate.toISOString().split('T')[0];
-        params.endDate = today.toISOString().split('T')[0];
+
+        params.startDate = startDate.toISOString().split("T")[0];
+        params.endDate = today.toISOString().split("T")[0];
       }
 
       const response = await axios.get("http://localhost:8080/api/questions", {
         params,
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       // 응답 데이터 매핑
-      const mappedInquiries = response.data.questions.map(inquiry => ({
+      const mappedInquiries = response.data.questions.map((inquiry) => ({
         id: inquiry.id,
         subject: "1:1문의",
         title: inquiry.title,
         content: inquiry.text,
-        date: new Date(inquiry.created_date).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }).replace(/\. /g, '-').slice(0, -1),
+        date: new Date(inquiry.created_date)
+          .toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+          .replace(/\. /g, "-")
+          .slice(0, -1),
         status: inquiry.answered ? "답변완료" : "답변대기",
         reply: null,
-        replyDate: null
+        replyDate: null,
       }));
 
       setOrders(mappedInquiries);
@@ -95,6 +100,8 @@ const InquiryHistory = () => {
   // useEffect 수정
   useEffect(() => {
     fetchInquiries(period, startDate, endDate);
+    const authority = localStorage.getItem("authority");
+    setIsAdmin(authority === "ADMIN");
   }, [period, startDate, endDate]);
 
   const handleNavigation = (path) => {
@@ -109,23 +116,30 @@ const InquiryHistory = () => {
       }
 
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8080/api/questions/${order.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `http://localhost:8080/api/questions/${order.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
       // 상세 정보로 업데이트
       const detailData = {
         ...order,
         content: response.data.text,
         reply: response.data.feedback_text,
-        replyDate: response.data.feedback_date ?
-          new Date(response.data.feedback_date).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\. /g, '-').slice(0, -1) : null
+        replyDate: response.data.feedback_date
+          ? new Date(response.data.feedback_date)
+              .toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+              .replace(/\. /g, "-")
+              .slice(0, -1)
+          : null,
       };
 
       setSelectedInquiry(detailData);
@@ -174,8 +188,8 @@ const InquiryHistory = () => {
           `http://localhost:8080/api/questions/${inquiryId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -188,6 +202,58 @@ const InquiryHistory = () => {
         console.error("문의 삭제 실패:", err);
         alert("문의 삭제에 실패했습니다.");
       }
+    }
+  };
+
+  // handleSubmitReply 함수 추가
+  const handleSubmitReply = async (questionId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:8080/api/questions/${questionId}/feedback`,
+        { text: replyText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        alert("답변이 등록되었습니다.");
+        
+        // 문의 목록 새로고침
+        await fetchInquiries(period, startDate, endDate);
+        
+        // 선택된 문의의 상세 정보 새로고침
+        const updatedDetailResponse = await axios.get(
+          `http://localhost:8080/api/questions/${questionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        // 상세 정보 업데이트
+        const updatedDetail = {
+          ...selectedInquiry,
+          status: "답변완료",
+          reply: replyText,
+          replyDate: new Date().toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).replace(/\. /g, '-').slice(0, -1)
+        };
+
+        setSelectedInquiry(updatedDetail);
+        setReplyText("");
+      }
+    } catch (error) {
+      console.error("답변 등록 실패:", error);
+      alert("답변 등록에 실패했습니다.");
     }
   };
 
@@ -284,7 +350,7 @@ const InquiryHistory = () => {
                                         </p>
                                       ))}
                                   </div>
-                                  {order.reply && (
+                                  {order.reply ? (
                                     <div className={style.replySection}>
                                       <h3>답변 내용</h3>
                                       <div className={style.replyContent}>
@@ -306,6 +372,29 @@ const InquiryHistory = () => {
                                         답변일자 {order.replyDate}
                                       </div>
                                     </div>
+                                  ) : (
+                                    isAdmin && (
+                                      <div className={style.replyForm}>
+                                        <h3>답변 작성</h3>
+                                        <textarea
+                                          value={replyText}
+                                          onChange={(e) =>
+                                            setReplyText(e.target.value)
+                                          }
+                                          rows={5}
+                                          className={style.replyTextarea}
+                                        />
+                                        <button
+                                          className={style.submitReplyButton}
+                                          onClick={() =>
+                                            handleSubmitReply(order.id)
+                                          }
+                                          disabled={!replyText.trim()}
+                                        >
+                                          답변 등록
+                                        </button>
+                                      </div>
+                                    )
                                   )}
                                   <div className={style.buttonContainer}>
                                     <button
@@ -335,38 +424,61 @@ const InquiryHistory = () => {
           </div>
         </div>
         <div className={style.sideNav}>
-          <div
-            className={`${style.sideNavItem} ${
-              currentPath === "/memberinfoupdate" ? style.active : ""
-            }`}
-            onClick={() => handleNavigation("/memberinfoupdate")}
-          >
-            회원정보 확인 · 수정
-          </div>
-          <div
-            className={`${style.sideNavItem} ${
-              currentPath === "/couponstamp" ? style.active : ""
-            }`}
-            onClick={() => handleNavigation("/couponstamp")}
-          >
-            쿠폰 · 스탬프 조회
-          </div>
-          <div
-            className={`${style.sideNavItem} ${
-              currentPath === "/orderhistory" ? style.active : ""
-            }`}
-            onClick={() => handleNavigation("/orderhistory")}
-          >
-            주문내역 조회
-          </div>
-          <div
-            className={`${style.sideNavItem} ${
-              currentPath === "/inquiryhistory" ? style.active : ""
-            }`}
-            onClick={() => handleNavigation("/inquiryhistory")}
-          >
-            1:1 문의 내역
-          </div>
+          {isAdmin ? (
+            <>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/inquiryhistory" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/inquiryhistory")}
+              >
+                1:1 문의 관리
+              </div>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/notice/write" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/notice/write")}
+              >
+                공지사항 작성
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/memberinfoupdate" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/memberinfoupdate")}
+              >
+                회원정보 확인 · 수정
+              </div>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/couponstamp" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/couponstamp")}
+              >
+                쿠폰 · 스탬프 조회
+              </div>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/orderhistory" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/orderhistory")}
+              >
+                주문내역 조회
+              </div>
+              <div
+                className={`${style.sideNavItem} ${
+                  currentPath === "/inquiryhistory" ? style.active : ""
+                }`}
+                onClick={() => handleNavigation("/inquiryhistory")}
+              >
+                1:1 문의 내역
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

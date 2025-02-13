@@ -34,6 +34,7 @@ import OrderComplete from "./pages/OrderComplete";
 import FloatingButtons from "./components/FloatingButtons";
 import { CartProvider } from "./components/CartContext";
 import MyMenu from "./pages/MyMenu";
+import NoticeWrite from "./pages/NoticeWrite";
 
 function AppContent() {
   const location = useLocation();
@@ -117,6 +118,7 @@ function App() {
             <Route path="/kokeestory" element={<KokeeStory />} />
             <Route path="/affiliated" element={<Affiliated />} />
             <Route path="/notice" element={<NoticePage />} />
+            <Route path="/notice/write" element={<NoticeWrite />} />
             <Route path="/inquiry" element={<Inquiry />} />
             <Route path="/faq" element={<Faq isLogined={isLogined} />} />
             <Route path="/store" element={<Store />} />

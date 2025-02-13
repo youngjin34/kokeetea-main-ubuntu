@@ -195,8 +195,7 @@
 }
 
 .inquiryContent {
-  background-color: #f9f9f9;
-  padding: 20px;
+  padding: 0px 20px;
   border-radius: 8px;
   margin-bottom: 20px;
   white-space: pre-wrap;
@@ -208,19 +207,20 @@
 }
 
 .inquiryDetail {
-  padding: 20px;
   background-color: #fff;
   border-radius: 8px;
   margin-top: 10px;
 }
 
 .replyContent {
-  background-color: #fff;
-  padding: 20px;
   border-radius: 8px;
   margin-top: 10px;
   white-space: pre-wrap;
   line-height: 1.6;
+}
+
+.replyDate {
+  margin: 20px 0px 0px 0px;
 }
 
 .orderTable td {
@@ -231,4 +231,40 @@
 /* 선택된 행의 스타일 */
 .selectedTable tr.selected {
   background-color: #f8f8f8;
+}
+
+.replyForm {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.replyTextarea {
+  width: 100%;
+  padding: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.submitReplyButton {
+  background-color: #ba274a;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.submitReplyButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.submitReplyButton:hover:not(:disabled) {
+  background-color: #a02242;
 }

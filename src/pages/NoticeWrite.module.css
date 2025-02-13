@@ -1,0 +1,196 @@
+.container {
+  padding-top: 180px;
+  width: 70%;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+}
+
+.menu_title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 40px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.title::before {
+  content: "";
+  width: 6px;
+  height: 32px;
+  background: #ba274a;
+  border-radius: 8px;
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.content {
+  flex: 1;
+  max-width: 800px;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.sideNav {
+  width: 200px;
+  margin-left: 20px;
+  border-top: 2px solid #E5D5DA;
+  height: 100%;
+}
+
+.sideNavItem {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #E5D5DA;
+  font-weight: 600;
+}
+
+.sideNavItem:last-child {
+  border-bottom: 2px solid #E5D5DA;
+}
+
+.sideNavItem:hover {
+  color: #ba274a;
+}
+
+.active {
+  color: #BA274A;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.form {
+  width: 90%;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  width: 100%;
+  position: relative;
+}
+
+.inputGroup label {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.required {
+  color: #ba274a;
+  margin-left: 4px;
+}
+
+.inputGroup input,
+.inputGroup textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #E5D5DA;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  outline: none;
+  border-color: #ba274a;
+}
+
+.inputGroup textarea {
+  resize: vertical;
+  min-height: 300px;
+}
+
+.charCount {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitButton {
+  background-color: #ba274a;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #a32242;
+}
+
+.cancelButton {
+  background: none;
+  color: #666;
+  border: 2px solid #E5D5DA;
+}
+
+.cancelButton:hover {
+  background-color: #eee;
+}
+
+.inputGroup input::placeholder,
+.inputGroup textarea::placeholder {
+  color: #999;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+
+  .contentWrapper {
+    flex-direction: column;
+  }
+
+  .content {
+    margin-right: 0;
+    max-width: 100%;
+  }
+
+  .sideNav {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+  }
+} 
