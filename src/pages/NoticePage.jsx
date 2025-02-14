@@ -98,25 +98,36 @@ const Notice = () => {
 
   const getPageNumbers = () => {
     const pages = [];
-    if (totalPages <= 5) {
+    const totalDisplayPages = 5; // 한 번에 보여줄 페이지 번호 개수
+    const halfDisplay = Math.floor(totalDisplayPages / 2); // 현재 페이지 기준 좌우로 보여줄 페이지 수
+
+    if (totalPages <= totalDisplayPages) {
+      // 전체 페이지가 표시할 페이지 수보다 적으면 모든 페이지 표시
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 5; i++) {
-          pages.push(i);
-        }
-      } else if (currentPage >= totalPages - 2) {
-        for (let i = totalPages - 4; i <= totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
-          pages.push(i);
-        }
+      let startPage = currentPage - halfDisplay;
+      let endPage = currentPage + halfDisplay;
+
+      // 시작 페이지가 1보다 작을 경우 조정
+      if (startPage < 1) {
+        startPage = 1;
+        endPage = totalDisplayPages;
+      }
+
+      // 끝 페이지가 총 페이지수보다 클 경우 조정
+      if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = totalPages - totalDisplayPages + 1;
+      }
+
+      // 페이지 번호 배열 생성
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
       }
     }
+
     return pages;
   };
 
@@ -222,42 +233,62 @@ const Notice = () => {
           </div>
 
           {notices && notices.length > 0 && (
-            <div className={style.Pagination}>
-              <button
-                onClick={() => handlePageChange(1)}
-                className={style.PageButton}
-                disabled={currentPage === 1}
-              >
-                «
-              </button>
-              {getPageNumbers().map((pageNum) => (
+            <div className={style.PaginationContainer}>
+              <div className={style.Pagination}>
                 <button
-                  key={pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                  className={currentPage === pageNum ? style.ActivePage : style.PageButton}
+                  onClick={() => handlePageChange(1)}
+                  className={style.PageButton}
+                  disabled={currentPage === 1}
                 >
-                  {pageNum}
+                  «
                 </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                className={style.PageButton}
-                disabled={currentPage === totalPages}
-              >
-                »
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={style.PageButton}
+                  disabled={currentPage === 1}
+                >
+                  ‹
+                </button>
 
-          {/* 관리자용 작성 버튼 추가 */}
-          {isAdmin && (
-            <div className={style.WriteButtonWrapper}>
-              <button
-                className={style.WriteButton}
-                onClick={() => navigate('/notice/write')}
-              >
-                작성하기
-              </button>
+                {getPageNumbers().map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={
+                      currentPage === pageNum
+                        ? style.ActivePage
+                        : style.PageButton
+                    }
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={style.PageButton}
+                  disabled={currentPage === totalPages}
+                >
+                  ›
+                </button>
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  className={style.PageButton}
+                  disabled={currentPage === totalPages}
+                >
+                  »
+                </button>
+              </div>
+              {isAdmin && (
+                <div className={style.ButtonContainer}>
+                  <button
+                    className={style.InquiryButton}
+                    onClick={() => navigate('/notice/write')}
+                  >
+                    작성하기
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -12,10 +12,16 @@
   color: #f5edf0;
 }
 
-.Notice > span {
+.notice_title {
   font-size: 20px;
   font-weight: bolder;
   margin-left: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.notice_title:hover {
+  color: #ba274a;
 }
 
 .notice_content {

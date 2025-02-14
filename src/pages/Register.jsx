@@ -78,19 +78,24 @@ const PasswordInput = ({
   </>
 );
 
-const NameInput = ({ value, onChange }) => (
+const NameInput = ({ value, onChange, validName }) => (
   <div className={style.FormGroup}>
     <label>
       이름<span className={style.required}>*</span>
     </label>
     <div className={style.NameInputGroup}>
-      <input
-        type="text"
-        name="name"
-        value={value}
-        onChange={onChange}
-        placeholder="이름을 입력해주세요."
-      />
+      <div className={style.inputWrapper}>
+        <input
+          type="text"
+          name="name"
+          value={value}
+          onChange={onChange}
+          placeholder="이름을 입력해주세요."
+        />
+        <span className={`${style.guideMessage} ${validName ? style.errorMessage : ""}`}>
+          이름은 2자에서 4자 사이로 입력해주세요.
+        </span>
+      </div>
     </div>
   </div>
 );
@@ -205,6 +210,7 @@ const Register = () => {
 
   const [validId, setValidId] = useState(false);
   const [validPw, setValidPw] = useState(false);
+  const [validName, setValidName] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -218,6 +224,19 @@ const Register = () => {
     setFormData((prev) => ({
       ...prev,
       emailDomain: e.target.value,
+    }));
+  };
+
+  const onChangeName = (e) => {
+    const { value } = e.target;
+    if (!value || (value.length >= 2 && value.length <= 4)) {
+      setValidName(false);
+    } else {
+      setValidName(true);
+    }
+    setFormData(prev => ({
+      ...prev,
+      name: value
     }));
   };
 
@@ -254,6 +273,12 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 이름 길이 검사 추가
+    if (formData.name.length < 2 || formData.name.length > 4) {
+      alert("이름은 2자에서 4자 사이로 입력해주세요.");
+      return;
+    }
 
     // 모든 필수 항목 검사
     if (
@@ -333,7 +358,11 @@ const Register = () => {
             validPw={validPw}
           />
 
-          <NameInput value={formData.name} onChange={handleChange} />
+          <NameInput 
+            value={formData.name} 
+            onChange={onChangeName}
+            validName={validName} 
+          />
 
           <PhoneInput value={formData.phoneNumber} onChange={handleChange} />
 

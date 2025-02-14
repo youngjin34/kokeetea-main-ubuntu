@@ -124,12 +124,22 @@
   border-bottom: 1px solid #eee;
 }
 
+.PaginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  margin-top: 30px;
+}
+
 .Pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  margin-top: 20px;
+  margin: 0 auto;
+  flex: 1;
 }
 
 .PageButton {
@@ -144,6 +154,7 @@
   justify-content: center;
   font-size: 14px;
   color: #666;
+  transition: all 0.2s ease;
 }
 
 .PageButton:disabled {
@@ -165,10 +176,35 @@
   justify-content: center;
   font-size: 14px;
   border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
 .PageButton:hover:not(:disabled) {
   color: #ba274a;
+}
+
+.ButtonContainer {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.InquiryButton {
+  padding: 8px 16px;
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.InquiryButton:hover {
+  background-color: #a32242;
 }
 
 .TopControls {
@@ -248,24 +284,26 @@
   color: #000;
 }
 
-.WriteButtonContainer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+.WriteButtonWrapper {
+  margin: 0;
 }
 
 .WriteButton {
-  padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #ba274a;
   color: white;
   border: none;
+  padding: 8px 20px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  height: 35px;
+  line-height: 1;
 }
 
 .WriteButton:hover {
-  background-color: #0056b3;
+  background-color: #a32242;
 }
 
 .CategoryContainer {
@@ -299,24 +337,4 @@
 
 .ActiveCategory:hover {
   background: #a32242;
-}
-
-.WriteButtonWrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.WriteButton {
-  background-color: #ba274a;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.WriteButton:hover {
-  background-color: #a32242;
 }

@@ -98,6 +98,7 @@
   border-radius: 8px;
   width: 100px;
   margin-bottom: 0;
+  box-sizing: border-box;
 }
 
 .dateInput::-webkit-calendar-picker-indicator {
@@ -162,17 +163,18 @@
 
 .backButton,
 .deleteButton {
-  padding: 8px 20px;
+  padding: 10px 10px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   transition: all 0.2s ease;
+  width: 60px;
 }
 
 .backButton {
   background-color: #ffffff;
-  border: 1px solid #808080;
-  color: #808080;
+  border: 1px solid #E5D5DA;
+  color: #666;
 }
 
 .backButton:hover {
@@ -242,12 +244,13 @@
 
 .replyTextarea {
   width: 100%;
-  padding: 10px 0;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
   margin-bottom: 10px;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .submitReplyButton {
@@ -267,4 +270,14 @@
 
 .submitReplyButton:hover:not(:disabled) {
   background-color: #a02242;
+}
+
+.replyTextarea:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.dateInput:focus {
+  outline: none;
+  border: 1px solid #ba274a;
 }

@@ -116,6 +116,11 @@
   margin: 8px 0;
   width: 100%;
   border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
 }
 
 .container {

@@ -27,6 +27,8 @@ const FAQ = ({ isLogined }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const authority = localStorage.getItem("authority");
+    setIsAdmin(authority === "ADMIN");
     fetchNotices();
   }, [currentPage, selectedCategory]);
 
@@ -146,7 +148,7 @@ const FAQ = ({ isLogined }) => {
                 <div className={style.TableHeader}>
                   <div className={style.HeaderNo}>번호</div>
                   <div className={style.HeaderCategory}>카테고리</div>
-                  <div className={style.HeaderSubject}>주제</div>
+                  <div className={style.HeaderSubject}>제목</div>
                   <div className={style.HeaderDate}>작성일</div>
                 </div>
 
@@ -162,7 +164,6 @@ const FAQ = ({ isLogined }) => {
                         {notice.title}
                       </div>
                       <div className={style.RowDate}>{notice.date}</div>
-                      <div className={style.RowViews}>{notice.view}</div>
                     </div>
                     {expandedNotice === notice.id && (
                       <div className={style.ContentRow}>
@@ -230,25 +231,14 @@ const FAQ = ({ isLogined }) => {
               </button>
             </div>
             <div className={style.ButtonContainer}>
-              {isLogined && (
+              {isLogined && !isAdmin && (
                 <button
                   className={style.InquiryButton}
                   onClick={() => {
-                    window.location.href = "/inquiry"; // 1:1 문의 페이지로 이동
+                    window.location.href = "/inquiry";
                   }}
                 >
                   1:1 문의하기
-                </button>
-              )}
-
-              {isAdmin && (
-                <button
-                  className={style.WriteButton}
-                  onClick={() => {
-                    /* 글쓰기 페이지로 이동하는 로직 */
-                  }}
-                >
-                  작성하기
                 </button>
               )}
             </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import style from "./Notice.module.css";
 
@@ -7,6 +8,7 @@ const Notice = () => {
   const [index, setIndex] = useState(0);
   const [noticeList, setNoticeList] = useState([]);
   const [notice, setNotice] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getNotice() {
@@ -40,7 +42,7 @@ const Notice = () => {
 
   return (
     <div className={`${style.Notice}`}>
-      <span>NOTICE</span>
+      <span onClick={() => navigate('/notice')} className={style.notice_title}>NOTICE</span>
       {notice ? (
         <p className={`${style.notice_content}`}>{notice}</p>
       ) : (

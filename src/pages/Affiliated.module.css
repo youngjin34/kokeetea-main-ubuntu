@@ -119,6 +119,11 @@
   font-size: 14px;
 }
 
+.FormGroup input:focus {
+  border: 1px solid #ba274a;
+  outline: none;
+}
+
 .FormGroup textarea {
   height: auto;
   border: 1px solid #E5D5DA;
@@ -132,6 +137,11 @@
 
 .FormGroup:has(textarea) {
   align-items: flex-start;
+}
+
+.FormGroup textarea:focus {
+  border: 1px solid #ba274a;
+  outline: none;
 }
 
 .FormFooter {
@@ -237,6 +247,11 @@
   font-size: 14px;
 }
 
+.PhonePrefix:focus {
+  border: 1px solid #ba274a;
+  outline: none;
+}
+
 .PhoneInput {
   flex: 1;
   height: 36px;
@@ -267,3 +282,7 @@
   appearance: none;
 }
 
+.select_input:focus {
+  border: 1px solid #ba274a;
+  outline: none;
+}

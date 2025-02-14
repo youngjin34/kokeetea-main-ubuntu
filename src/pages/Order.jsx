@@ -114,7 +114,7 @@ function Order() {
     setSelectedPickupMethod(method);
   };
 
-  // 쿠폰 변경 핸들러
+  // 쿠폰 변경 핸들러 수정
   const handleCouponChange = (event) => {
     const selectedCouponId = event.target.value;
     const totalPrice = calculateTotalPrice();
@@ -124,21 +124,66 @@ function Order() {
     );
     let newDiscount = coupon ? coupon.discount_price : 0;
 
-    if (newDiscount > totalPrice - usePoints) {
-      alert(`총 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
-      return; // 변경 막기
+    // 쿠폰 할인액이 (총 주문금액 - 적립금 사용액)을 초과하는지 확인
+    if (newDiscount + usePoints > totalPrice) {
+      alert(`총 할인금액이 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
+      return;
     }
 
     setSelectedCoupon(selectedCouponId);
     setDiscountAmount(newDiscount);
   };
 
-  // 총 할인 금액 계산
+  // 적립금 변경 핸들러 수정
+  const handlePointsChange = (e) => {
+    const inputValue = e.target.value;
+    const value = parseInt(inputValue) || 0;
+    const totalPrice = calculateTotalPrice();
+
+    // 빈 문자열이거나 숫자가 아닌 경우 0으로 설정
+    if (inputValue === '' || isNaN(value)) {
+      setUsePoints(0);
+      return;
+    }
+
+    // 입력된 값이 보유 적립금보다 큰 경우
+    if (value > points) {
+      alert("보유 적립금을 초과할 수 없습니다.");
+      setUsePoints(points);
+      return;
+    }
+
+    // 총 할인금액(쿠폰 할인 + 적립금)이 주문금액을 초과하는 경우
+    if (value + discountAmount > totalPrice) {
+      alert(`총 할인금액이 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
+      const maxPoints = totalPrice - discountAmount;
+      setUsePoints(Math.max(0, maxPoints));
+      return;
+    }
+
+    // 유효한 입력인 경우 적립금 설정
+    setUsePoints(value);
+  };
+
+  // 적립금 전액 사용 핸들러 수정
+  const handleUseAllPoints = () => {
+    const totalPrice = calculateTotalPrice();
+    const maxUsablePoints = totalPrice - discountAmount; // 쿠폰 할인을 제외한 최대 사용 가능 적립금
+    
+    if (points >= maxUsablePoints) {
+      setUsePoints(maxUsablePoints);
+    } else {
+      setUsePoints(points);
+    }
+  };
+
+  // 총 할인 금액 계산 함수 수정
   const calculateDiscount = () => {
+    const totalPrice = calculateTotalPrice();
     const totalDiscount = discountAmount + usePoints;
-    return totalDiscount > calculateTotalPrice()
-      ? calculateTotalPrice()
-      : totalDiscount;
+    
+    // 총 할인금액이 주문금액을 초과하지 않도록 제한
+    return Math.min(totalDiscount, totalPrice);
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -207,34 +252,6 @@ function Order() {
     navigate("/cart");
   };
 
-  // 적립금 변경 핸들러
-  const handlePointsChange = (e) => {
-    const value = parseInt(e.target.value) || 0;
-    const totalPrice = calculateTotalPrice();
-    const maxUsablePoints = totalPrice - discountAmount; // 쿠폰 적용 후 남은 금액
-
-    if (value > points) {
-      alert("보유 적립금을 초과할 수 없습니다.");
-      return; // 변경 막기
-    }
-    if (value > maxUsablePoints) {
-      alert(`총 주문 금액(${totalPrice}원)을 초과할 수 없습니다.`);
-      return; // 변경 막기
-    }
-
-    setUsePoints(value);
-  };
-
-  // 적립금 전액 사용 핸들러
-  const handleUseAllPoints = () => {
-    const totalPrice = calculateTotalPrice();
-    if (points >= totalPrice) {
-      setUsePoints(totalPrice);
-    } else {
-      setUsePoints(points);
-    }
-  };
-
   const OrderMethods = () => {
     return (
       <div className={style.order_methods}>
@@ -292,7 +309,7 @@ function Order() {
               <span>쿠폰 할인 금액</span>
             </div>
             <span className={style.discount_price_money}>
-              {discountAmount} 원
+              {discountAmount.toLocaleString()} 원
             </span>
           </div>
         </div>
@@ -303,7 +320,9 @@ function Order() {
           <div className={style.points_container}>
             <div className={style.points_info}>
               <span>보유 적립금</span>
-              <span className={style.available_points}>{points} P</span>
+              <span className={style.available_points}>
+                {points.toLocaleString()} P
+              </span>
             </div>
             <div className={style.points_input_wrapper}>
               <input
@@ -528,14 +547,14 @@ function Order() {
                 <div className={style.order_summary_detail}>
                   <span className={style.order_summary_item}>쿠폰 할인</span>
                   <span className={style.order_summary_discount}>
-                    {discountAmount} 원
+                    {discountAmount.toLocaleString()} 원
                   </span>
                 </div>
               )}
               <div className={style.order_summary_detail}>
                 <span className={style.order_summary_item}>적립금 할인</span>
                 <span className={style.order_summary_discount}>
-                  {usePoints} 원
+                  {usePoints.toLocaleString()} 원
                 </span>
               </div>
               <div className={style.order_summary_detail}>

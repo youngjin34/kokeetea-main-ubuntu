@@ -327,3 +327,23 @@
   font-size: 12px;
   margin-left: 130px;
 }
+
+.input:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.nameInput:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.emailInput input:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
+
+.emailSelect:focus {
+  outline: none;
+  border: 1px solid #ba274a;
+}
