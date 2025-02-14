@@ -2,6 +2,19 @@
   width: 100%;
   min-height: 100vh;
   background: #ffffff;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  position: relative;
+  will-change: transform;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Container::-webkit-scrollbar {
+  display: none;
 }
 
 .MainContent {
@@ -199,11 +212,20 @@
   font-weight: bold;
 }
 
+.FirstSection {
+  min-height: 100vh;
+  height: auto;
+  scroll-snap-align: none;
+  background-color: #ffffff;
+}
+
 .ParallaxSection {
-  height: 100vh;
-  width: 100%;
   position: relative;
+  height: 100vh;
+  scroll-snap-align: start;
   overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .ParallaxBackground {
@@ -215,42 +237,80 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
-  backface-visibility: hidden;
-  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-out;
 }
 
 .ParallaxContent {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  z-index: 2;
   text-align: center;
-  color: white;
-  z-index: 1;
-  width: 100%;
+  color: #333;
   padding: 0 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
 }
 
 .ParallaxContent h2 {
-  font-size: 4rem;
-  margin-bottom: 2rem;
-  font-weight: bold;
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .ParallaxContent p {
-  font-size: 1.5rem;
-  line-height: 1.8;
+  font-size: 24px;
+  line-height: 1.6;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.ParallaxBackground::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.05);
+.ParallaxSection:first-child .ParallaxContent h2,
+.ParallaxSection:first-child .ParallaxContent p {
+  color: #333;
+  text-shadow: none;
+}
+
+.ParallaxSection:not(.FirstSection) header {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .ParallaxContent h2 {
+    font-size: 36px;
+  }
+
+  .ParallaxContent p {
+    font-size: 18px;
+  }
+
+  .menu_title {
+    font-size: 40px;
+  }
+
+  .menu_content {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ParallaxContent h2 {
+    font-size: 28px;
+  }
+
+  .ParallaxContent p {
+    font-size: 16px;
+  }
+
+  .menu_title {
+    font-size: 32px;
+  }
+
+  .menu_content {
+    font-size: 16px;
+  }
 }
 
 .title_animation {
@@ -313,4 +373,10 @@
     opacity: 0;
     transform: rotate(45deg) translate(5px, 5px);
   }
+}
+
+/* 헤더 스타일 수정을 위한 추가 */
+header {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1000;
 }

@@ -61,12 +61,14 @@ const InquiryHistory = () => {
         params.endDate = today.toISOString().split("T")[0];
       }
 
-      const response = await axios.get("http://localhost:8080/api/questions", {
+      const response = await axios.get("http://localhost:8080/api/admin/questions", {
         params,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log(response.data);
 
       // 응답 데이터 매핑
       const mappedInquiries = response.data.questions.map((inquiry) => ({
@@ -231,8 +233,8 @@ const InquiryHistory = () => {
           `http://localhost:8080/api/questions/${questionId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -241,11 +243,11 @@ const InquiryHistory = () => {
           ...selectedInquiry,
           status: "답변완료",
           reply: replyText,
-          replyDate: new Date().toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\. /g, '-').slice(0, -1)
+          replyDate: new Date().toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).replace(/\. /g, "-").slice(0, -1),
         };
 
         setSelectedInquiry(updatedDetail);
