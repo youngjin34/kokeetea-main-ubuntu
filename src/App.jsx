@@ -38,7 +38,6 @@ import NoticeWrite from "./pages/NoticeWrite";
 
 function AppContent() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state?.currentPage !== undefined) {

@@ -17,7 +17,7 @@ const MyPage = () => {
     // 컴포넌트 마운트 시 인증 상태와 권한 확인
     const token = localStorage.getItem("token");
     const authority = localStorage.getItem("authority");
-    
+
     if (!token) {
       navigate("/login");
       return;
@@ -25,7 +25,7 @@ const MyPage = () => {
 
     setIsAdmin(authority === "ADMIN");
     window.scrollTo(0, 0);
-    
+
     if (authority !== "ADMIN") {
       fetchMembershipInfo();
     }
@@ -48,13 +48,13 @@ const MyPage = () => {
 
       // 멤버십 정보 가져오기
       const membershipResponse = await axios.get(
-        "http://localhost:8080/api/members/about/membership",
+        "http://spring.mirae.network:8080/api/members/about/membership",
         { headers }
       );
 
       // 쿠폰/스탬프 정보 가져오기
       const couponResponse = await axios.get(
-        "http://localhost:8080/api/members/about/gaeggul",
+        "http://spring.mirae.network:8080/api/members/about/gaeggul",
         { headers }
       );
 
@@ -100,24 +100,32 @@ const MyPage = () => {
   return (
     <div className={style.container}>
       <div className={style.content}>
-        <h1 className={style.title}>{isAdmin ? "관리자 페이지" : "마이 페이지"}</h1>
+        <h1 className={style.title}>
+          {isAdmin ? "관리자 페이지" : "마이 페이지"}
+        </h1>
 
         {!isAdmin && (
           <>
             <div className={style.summarySection}>
               <div className={style.summaryItem}>
                 <span className={style.label}>멤버십 등급</span>
-                <span className={style.value}>{membershipInfo.grade || "-"}</span>
+                <span className={style.value}>
+                  {membershipInfo.grade || "-"}
+                </span>
               </div>
               <div className={style.divider}></div>
               <div className={style.summaryItem}>
                 <span className={style.label}>보유 쿠폰</span>
-                <span className={style.value}>{membershipInfo.couponCount}장</span>
+                <span className={style.value}>
+                  {membershipInfo.couponCount}장
+                </span>
               </div>
               <div className={style.divider}></div>
               <div className={style.summaryItem}>
                 <span className={style.label}>적립 스탬프</span>
-                <span className={style.value}>{membershipInfo.stampCount}개</span>
+                <span className={style.value}>
+                  {membershipInfo.stampCount}개
+                </span>
               </div>
             </div>
 
@@ -196,11 +204,11 @@ const MyPage = () => {
 
               <Link to="/mymenu" className={style.menuItem}>
                 <div className={style.iconWrapper}>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
                     strokeWidth="2"
                   >
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -208,7 +216,8 @@ const MyPage = () => {
                 </div>
                 <h3>나만의 메뉴</h3>
                 <p>
-                  자주 마시는 음료를 저장하고 편리하게 주문할 수 있는 공간입니다.
+                  자주 마시는 음료를 저장하고 편리하게 주문할 수 있는
+                  공간입니다.
                 </p>
               </Link>
             </div>

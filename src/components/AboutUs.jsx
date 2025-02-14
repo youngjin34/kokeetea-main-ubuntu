@@ -47,7 +47,7 @@ function AboutUs() {
         <div className={style.imageContainer}>
           <div className={style.imageWrapper}>
             <img
-              src="/public/img/organicCream.png"
+              src="/img/organicCream.png"
               alt="Organic Cream"
               onMouseEnter={() => setHoverContent(hoverData.cream)}
               onMouseLeave={() =>
@@ -71,10 +71,7 @@ function AboutUs() {
               ])
             }
           >
-            <img
-              src="/public/img/goldenCaneSugar.png"
-              alt="Golden Cane Sugar"
-            />
+            <img src="/img/goldenCaneSugar.png" alt="Golden Cane Sugar" />
           </div>
 
           <div
@@ -88,7 +85,7 @@ function AboutUs() {
               ])
             }
           >
-            <img src="/public/img/finestTea.png" alt="Finest Tea" />
+            <img src="/img/finestTea.png" alt="Finest Tea" />
           </div>
         </div>
 

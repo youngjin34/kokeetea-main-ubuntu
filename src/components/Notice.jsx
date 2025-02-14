@@ -13,7 +13,9 @@ const Notice = () => {
   useEffect(() => {
     async function getNotice() {
       try {
-        const result = await axios.get(`http://localhost:8080/api/notices`);
+        const result = await axios.get(
+          `http://spring.mirae.network:8080/api/notices`
+        );
 
         console.log(result.data.notices);
 
@@ -42,7 +44,9 @@ const Notice = () => {
 
   return (
     <div className={`${style.Notice}`}>
-      <span onClick={() => navigate('/notice')} className={style.notice_title}>NOTICE</span>
+      <span onClick={() => navigate("/notice")} className={style.notice_title}>
+        NOTICE
+      </span>
       {notice ? (
         <p className={`${style.notice_content}`}>{notice}</p>
       ) : (
@@ -50,8 +54,8 @@ const Notice = () => {
       )}
 
       <div className={`${style.notice_btn}`}>
-        <img src="/public/img/left.png" onClick={() => prevNotice()} />
-        <img src="/public/img/right.png" onClick={() => nextNotice()} />
+        <img src="/img/left.png" onClick={() => prevNotice()} />
+        <img src="/img/right.png" onClick={() => nextNotice()} />
       </div>
     </div>
   );

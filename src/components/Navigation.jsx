@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
-import axios from "axios";
 import { CartContext } from "./CartContext";
 
 function Navigation({
@@ -115,11 +114,11 @@ function Navigation({
   }, [setIsLogined, isModalOpen]);
 
   function logoutFunction() {
-    if (window.confirm("로그아웃 하시겠습니까?")) {
+    if (window.confirm("로그아웃 하시겠겠습니까?")) {
       localStorage.clear();
       setIsLogined(false);
-      setIsAdmin(false);
       navigate("/");
+      window.location.reload();
     }
   }
 
@@ -229,8 +228,74 @@ function Navigation({
           </Link>
         </div>
 
-        {/* 상단 네비게이션 메뉴 - admin이 아닐 때만 표시 */}
-        {(!isLogined || (isLogined && !isAdmin)) && (
+        {/* 상단 네비게이션 메뉴 */}
+        {isAdmin ? (
+          <div className={style.main_menu}>
+            <ul className={style.main_menu_list}>
+              <li className={style.main_menu_item}>
+                <Link
+                  to="/kokeestory"
+                  className={style.main_menu_link}
+                  style={{ color: fontColor }}
+                >
+                  KOKEE STORY
+                </Link>
+                <ul className={style.sub_menu_list}>
+                  <li className={style.sub_menu_item}>
+                    <Link
+                      to="/kokeestory"
+                      className={style.sub_menu_link}
+                      style={{ color: fontColor }}
+                    >
+                      브랜드 소개
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              <li className={style.main_menu_item}>
+                <Link
+                  to="/notice"
+                  className={style.main_menu_link}
+                  style={{ color: fontColor }}
+                >
+                  NOTICE
+                </Link>
+                <ul className={style.sub_menu_list}>
+                  <li className={style.sub_menu_item}>
+                    <Link
+                      to="/notice"
+                      className={style.sub_menu_link}
+                      style={{ color: fontColor }}
+                    >
+                      공지사항
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className={style.main_menu_item}>
+                <Link
+                  to="/support"
+                  className={style.main_menu_link}
+                  style={{ color: fontColor }}
+                >
+                  SUPPORT
+                </Link>
+                <ul className={style.sub_menu_list}>
+                  <li className={style.sub_menu_item}>
+                    <Link
+                      to="/faq"
+                      className={style.sub_menu_link}
+                      style={{ color: fontColor }}
+                    >
+                      자주하는 질문
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        ) : (
           <div className={style.main_menu}>
             <ul className={style.main_menu_list}>
               <li className={style.main_menu_item}>
@@ -313,119 +378,241 @@ function Navigation({
                   </li>
                 </ul>
               </li>
+              <li className={style.main_menu_item}>
+                <Link
+                  to="/notice"
+                  className={style.main_menu_link}
+                  style={{ color: fontColor }}
+                >
+                  NOTICE
+                </Link>
+                <ul className={style.sub_menu_list}>
+                  <li className={style.sub_menu_item}>
+                    <Link
+                      to="/notice"
+                      className={style.sub_menu_link}
+                      style={{ color: fontColor }}
+                    >
+                      공지사항
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className={style.main_menu_item}>
+                <Link
+                  to="/support"
+                  className={style.main_menu_link}
+                  style={{ color: fontColor }}
+                >
+                  SUPPORT
+                </Link>
+                <ul className={style.sub_menu_list}>
+                  <li className={style.sub_menu_item}>
+                    <Link
+                      to="/faq"
+                      className={style.sub_menu_link}
+                      style={{ color: fontColor }}
+                    >
+                      자주하는 질문
+                    </Link>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
         )}
 
-        {/* NOTICE와 SUPPORT 메뉴는 항상 표시 */}
-        <div className={style.main_menu}>
-          <ul className={style.main_menu_list}>
-            <li className={style.main_menu_item}>
-              <Link
-                to="/notice"
-                className={style.main_menu_link}
-                style={{ color: fontColor }}
+        {/* 햄버거 버튼 눌렀을 때 모달 창 */}
+        <div
+          className={`${style.modal_overlay} ${
+            isModalOpen ? style.active : ""
+          }`}
+        >
+          <div
+            className={`${style.modal_menu} ${isModalOpen ? style.active : ""}`}
+            ref={menuRef}
+          >
+            {/* 모달 닫기 버튼 */}
+            <button className={style.modal_close_button} onClick={toggleModal}>
+              x
+            </button>
+
+            {/* KOKEE STORY 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "KOKEE STORY" ? style.active : ""
+              }`}
+            >
+              KOKEE STORY
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "KOKEE STORY" ? style.active : ""
+                }`}
               >
-                NOTICE
-              </Link>
-              <ul className={style.sub_menu_list}>
-                <li className={style.sub_menu_item}>
-                  <Link
-                    to="/notice"
-                    className={style.sub_menu_link}
-                    style={{ color: fontColor }}
-                  >
-                    공지사항
-                  </Link>
-                </li>
-              </ul>
-            </li>
-            <li className={style.main_menu_item}>
-              <Link
-                to="/support"
-                className={style.main_menu_link}
-                style={{ color: fontColor }}
+                <Link to="/kokeestory" onClick={toggleModal}>
+                  브랜드 소개
+                </Link>
+              </div>
+            </div>
+
+            {/* MENU 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "MENU" ? style.active : ""
+              }`}
+            >
+              MENU
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "MENU" ? style.active : ""
+                }`}
               >
-                SUPPORT
-              </Link>
-              <ul className={style.sub_menu_list}>
-                <li className={style.sub_menu_item}>
-                  <Link
-                    to="/faq"
-                    className={style.sub_menu_link}
-                    style={{ color: fontColor }}
-                  >
-                    자주하는 질문
-                  </Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
+                <Link to="./menupage" onClick={toggleModal}>
+                  음료
+                </Link>
+              </div>
+            </div>
+
+            {/* STORE 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "STORE" ? style.active : ""
+              }`}
+            >
+              STORE
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "STORE" ? style.active : ""
+                }`}
+              >
+                <Link to="/store" onClick={toggleModal}>
+                  매장 찾기
+                </Link>
+              </div>
+            </div>
+
+            {/* AFFILIATED 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "AFFILIATED" ? style.active : ""
+              }`}
+            >
+              FRANCHISE
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "AFFILIATED" ? style.active : ""
+                }`}
+              >
+                <Link to="/franchisepromotion" onClick={toggleModal}>
+                  가맹안내
+                </Link>
+              </div>
+            </div>
+
+            {/* NOTICE 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "NOTICE" ? style.active : ""
+              }`}
+            >
+              NOTICE
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "NOTICE" ? style.active : ""
+                }`}
+              >
+                <Link to="/notice" onClick={toggleModal}>
+                  공지사항
+                </Link>
+              </div>
+            </div>
+
+            {/* SUPPORT 메뉴 */}
+            <div
+              className={`${style.modal_menu_item} ${
+                activeSubMenu === "SUPPORT" ? style.active : ""
+              }`}
+            >
+              SUPPORT
+              <div
+                className={`${style.submenu} ${
+                  activeSubMenu === "SUPPORT" ? style.active : ""
+                }`}
+              >
+                <Link to="/faq" onClick={toggleModal}>
+                  자주하는 질문
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="inner">
           <ul className={`${style.header_top}`}>
-            {isLogined && !isAdmin && (
-              <>
-                <li>
-                  <Link
-                    to="/cart"
-                    style={{ color: fontColor }}
-                    className={style.cart_icon}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={fontColor === "black" ? "#000" : "#fff"}
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+            {isLogined &&
+              (isAdmin ? (
+                ""
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      to="/cart"
+                      style={{ color: fontColor }}
+                      className={style.cart_icon}
                     >
-                      <circle cx="9" cy="21" r="1"></circle>
-                      <circle cx="20" cy="21" r="1"></circle>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span className={style.cart_count}>{cartCount}</span>
-                  </Link>
-                </li>
-                <li>
-                  <div
-                    onClick={toggleNotificationModal}
-                    style={{ color: fontColor, cursor: "pointer" }}
-                    className={style.notification_icon}
-                    ref={notificationRef}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={fontColor === "black" ? "#000" : "#fff"}
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke={fontColor === "black" ? "#000" : "#fff"}
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                      </svg>
+                      <span className={style.cart_count}>{cartCount}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <div
+                      onClick={toggleNotificationModal}
+                      style={{ color: fontColor, cursor: "pointer" }}
+                      className={style.notification_icon}
+                      ref={notificationRef}
                     >
-                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    {notificationCount > 0 && (
-                      <span className={style.notification_count}>
-                        {notificationCount}
-                      </span>
-                    )}
-                    {isNotificationModalOpen && (
-                      <div className={style.notification_dropdown}>
-                        <div>새로운 알림이 없습니다.</div>
-                      </div>
-                    )}
-                  </div>
-                </li>
-              </>
-            )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke={fontColor === "black" ? "#000" : "#fff"}
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                      </svg>
+                      {notificationCount > 0 && (
+                        <span className={style.notification_count}>
+                          {notificationCount}
+                        </span>
+                      )}
+                      {isNotificationModalOpen && (
+                        <div className={style.notification_dropdown}>
+                          <div>새로운 알림이 없습니다.</div>
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                </>
+              ))}
 
             {isLogined ? (
               <li onClick={logoutFunction}>
@@ -480,8 +667,9 @@ function Navigation({
               </>
             )}
 
-            {/* 소셜 미디어 링크 - admin이 아닐 때만 표시 */}
-            {(!isLogined || (isLogined && !isAdmin)) && (
+            {isAdmin ? (
+              ""
+            ) : (
               <>
                 <li>
                   <Link to="https://ko-kr.facebook.com/luvkokeetea/">
@@ -515,137 +703,6 @@ function Navigation({
           </ul>
         </div>
       </div>
-
-      {/* 햄버거 메뉴 모달 - admin이 아닐 때만 표시 */}
-      {(!isLogined || (isLogined && !isAdmin)) && isModalOpen && (
-        <div
-          className={`${style.modal_overlay} ${isModalOpen ? style.active : ""}`}
-        >
-          <div
-            className={`${style.modal_menu} ${isModalOpen ? style.active : ""}`}
-            ref={menuRef}
-          >
-            {/* 모달 닫기 버튼 */}
-            <button className={style.modal_close_button} onClick={toggleModal}>
-              x
-            </button>
-
-            {/* admin이 아닐 때만 보이는 메뉴들 */}
-            {(!isLogined || (isLogined && !isAdmin)) && (
-              <>
-                {/* KOKEE STORY 메뉴 */}
-                <div
-                  className={`${style.modal_menu_item} ${
-                    activeSubMenu === "KOKEE STORY" ? style.active : ""
-                  }`}
-                >
-                  KOKEE STORY
-                  <div
-                    className={`${style.submenu} ${
-                      activeSubMenu === "KOKEE STORY" ? style.active : ""
-                    }`}
-                  >
-                    <Link to="/kokeestory" onClick={toggleModal}>
-                      브랜드 소개
-                    </Link>
-                  </div>
-                </div>
-
-                {/* MENU 메뉴 */}
-                <div
-                  className={`${style.modal_menu_item} ${
-                    activeSubMenu === "MENU" ? style.active : ""
-                  }`}
-                >
-                  MENU
-                  <div
-                    className={`${style.submenu} ${
-                      activeSubMenu === "MENU" ? style.active : ""
-                    }`}
-                  >
-                    <Link to="./menupage" onClick={toggleModal}>
-                      음료
-                    </Link>
-                  </div>
-                </div>
-
-                {/* STORE 메뉴 */}
-                <div
-                  className={`${style.modal_menu_item} ${
-                    activeSubMenu === "STORE" ? style.active : ""
-                  }`}
-                >
-                  STORE
-                  <div
-                    className={`${style.submenu} ${
-                      activeSubMenu === "STORE" ? style.active : ""
-                    }`}
-                  >
-                    <Link to="/store" onClick={toggleModal}>
-                      매장 찾기
-                    </Link>
-                  </div>
-                </div>
-
-                {/* FRANCHISE 메뉴 */}
-                <div
-                  className={`${style.modal_menu_item} ${
-                    activeSubMenu === "AFFILIATED" ? style.active : ""
-                  }`}
-                >
-                  FRANCHISE
-                  <div
-                    className={`${style.submenu} ${
-                      activeSubMenu === "AFFILIATED" ? style.active : ""
-                    }`}
-                  >
-                    <Link to="/franchisepromotion" onClick={toggleModal}>
-                      가맹안내
-                    </Link>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* 항상 보이는 메뉴들 */}
-            {/* NOTICE 메뉴 */}
-            <div
-              className={`${style.modal_menu_item} ${
-                activeSubMenu === "NOTICE" ? style.active : ""
-              }`}
-            >
-              NOTICE
-              <div
-                className={`${style.submenu} ${
-                  activeSubMenu === "NOTICE" ? style.active : ""
-                }`}
-              >
-                <Link to="/notice" onClick={toggleModal}>
-                  공지사항
-                </Link>
-              </div>
-            </div>
-
-            {/* SUPPORT 메뉴 */}
-            <div
-              className={`${style.modal_menu_item} ${
-                activeSubMenu === "SUPPORT" ? style.active : ""
-              }`}
-            >
-              SUPPORT
-              <div
-                className={`${style.submenu} ${
-                  activeSubMenu === "SUPPORT" ? style.active : ""
-                }`}
-              >
-                <Link to="/faq" onClick={toggleModal}>
-                  자주하는 질문
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {isLoginModalOpen && (
         <div className={style.modal} ref={loginRef}>

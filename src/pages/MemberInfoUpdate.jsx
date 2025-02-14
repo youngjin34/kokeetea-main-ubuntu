@@ -38,7 +38,7 @@ const MemberInfoUpdate = ({ setIsLogined }) => {
         }
 
         const response = await axios.get(
-          `http://localhost:8080/api/members/about`,
+          `http://spring.mirae.network:8080/api/members/about`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const MemberInfoUpdate = ({ setIsLogined }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8080/api/members/verify?password=${encodeURIComponent(
+        `http://spring.mirae.network:8080/api/members/verify?password=${encodeURIComponent(
           formData.currentPassword
         )}`,
         {
@@ -132,7 +132,7 @@ const MemberInfoUpdate = ({ setIsLogined }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.patch(
-        "http://localhost:8080/api/members",
+        "http://spring.mirae.network:8080/api/members",
         {
           real_name: formData.realName,
           password: formData.newPassword || undefined,
@@ -169,7 +169,7 @@ const MemberInfoUpdate = ({ setIsLogined }) => {
       const token = localStorage.getItem("token");
 
       const response = await axios.delete(
-        `http://localhost:8080/api/members/${
+        `http://spring.mirae.network:8080/api/members/${
           formData.id
         }?password=${encodeURIComponent(withdrawalPaassword)}`,
         {

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import style from './NoticeWrite.module.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import style from "./NoticeWrite.module.css";
 
 const NoticeWrite = () => {
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     // 관리자 권한 확인
-    const authority = localStorage.getItem('authority');
-    if (authority !== 'ADMIN') {
-      alert('관리자만 접근할 수 있습니다.');
-      navigate('/');
+    const authority = localStorage.getItem("authority");
+    if (authority !== "ADMIN") {
+      alert("관리자만 접근할 수 있습니다.");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -21,35 +21,35 @@ const NoticeWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!title.trim() || !text.trim()) {
-      alert('제목과 내용을 모두 입력해주세요.');
+      alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await axios.post(
-        'http://localhost:8080/api/notices',
+        "http://spring.mirae.network:8080/api/notices",
         {
           title: title.trim(),
-          text: text.trim()
+          text: text.trim(),
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       if (response.status === 200) {
-        alert('공지사항이 성공적으로 등록되었습니다.');
-        navigate('/notice');
+        alert("공지사항이 성공적으로 등록되었습니다.");
+        navigate("/notice");
       }
     } catch (error) {
-      console.error('공지사항 등록 실패:', error);
-      alert('공지사항 등록에 실패했습니다.');
+      console.error("공지사항 등록 실패:", error);
+      alert("공지사항 등록에 실패했습니다.");
     }
   };
 
@@ -62,7 +62,7 @@ const NoticeWrite = () => {
       <div className={style.menu_title}>
         <h1 className={style.title}>공지사항 작성</h1>
       </div>
-      
+
       <div className={style.contentWrapper}>
         <div className={style.content}>
           <form onSubmit={handleSubmit} className={style.form}>
@@ -81,7 +81,7 @@ const NoticeWrite = () => {
                 maxLength={100}
               />
             </div>
-            
+
             <div className={style.inputGroup}>
               <label htmlFor="content">
                 내용
@@ -97,7 +97,7 @@ const NoticeWrite = () => {
               />
               <span className={style.charCount}>{text.length} / 2000</span>
             </div>
-            
+
             <div className={style.buttonGroup}>
               <button
                 type="button"
@@ -136,4 +136,4 @@ const NoticeWrite = () => {
   );
 };
 
-export default NoticeWrite; 
+export default NoticeWrite;

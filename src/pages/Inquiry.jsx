@@ -79,7 +79,7 @@ const Inquiry = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8080/api/questions",
+        "http://spring.mirae.network:8080/api/questions",
         submitData,
         {
           headers: {

@@ -35,7 +35,7 @@ const OrderHistory = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:8080/api/orders/history`,
+        `http://spring.mirae.network:8080/api/orders/history`,
         {
           params: {
             startDate: start,
@@ -212,9 +212,7 @@ const OrderHistory = () => {
                         <td>{new Date(order.date).toLocaleDateString()}</td>
                         <td>{order.branch_name}</td>
                         <td>{order.first_product_name}</td>
-                        <td>
-                          {order.billed_amount.toLocaleString()}원
-                        </td>
+                        <td>{order.billed_amount.toLocaleString()}원</td>
                       </tr>
                     ))}
                     {orders.length === 0 && (

@@ -20,6 +20,8 @@ const InquiryHistory = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [replyText, setReplyText] = useState("");
 
+  const authority = localStorage.getItem("authority");
+
   // API 호출 함수 추가
   const fetchInquiries = async (selectedPeriod, start, end) => {
     setLoading(true);
@@ -61,14 +63,29 @@ const InquiryHistory = () => {
         params.endDate = today.toISOString().split("T")[0];
       }
 
-      const response = await axios.get("http://localhost:8080/api/admin/questions", {
-        params,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      let response;
 
-      console.log(response.data);
+      if (authority === "ADMIN") {
+        response = await axios.get(
+          "http://spring.mirae.network:8080/api/admin/questions",
+          {
+            params,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else if (authority === "USER") {
+        response = await axios.get(
+          "http://spring.mirae.network:8080/api/questions",
+          {
+            params,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
 
       // 응답 데이터 매핑
       const mappedInquiries = response.data.questions.map((inquiry) => ({
@@ -102,7 +119,6 @@ const InquiryHistory = () => {
   // useEffect 수정
   useEffect(() => {
     fetchInquiries(period, startDate, endDate);
-    const authority = localStorage.getItem("authority");
     setIsAdmin(authority === "ADMIN");
   }, [period, startDate, endDate]);
 
@@ -119,7 +135,7 @@ const InquiryHistory = () => {
 
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8080/api/questions/${order.id}`,
+        `http://spring.mirae.network:8080/api/questions/${order.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -187,7 +203,7 @@ const InquiryHistory = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.delete(
-          `http://localhost:8080/api/questions/${inquiryId}`,
+          `http://spring.mirae.network:8080/api/questions/${inquiryId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -212,25 +228,25 @@ const InquiryHistory = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:8080/api/questions/${questionId}/feedback`,
+        `http://spring.mirae.network:8080/api/questions/${questionId}/feedback`,
         { text: replyText },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
 
       if (response.status === 200) {
         alert("답변이 등록되었습니다.");
-        
+
         // 문의 목록 새로고침
         await fetchInquiries(period, startDate, endDate);
-        
+
         // 선택된 문의의 상세 정보 새로고침
         const updatedDetailResponse = await axios.get(
-          `http://localhost:8080/api/questions/${questionId}`,
+          `http://spring.mirae.network:8080/api/questions/${questionId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -243,11 +259,14 @@ const InquiryHistory = () => {
           ...selectedInquiry,
           status: "답변완료",
           reply: replyText,
-          replyDate: new Date().toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).replace(/\. /g, "-").slice(0, -1),
+          replyDate: new Date()
+            .toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\. /g, "-")
+            .slice(0, -1),
         };
 
         setSelectedInquiry(updatedDetail);
@@ -264,166 +283,182 @@ const InquiryHistory = () => {
       <div className={style.title}>1:1 문의 내역</div>
       <div className={style.content}>
         <div className={style.formContainer}>
-          <div className={style.orderHistory}>
-            {loading && <div>로딩 중...</div>}
-            {error && <div className={style.error}>{error}</div>}
-            {!loading && !error && (
-              <>
-                {!selectedInquiry && (
-                  <div className={style.periodFilter}>
-                    <span>기간별</span>
-                    {["1개월", "3개월", "1년"].map((p) => (
+          {orders.length === 0 ? (
+            <div className={style.empty_my_inquiry}>
+              <h2>1:1 문의 내역이 없습니다.</h2>
+              <p>궁금하거나 불편한 점이 있으면 문의해주세요</p>
+              <button
+                className={style.go_to_inquiry_button}
+                onClick={() => navigate("/inquiry")}
+              >
+                문의하기
+              </button>
+            </div>
+          ) : (
+            <div className={style.orderHistory}>
+              {loading && <div>로딩 중...</div>}
+              {error && <div className={style.error}>{error}</div>}
+              {!loading && !error && (
+                <>
+                  {!selectedInquiry && (
+                    <div className={style.periodFilter}>
+                      <span>기간별</span>
+                      {["1개월", "3개월", "1년"].map((p) => (
+                        <button
+                          key={p}
+                          className={`${style.periodButton} ${
+                            period === p ? style.active : ""
+                          }`}
+                          onClick={() => handlePeriodClick(p)}
+                        >
+                          {p}
+                        </button>
+                      ))}
+                      <span style={{ marginLeft: "70px" }}>일자별</span>
+                      <input
+                        type="date"
+                        className={style.dateInput}
+                        value={startDate}
+                        onChange={(e) => handleDateInput(e, "start")}
+                      />{" "}
+                      -
+                      <input
+                        type="date"
+                        className={style.dateInput}
+                        value={endDate}
+                        onChange={(e) => handleDateInput(e, "end")}
+                      />
                       <button
-                        key={p}
-                        className={`${style.periodButton} ${
-                          period === p ? style.active : ""
-                        }`}
-                        onClick={() => handlePeriodClick(p)}
+                        className={style.searchButton}
+                        onClick={handleDateSearch}
                       >
-                        {p}
+                        조회
                       </button>
-                    ))}
-                    <span style={{ marginLeft: "70px" }}>일자별</span>
-                    <input
-                      type="date"
-                      className={style.dateInput}
-                      value={startDate}
-                      onChange={(e) => handleDateInput(e, "start")}
-                    />{" "}
-                    -
-                    <input
-                      type="date"
-                      className={style.dateInput}
-                      value={endDate}
-                      onChange={(e) => handleDateInput(e, "end")}
-                    />
-                    <button
-                      className={style.searchButton}
-                      onClick={handleDateSearch}
-                    >
-                      조회
-                    </button>
-                  </div>
-                )}
+                    </div>
+                  )}
 
-                <table
-                  className={`${style.orderTable} ${
-                    selectedInquiry ? style.selectedTable : ""
-                  }`}
-                >
-                  <thead>
-                    <tr>
-                      <th>접수구분</th>
-                      <th>제목</th>
-                      <th>작성일자</th>
-                      <th>답변여부</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(selectedInquiry ? [selectedInquiry] : orders).map(
-                      (order) => (
-                        <React.Fragment key={order.id}>
-                          <tr>
-                            <td>{order.subject}</td>
-                            <td>
-                              <span
-                                onClick={() => handleTitleClick(order)}
-                                style={{ cursor: "pointer" }}
-                              >
-                                {order.title}
-                              </span>
-                            </td>
-                            <td>{order.date}</td>
-                            <td>{order.status}</td>
-                          </tr>
-                          {selectedInquiry?.id === order.id && (
+                  <table
+                    className={`${style.orderTable} ${
+                      selectedInquiry ? style.selectedTable : ""
+                    }`}
+                  >
+                    <thead>
+                      <tr>
+                        <th>접수구분</th>
+                        <th>제목</th>
+                        <th>작성일자</th>
+                        <th>답변여부</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(selectedInquiry ? [selectedInquiry] : orders).map(
+                        (order) => (
+                          <React.Fragment key={order.id}>
                             <tr>
-                              <td colSpan="4" style={{ borderBottom: "none" }}>
-                                <div
-                                  className={style.inquiryDetail}
-                                  style={{ textAlign: "left" }}
+                              <td>{order.subject}</td>
+                              <td>
+                                <span
+                                  onClick={() => handleTitleClick(order)}
+                                  style={{ cursor: "pointer" }}
                                 >
-                                  <div className={style.inquiryContent}>
-                                    {order.content
-                                      ?.split("\n")
-                                      .map((line, i) => (
-                                        <p key={i} style={{ margin: "0" }}>
-                                          {line}
-                                        </p>
-                                      ))}
-                                  </div>
-                                  {order.reply ? (
-                                    <div className={style.replySection}>
-                                      <h3>답변 내용</h3>
-                                      <div className={style.replyContent}>
-                                        {order.reply
-                                          .split("\n")
-                                          .map((line, i) => (
-                                            <p
-                                              key={i}
-                                              style={{
-                                                margin: "0",
-                                                lineHeight: "1.5",
-                                              }}
-                                            >
-                                              {line}
-                                            </p>
-                                          ))}
-                                      </div>
-                                      <div className={style.replyDate}>
-                                        답변일자 {order.replyDate}
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    isAdmin && (
-                                      <div className={style.replyForm}>
-                                        <h3>답변 작성</h3>
-                                        <textarea
-                                          value={replyText}
-                                          onChange={(e) =>
-                                            setReplyText(e.target.value)
-                                          }
-                                          rows={5}
-                                          className={style.replyTextarea}
-                                        />
-                                        <button
-                                          className={style.submitReplyButton}
-                                          onClick={() =>
-                                            handleSubmitReply(order.id)
-                                          }
-                                          disabled={!replyText.trim()}
-                                        >
-                                          답변 등록
-                                        </button>
-                                      </div>
-                                    )
-                                  )}
-                                  <div className={style.buttonContainer}>
-                                    <button
-                                      className={style.backButton}
-                                      onClick={() => setSelectedInquiry(null)}
-                                    >
-                                      뒤로
-                                    </button>
-                                    <button
-                                      className={style.deleteButton}
-                                      onClick={() => handleDelete(order.id)}
-                                    >
-                                      삭제
-                                    </button>
-                                  </div>
-                                </div>
+                                  {order.title}
+                                </span>
                               </td>
+                              <td>{order.date}</td>
+                              <td>{order.status}</td>
                             </tr>
-                          )}
-                        </React.Fragment>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </>
-            )}
-          </div>
+                            {selectedInquiry?.id === order.id && (
+                              <tr>
+                                <td
+                                  colSpan="4"
+                                  style={{ borderBottom: "none" }}
+                                >
+                                  <div
+                                    className={style.inquiryDetail}
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    <div className={style.inquiryContent}>
+                                      {order.content
+                                        ?.split("\n")
+                                        .map((line, i) => (
+                                          <p key={i} style={{ margin: "0" }}>
+                                            {line}
+                                          </p>
+                                        ))}
+                                    </div>
+                                    {order.reply ? (
+                                      <div className={style.replySection}>
+                                        <h3>답변 내용</h3>
+                                        <div className={style.replyContent}>
+                                          {order.reply
+                                            .split("\n")
+                                            .map((line, i) => (
+                                              <p
+                                                key={i}
+                                                style={{
+                                                  margin: "0",
+                                                  lineHeight: "1.5",
+                                                }}
+                                              >
+                                                {line}
+                                              </p>
+                                            ))}
+                                        </div>
+                                        <div className={style.replyDate}>
+                                          답변일자 {order.replyDate}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      isAdmin && (
+                                        <div className={style.replyForm}>
+                                          <h3>답변 작성</h3>
+                                          <textarea
+                                            value={replyText}
+                                            onChange={(e) =>
+                                              setReplyText(e.target.value)
+                                            }
+                                            rows={5}
+                                            className={style.replyTextarea}
+                                          />
+                                          <button
+                                            className={style.submitReplyButton}
+                                            onClick={() =>
+                                              handleSubmitReply(order.id)
+                                            }
+                                            disabled={!replyText.trim()}
+                                          >
+                                            답변 등록
+                                          </button>
+                                        </div>
+                                      )
+                                    )}
+                                    <div className={style.buttonContainer}>
+                                      <button
+                                        className={style.backButton}
+                                        onClick={() => setSelectedInquiry(null)}
+                                      >
+                                        뒤로
+                                      </button>
+                                      <button
+                                        className={style.deleteButton}
+                                        onClick={() => handleDelete(order.id)}
+                                      >
+                                        삭제
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                </>
+              )}
+            </div>
+          )}
         </div>
         <div className={style.sideNav}>
           {isAdmin ? (

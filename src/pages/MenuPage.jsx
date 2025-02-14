@@ -103,7 +103,7 @@ function MenuPage({ isLogined }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
+          `http://spring.mirae.network:8080/api/products?branchId=${selectedBranchId}&category=${selectedMenu}`
         );
 
         setProducts(response.data);
@@ -118,7 +118,9 @@ function MenuPage({ isLogined }) {
   useEffect(() => {
     const fetchBranchDate = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/branches");
+        const response = await axios.get(
+          "http://spring.mirae.network:8080/api/branches"
+        );
         setBranches(response.data); // 받아온 데이터로 상태 설정
       } catch (error) {
         console.error(error);
@@ -135,11 +137,14 @@ function MenuPage({ isLogined }) {
 
     if (token) {
       try {
-        const response = await axios.get("http://localhost:8080/api/carts", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://spring.mirae.network:8080/api/carts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         // 서버에서 가져온 데이터를 cartItems에 저장
         setCartItems(response.data.items);
@@ -285,7 +290,7 @@ function MenuPage({ isLogined }) {
         console.log(tempId);
 
         const response = await axios.post(
-          "http://localhost:8080/api/carts",
+          "http://spring.mirae.network:8080/api/carts",
           {
             product_id: selectedProduct.id,
             quantity: quantity,
@@ -349,7 +354,7 @@ function MenuPage({ isLogined }) {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/members/personal-products",
+          "http://spring.mirae.network:8080/api/members/personal-products",
           {
             product_id: selectedProduct.id,
             option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
@@ -406,7 +411,7 @@ function MenuPage({ isLogined }) {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/carts",
+          "http://spring.mirae.network:8080/api/carts",
           {
             product_id: selectedProduct.id,
             quantity: quantity,
@@ -482,7 +487,7 @@ function MenuPage({ isLogined }) {
     if (token) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/carts",
+          "http://spring.mirae.network:8080/api/carts",
           {
             product_id: product.id,
             quantity: 1,
@@ -591,11 +596,25 @@ function MenuPage({ isLogined }) {
               data-tooltip-content="로그인이 필요한 서비스입니다."
               data-tooltip-place="top"
             >
-              <img src={product.product.image_url} alt={product.product.name} />
+              <div className={style.imageWrapper}>
+                {/* 상품 이미지 위에 x 이미지 표시 */}
+                {product.unavailable && (
+                  <img
+                    src="/img/kokeeX.png"
+                    alt="판매 불가"
+                    className={style.unavailableImage}
+                  />
+                )}
+                <img
+                  src={product.product.image_url}
+                  alt={product.product.name}
+                  className={product.unavailable ? style.disabledImage : ""}
+                />
+              </div>
               <h3>{product.product.name}</h3>
               <p>{product.product.price.toLocaleString()} 원</p>
 
-              {/* 영양정보 오버레이 추가 */}
+              {/* 영양정보 오버레이 */}
               <div className={style.nutrition_overlay}>
                 <div className={style.nutrition_info}>
                   <h4>영양정보</h4>
@@ -610,15 +629,22 @@ function MenuPage({ isLogined }) {
             <Tooltip id={`menu-tooltip-${product.id}`} />
 
             <div className={style.button_container}>
+              {/* 상품이 unavailable일 때는 버튼을 비활성화 */}
               <button
-                className={style.menu_order_btn}
+                className={`${style.menu_order_btn} ${
+                  product.unavailable ? style.disabledButton : ""
+                }`}
                 onClick={() => toggleModal(product.product)}
+                disabled={product.unavailable}
               >
-                <img src="/public/img/cart.png" /> 옵션선택
+                <img src="/img/cart.png" alt="장바구니" /> 옵션선택
               </button>
               <button
-                className={`${style.menu_order_btn} ${style.direct_order_btn}`}
+                className={`${style.menu_order_btn} ${style.direct_order_btn} ${
+                  product.unavailable ? style.disabledButton : ""
+                }`}
                 onClick={() => handleDirectOrder(product.product)}
+                disabled={product.unavailable}
               >
                 바로주문
               </button>

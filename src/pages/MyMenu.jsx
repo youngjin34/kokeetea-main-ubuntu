@@ -38,7 +38,9 @@ const MyMenu = () => {
   useEffect(() => {
     const fetchBranchDate = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/branches");
+        const response = await axios.get(
+          "http://spring.mirae.network:8080/api/branches"
+        );
         setBranches(response.data); // 받아온 데이터로 상태 설정
       } catch (error) {
         console.error(error);
@@ -52,7 +54,7 @@ const MyMenu = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/members/personal-products`,
+        `http://spring.mirae.network:8080/api/members/personal-products`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -110,7 +112,7 @@ const MyMenu = () => {
 
     try {
       await axios.delete(
-        `http://localhost:8080/api/members/personal-products/${id}`,
+        `http://spring.mirae.network:8080/api/members/personal-products/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -148,7 +150,7 @@ const MyMenu = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/carts",
+          "http://spring.mirae.network:8080/api/carts",
           {
             product_id: item.product.id,
             quantity: quantities[item.id] || 1,
@@ -192,7 +194,7 @@ const MyMenu = () => {
     if (token) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/carts",
+          "http://spring.mirae.network:8080/api/carts",
           {
             product_id: item.product.id,
             quantity: quantities[item.id] || 1,

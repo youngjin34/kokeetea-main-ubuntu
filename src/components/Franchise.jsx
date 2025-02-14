@@ -86,7 +86,7 @@ function Franchise() {
     <div className={style.Franchise}>
       <div className={style.img_container}>
         <img
-          src="/public/img/franchise.png"
+          src="/img/franchise.png"
           alt="Franchise"
           className={style.franchise_img}
         />

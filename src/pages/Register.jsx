@@ -92,7 +92,11 @@ const NameInput = ({ value, onChange, validName }) => (
           onChange={onChange}
           placeholder="이름을 입력해주세요."
         />
-        <span className={`${style.guideMessage} ${validName ? style.errorMessage : ""}`}>
+        <span
+          className={`${style.guideMessage} ${
+            validName ? style.errorMessage : ""
+          }`}
+        >
           이름은 2자에서 4자 사이로 입력해주세요.
         </span>
       </div>
@@ -234,9 +238,9 @@ const Register = () => {
     } else {
       setValidName(true);
     }
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      name: value
+      name: value,
     }));
   };
 
@@ -314,13 +318,16 @@ const Register = () => {
       const email = `${formData.emailId}@${formData.emailDomain}`; // 이메일 합치기
       const phone = `010-${phone2}-${phone3}`;
 
-      const response = await axios.post("http://localhost:8080/api/members", {
-        user_name: formData.userId,
-        password: formData.password,
-        real_name: formData.name,
-        phone: phone,
-        email: email,
-      });
+      const response = await axios.post(
+        "http://spring.mirae.network:8080/api/members",
+        {
+          user_name: formData.userId,
+          password: formData.password,
+          real_name: formData.name,
+          phone: phone,
+          email: email,
+        }
+      );
 
       if (response.status === 200) {
         localStorage.setItem("phoneNumber", formData.phoneNumber);
@@ -358,10 +365,10 @@ const Register = () => {
             validPw={validPw}
           />
 
-          <NameInput 
-            value={formData.name} 
+          <NameInput
+            value={formData.name}
             onChange={onChangeName}
-            validName={validName} 
+            validName={validName}
           />
 
           <PhoneInput value={formData.phoneNumber} onChange={handleChange} />

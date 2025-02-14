@@ -23,12 +23,15 @@ const Cart = () => {
   const fetchCartData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/carts`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://spring.mirae.network:8080/api/carts`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const items = response.data.items || [];
       setCartItems(items);
@@ -63,7 +66,7 @@ const Cart = () => {
 
     try {
       for (const itemId of selectedItems) {
-        await axios.delete(`http://localhost:8080/api/carts`, {
+        await axios.delete(`http://spring.mirae.network:8080/api/carts`, {
           data: { cart_ids: [itemId] },
           headers: {
             "Content-Type": "application/json",
@@ -91,7 +94,7 @@ const Cart = () => {
 
     try {
       await axios.patch(
-        `http://localhost:8080/api/carts/${id}/quantity/${newQuantity}`,
+        `http://spring.mirae.network:8080/api/carts/${id}/quantity/${newQuantity}`,
         {},
         {
           headers: {

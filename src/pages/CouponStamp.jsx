@@ -62,9 +62,9 @@ const CouponStamp = () => {
           }`}
         >
           {index < userData.stamps ? (
-            <img src="/public/img/coupon.png" alt="Active stamp" />
+            <img src="/img/coupon.png" alt="Active stamp" />
           ) : (
-            <img src="/public/img/coupon.png" alt="Inactive stamp" />
+            <img src="/img/coupon.png" alt="Inactive stamp" />
           )}
         </div>
       ));
@@ -106,19 +106,19 @@ const CouponStamp = () => {
 
       // 멤버십 정보 가져오기
       const membershipResponse = await axios.get(
-        "http://localhost:8080/api/members/about/membership",
+        "http://spring.mirae.network:8080/api/members/about/membership",
         config
       );
 
       // 쿠폰/스탬프 정보 가져오기
       const couponResponse = await axios.get(
-        "http://localhost:8080/api/members/about/gaeggul",
+        "http://spring.mirae.network:8080/api/members/about/gaeggul",
         config
       );
 
       // 멤버 정보 가져오기
       const memberResponse = await axios.get(
-        "http://localhost:8080/api/members/about",
+        "http://spring.mirae.network:8080/api/members/about",
         config
       );
 
@@ -126,7 +126,7 @@ const CouponStamp = () => {
 
       // 포인트 정보 가져오기
       const pointResponse = await axios.get(
-        "http://localhost:8080/api/members/current-point",
+        "http://spring.mirae.network:8080/api/members/current-point",
         config
       );
 

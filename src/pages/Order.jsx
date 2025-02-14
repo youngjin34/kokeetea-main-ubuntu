@@ -39,7 +39,7 @@ function Order() {
 
         // 장바구니 데이터 가져오기
         const cartResponse = await axios.get(
-          `http://localhost:8080/api/carts`,
+          `http://spring.mirae.network:8080/api/carts`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function Order() {
 
         // 사용 가능한 쿠폰 가져오기
         const couponsResponse = await axios.get(
-          `http://localhost:8080/api/members/coupons`,
+          `http://spring.mirae.network:8080/api/members/coupons`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ function Order() {
 
         // 적립금 정보 가져오기
         const memberResponse = await axios.get(
-          `http://localhost:8080/api/members/current-point`,
+          `http://spring.mirae.network:8080/api/members/current-point`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -141,7 +141,7 @@ function Order() {
     const totalPrice = calculateTotalPrice();
 
     // 빈 문자열이거나 숫자가 아닌 경우 0으로 설정
-    if (inputValue === '' || isNaN(value)) {
+    if (inputValue === "" || isNaN(value)) {
       setUsePoints(0);
       return;
     }
@@ -169,7 +169,7 @@ function Order() {
   const handleUseAllPoints = () => {
     const totalPrice = calculateTotalPrice();
     const maxUsablePoints = totalPrice - discountAmount; // 쿠폰 할인을 제외한 최대 사용 가능 적립금
-    
+
     if (points >= maxUsablePoints) {
       setUsePoints(maxUsablePoints);
     } else {
@@ -181,7 +181,7 @@ function Order() {
   const calculateDiscount = () => {
     const totalPrice = calculateTotalPrice();
     const totalDiscount = discountAmount + usePoints;
-    
+
     // 총 할인금액이 주문금액을 초과하지 않도록 제한
     return Math.min(totalDiscount, totalPrice);
   };
@@ -217,7 +217,7 @@ function Order() {
 
       // 주문 데이터 전송
       const response = await axios.post(
-        `http://localhost:8080/api/orders`,
+        `http://spring.mirae.network:8080/api/orders`,
         {
           payment_method: methodMapping[selectedMethod],
           point: usePoints,

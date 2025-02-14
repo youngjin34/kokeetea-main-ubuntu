@@ -33,12 +33,10 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
 
     try {
       const result = await axios.get(
-        `http://localhost:8080/api/members/login?userName=${userName}&password=${encodeURIComponent(
+        `http://spring.mirae.network:8080/api/members/login?userName=${userName}&password=${encodeURIComponent(
           password
         )}`
       );
-
-      console.log(result);
 
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);

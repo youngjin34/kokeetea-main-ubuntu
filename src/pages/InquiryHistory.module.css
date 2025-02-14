@@ -2,7 +2,7 @@
   padding-top: 180px;
   width: 70%;
   margin: 0 auto;
-  min-height: calc(100vh - 140px); 
+  min-height: calc(100vh - 140px);
 }
 
 .title {
@@ -39,10 +39,71 @@
   max-width: 800px;
 }
 
+.empty_my_inquiry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 20px 0;
+  margin-left: 260px;
+}
+
+.empty_my_inquiry h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.empty_my_inquiry p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.go_to_inquiry_button {
+  background-color: #ba274a;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.go_to_inquiry_button:hover {
+  background-color: #a32342;
+}
+
+@media (max-width: 768px) {
+  .empty_my_inquiry {
+    padding: 40px 16px;
+  }
+
+  .empty_my_inquiry h2 {
+    font-size: 20px;
+  }
+
+  .empty_my_inquiry p {
+    font-size: 14px;
+  }
+
+  .go_to_inquiry_button {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
 .sideNav {
   width: 200px;
   margin-left: 20px;
-  border-top: 2px solid #E5D5DA;
+  border-top: 2px solid #e5d5da;
   height: 100%;
 }
 
@@ -51,12 +112,12 @@
   cursor: pointer;
   font-size: 16px;
   transition: all 0.2s ease;
-  border-bottom: 1px solid #E5D5DA;
+  border-bottom: 1px solid #e5d5da;
   font-weight: 600;
 }
 
 .sideNavItem:last-child {
-  border-bottom: 2px solid #E5D5DA;
+  border-bottom: 2px solid #e5d5da;
 }
 
 .sideNavItem:hover {
@@ -87,9 +148,9 @@
 }
 
 .periodButton.active {
-  background: #BA274A;
+  background: #ba274a;
   color: white;
-  border-color: #BA274A;
+  border-color: #ba274a;
 }
 
 .dateInput {
@@ -103,7 +164,8 @@
 
 .dateInput::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(327deg) brightness(87%) contrast(97%);
+  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(327deg)
+    brightness(87%) contrast(97%);
 }
 
 .searchButton {
@@ -126,11 +188,11 @@
 .orderTable td {
   padding: 12px;
   text-align: center;
-  border-bottom: 1px solid #E5D5DA;
+  border-bottom: 1px solid #e5d5da;
 }
 
 .orderTable th {
-  border-top: 2px solid #BA274A;
+  border-top: 2px solid #ba274a;
   font-weight: bold;
 }
 
@@ -173,7 +235,7 @@
 
 .backButton {
   background-color: #ffffff;
-  border: 1px solid #E5D5DA;
+  border: 1px solid #e5d5da;
   color: #666;
 }
 
@@ -205,7 +267,7 @@
 }
 
 .active {
-  color: #BA274A;
+  color: #ba274a;
 }
 
 .inquiryDetail {

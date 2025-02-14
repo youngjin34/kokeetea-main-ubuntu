@@ -35,13 +35,16 @@ const FAQ = ({ isLogined }) => {
   const fetchNotices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8080/api/faqs", {
-        params: {
-          page: currentPage - 1,
-          size: itemsPerPage,
-          category: selectedCategory === "전체" ? null : selectedCategory,
-        },
-      });
+      const response = await axios.get(
+        "http://spring.mirae.network:8080/api/faqs",
+        {
+          params: {
+            page: currentPage - 1,
+            size: itemsPerPage,
+            category: selectedCategory === "전체" ? null : selectedCategory,
+          },
+        }
+      );
 
       // 응답 데이터 매핑
       const mappedFaqs = response.data.faqs.map((faq) => ({

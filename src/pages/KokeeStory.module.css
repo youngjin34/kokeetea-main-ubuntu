@@ -1,7 +1,7 @@
 .Container {
   width: 100%;
   min-height: 100vh;
-  background: #ffffff;
+  background: #000000;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -96,12 +96,12 @@
   transition: all 0.3s ease;
   position: relative;
   border: 1px solid rgba(186, 39, 74, 0.1);
-  box-shadow: 0 10px 30px #F5EDF0;
+  box-shadow: 0 10px 30px #f5edf0;
   overflow: hidden;
 }
 
 .FeatureBox::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -131,7 +131,7 @@
 }
 
 .FeatureTitle::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;

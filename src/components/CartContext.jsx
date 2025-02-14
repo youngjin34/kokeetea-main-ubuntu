@@ -9,12 +9,15 @@ export function CartProvider({ children }) {
 
   const fetchCartCount = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/carts", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://spring.mirae.network:8080/api/carts",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setCartCount(response.data.cart_count); // DB에서 가져온 개수 설정
     } catch (error) {

@@ -15,38 +15,41 @@ const Notice = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchTerm, setActiveSearchTerm] = useState("");
   const itemsPerPage = 10;
-  
+
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchNotices(currentPage - 1);
-    
+
     // 관리자 권한 확인
-    const authority = localStorage.getItem('authority');
-    setIsAdmin(authority === 'ADMIN');
+    const authority = localStorage.getItem("authority");
+    setIsAdmin(authority === "ADMIN");
   }, [currentPage, activeSearchTerm]);
 
   const fetchNotices = async (page) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:8080/api/notices`, {
-        params: {
-          page: page,
-          size: itemsPerPage,
-          title: activeSearchTerm
+      const response = await axios.get(
+        `http://spring.mirae.network:8080/api/notices`,
+        {
+          params: {
+            page: page,
+            size: itemsPerPage,
+            title: activeSearchTerm,
+          },
         }
-      });
-      
-      const mappedNotices = response.data.notices.map(notice => ({
+      );
+
+      const mappedNotices = response.data.notices.map((notice) => ({
         id: notice.id,
         title: notice.title,
         content: notice.text,
         createdAt: new Date(notice.date).toLocaleDateString(),
-        views: notice.view
+        views: notice.view,
       }));
-      
+
       setNotices(mappedNotices);
       setTotalPages(response.data.total_page);
       setError("");
@@ -64,25 +67,26 @@ const Notice = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/notices/${noticeId}`);
-      
+      const response = await axios.get(
+        `http://spring.mirae.network:8080/api/notices/${noticeId}`
+      );
+
       // 응답 데이터 구조 확인을 위한 로그
-      console.log('상세 조회 응답:', response.data);
-      
+      console.log("상세 조회 응답:", response.data);
+
       // 확장된 공지사항 ID 설정
       setExpandedNotice(noticeId);
-      setNotices(prevNotices => 
-        prevNotices.map(notice => 
-          notice.id === noticeId 
-            ? { 
+      setNotices((prevNotices) =>
+        prevNotices.map((notice) =>
+          notice.id === noticeId
+            ? {
                 ...notice,
-                content: response.data.text, 
-                views: response.data.view    
+                content: response.data.text,
+                views: response.data.view,
               }
             : notice
         )
       );
-
     } catch (error) {
       console.error("공지사항 상세 조회 실패:", error);
       if (error.response) {
@@ -137,7 +141,7 @@ const Notice = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -173,10 +177,7 @@ const Notice = () => {
                   onKeyDown={handleKeyPress}
                   className={style.SearchInput}
                 />
-                <button 
-                  className={style.SearchButton}
-                  onClick={handleSearch}
-                >
+                <button className={style.SearchButton} onClick={handleSearch}>
                   <BiSearch size={20} />
                 </button>
               </div>
@@ -212,14 +213,16 @@ const Notice = () => {
                     </div>
                     {expandedNotice === notice.id && (
                       <div className={style.ContentRow}>
-                        <div className={style.Content} 
-                             style={{ 
-                               whiteSpace: 'pre-wrap',    // 줄바꿈 보존
-                               padding: '20px',           // 여백 추가
-                               backgroundColor: '#f9f9f9', // 배경색 추가
-                               margin: '10px 0',          // 상하 여백
-                               borderRadius: '5px'        // 모서리 둥글게
-                             }}>
+                        <div
+                          className={style.Content}
+                          style={{
+                            whiteSpace: "pre-wrap", // 줄바꿈 보존
+                            padding: "20px", // 여백 추가
+                            backgroundColor: "#f9f9f9", // 배경색 추가
+                            margin: "10px 0", // 상하 여백
+                            borderRadius: "5px", // 모서리 둥글게
+                          }}
+                        >
                           {notice.content}
                         </div>
                       </div>
@@ -283,7 +286,7 @@ const Notice = () => {
                 <div className={style.ButtonContainer}>
                   <button
                     className={style.InquiryButton}
-                    onClick={() => navigate('/notice/write')}
+                    onClick={() => navigate("/notice/write")}
                   >
                     작성하기
                   </button>
