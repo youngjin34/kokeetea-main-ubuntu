@@ -14,7 +14,7 @@ const MyMenu = () => {
 
   const [myMenuItems, setMyMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+  const [quantities, setQuantities] = useState({}); // 각 아이템의 수량을 저장하는 상태
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -88,8 +88,21 @@ const MyMenu = () => {
     fetchMyMenuData();
   }, []);
 
-  // 장바구니 아이템 삭제
+  const increaseQuantity = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
 
+  const decreaseQuantity = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max((prev[id] || 1) - 1, 1), // 1 이하로 내려가지 않도록 설정
+    }));
+  };
+
+  // 장바구니 아이템 삭제
   const onDeleteMyMenu = async (id) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) {
       return; // 취소하면 삭제하지 않음
@@ -138,7 +151,7 @@ const MyMenu = () => {
           "http://localhost:8080/api/carts",
           {
             product_id: item.product.id,
-            quantity: quantity,
+            quantity: quantities[item.id] || 1,
             option_ids: optionId,
             branch_id: selectedBranchId,
           },
@@ -182,7 +195,7 @@ const MyMenu = () => {
           "http://localhost:8080/api/carts",
           {
             product_id: item.product.id,
-            quantity: quantity,
+            quantity: quantities[item.id] || 1,
             option_ids: optionId,
             branch_id: selectedBranchId,
           },
@@ -285,24 +298,22 @@ const MyMenu = () => {
                           <div className={style.my_menu_item_count}>
                             <button
                               className={style.minus_button}
-                              onClick={() =>
-                                setQuantity(Math.max(quantity - 1, 1))
-                              } // 1 이하로 못 내려감
+                              onClick={() => decreaseQuantity(item.id)}
                             >
                               -
                             </button>
                             <span className={style.amount_input}>
-                              {quantity}
+                              {quantities[item.id] || 1}
                             </span>
                             <button
                               className={style.plus_button}
-                              onClick={() => setQuantity(quantity + 1)}
+                              onClick={() => increaseQuantity(item.id)}
                             >
                               +
                             </button>
                           </div>
                           <div className={style.my_menu_item_price}>
-                            {item.price}원
+                            {item.price * (quantities[item.id] || 1)}원
                           </div>
                         </div>
                         <div className={style.button_group}>

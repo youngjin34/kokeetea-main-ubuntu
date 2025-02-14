@@ -498,10 +498,7 @@ function Order() {
                         {item.quantity}개
                       </span>
                       <span className={style.order_item_price}>
-                        {(
-                          item.total_item_price * item.quantity
-                        ).toLocaleString()}
-                        원
+                        {item.total_item_price.toLocaleString()}원
                       </span>
                     </div>
                   </div>

@@ -32,16 +32,19 @@
   background: #ba274a;
   border-radius: 8px;
 }
+
 .cart_menu_container {
   display: flex;
   justify-content: space-between;
 }
+
 .cart_items {
   display: flex;
   flex-direction: column;
   margin-top: 30px;
   flex: 1;
 }
+
 .total_select {
   display: flex;
   justify-content: space-between;
@@ -50,6 +53,7 @@
   border-bottom: 2px solid #ccc;
   margin-right: 20px;
 }
+
 .total_select_text {
   font-size: 16px;
   margin-left: 5px;
@@ -76,6 +80,7 @@
   -ms-overflow-style: auto !important;
   scrollbar-width: auto !important;
   margin-right: 20px;
+  margin-bottom: 100px;
 }
 
 .cart_item {

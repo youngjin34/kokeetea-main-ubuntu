@@ -424,11 +424,11 @@ function MenuPage({ isLogined }) {
         if (response.status === 200) {
           navigate("/order");
         } else {
-          alert("장바구니 추가에 실패했습니다.");
+          alert("주문에 실패했습니다.");
         }
       } catch (error) {
-        console.error("장바구니 추가 실패:", error);
-        alert("장바구니 추가에 실패했습니다.");
+        console.error("주문 실패:", error);
+        alert("주문에 실패했습니다.");
       }
     }
   };
