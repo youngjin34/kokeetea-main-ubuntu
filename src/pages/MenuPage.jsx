@@ -1,15 +1,15 @@
-import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Tooltip } from "react-tooltip";
+import { Tooltip } from 'react-tooltip';
 
-import style from "./MenuPage.module.css";
-import { CartContext } from "../components/CartContext";
+import style from './MenuPage.module.css';
+import { CartContext } from '../components/CartContext';
 
 function MenuPage({ isLogined }) {
   const [products, setProducts] = useState([]);
-  const [selectedMenu, setSelectedMenu] = useState("Cold Cloud"); // 탭에서 메뉴 선택
+  const [selectedMenu, setSelectedMenu] = useState('Cold Cloud'); // 탭에서 메뉴 선택
   const [selectedProduct, setSelectedProduct] = useState(null); // 메뉴 리스트에서 선택한 상품
   const [isModalOpen, setModalOpen] = useState(false);
   const modalRef = useRef(null);
@@ -22,11 +22,11 @@ function MenuPage({ isLogined }) {
   const [previousBranchId, setPreviousBranchId] = useState(selectedBranchId);
 
   // 각 옵션에 대한 상태 관리
-  const [temp, setTemp] = useState("ICE");
-  const [size, setSize] = useState("Regular");
-  const [sugar, setSugar] = useState("70%");
-  const [iceAmount, setIceAmount] = useState("보통");
-  const [topping, setTopping] = useState(["기본"]);
+  const [temp, setTemp] = useState('ICE');
+  const [size, setSize] = useState('Regular');
+  const [sugar, setSugar] = useState('70%');
+  const [iceAmount, setIceAmount] = useState('보통');
+  const [topping, setTopping] = useState(['기본']);
 
   const [tempId, setTempId] = useState(1);
   const [sizeId, setSizeId] = useState(3);
@@ -35,30 +35,30 @@ function MenuPage({ isLogined }) {
   const [toppingId, setToppingId] = useState([15]);
 
   const toppingOptions = [
-    { name: "타피오카 펄", id: 16 },
-    { name: "화이트 펄", id: 17 },
-    { name: "밀크폼", id: 18 },
-    { name: "코코넛", id: 19 },
-    { name: "알로에", id: 20 },
+    { name: '타피오카 펄', id: 16 },
+    { name: '화이트 펄', id: 17 },
+    { name: '밀크폼', id: 18 },
+    { name: '코코넛', id: 19 },
+    { name: '알로에', id: 20 },
   ];
 
   const [myMenuModal, setMyMenuModel] = useState(false);
-  const [myMenuName, setMyMenuName] = useState("");
+  const [myMenuName, setMyMenuName] = useState('');
 
   const { fetchCartCount } = useContext(CartContext); // fetchCartCount 사용
 
   const handleToppingChange = (e, item, itemId) => {
     if (e.target.checked) {
       // '기본'을 선택할 때 '기본'만 선택되도록 하고, toppingId에 15만 추가
-      if (item === "기본") {
-        setTopping(["기본"]); // '기본'만 선택된 상태로 설정
+      if (item === '기본') {
+        setTopping(['기본']); // '기본'만 선택된 상태로 설정
         setToppingId([15]); // '추가 안 함'에 해당하는 id: 15만 설정
       } else {
         setTopping(
           (prev) =>
-            prev.includes("기본")
+            prev.includes('기본')
               ? [item] // '기본'이 선택된 경우에는 다른 토핑을 초기화하고 현재 토핑만 추가
-              : [...prev.filter((t) => t !== "기본"), item] // '기본'을 제외한 토핑 선택
+              : [...prev.filter((t) => t !== '기본'), item] // '기본'을 제외한 토핑 선택
         );
         setToppingId((prev) => {
           // '기본'을 포함하지 않으면 기존 토핑들에 id를 추가
@@ -71,12 +71,12 @@ function MenuPage({ isLogined }) {
       // 체크 해제 시 해당 토핑을 제거
       setTopping((prev) => {
         const newToppings = prev.filter((t) => t !== item);
-        return newToppings.length === 0 ? ["기본"] : newToppings; // 토핑이 없으면 '기본'을 다시 추가
+        return newToppings.length === 0 ? ['기본'] : newToppings; // 토핑이 없으면 '기본'을 다시 추가
       });
       setToppingId((prev) => prev.filter((id) => id !== itemId));
 
       // '기본'이 해제되면 id: 15를 제거
-      if (item === "기본" && !e.target.checked) {
+      if (item === '기본' && !e.target.checked) {
         setToppingId([15]); // '추가 안 함'만 남기기
       }
     }
@@ -94,8 +94,8 @@ function MenuPage({ isLogined }) {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
     setIsLoggedIn(token && email);
   }, []);
 
@@ -108,18 +108,18 @@ function MenuPage({ isLogined }) {
 
         setProducts(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [selectedMenu]);
+  }, [selectedMenu, selectedBranchId, setSelectedBranchId]);
 
   useEffect(() => {
     const fetchBranchDate = async () => {
       try {
         const response = await axios.get(
-          "http://spring.mirae.network:8080/api/branches"
+          'http://spring.mirae.network:8080/api/branches'
         );
         setBranches(response.data); // 받아온 데이터로 상태 설정
       } catch (error) {
@@ -133,12 +133,12 @@ function MenuPage({ isLogined }) {
   // 장바구니 데이터를 가져오는 useEffect
   // 브랜치명 바뀔 떄 때문에 필요
   const fetchCartData = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (token) {
       try {
         const response = await axios.get(
-          "http://spring.mirae.network:8080/api/carts",
+          'http://spring.mirae.network:8080/api/carts',
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -149,7 +149,7 @@ function MenuPage({ isLogined }) {
         // 서버에서 가져온 데이터를 cartItems에 저장
         setCartItems(response.data.items);
       } catch (error) {
-        console.error("장바구니 데이터 가져오기 실패:", error);
+        console.error('장바구니 데이터 가져오기 실패:', error);
       }
     }
   };
@@ -167,11 +167,11 @@ function MenuPage({ isLogined }) {
   };
 
   const toggleModal = (product = null) => {
-    const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
 
     if ((!token || !email) && !isLogined) {
-      alert("로그인이 필요한 서비스입니다.");
+      alert('로그인이 필요한 서비스입니다.');
       return;
     }
 
@@ -180,27 +180,27 @@ function MenuPage({ isLogined }) {
       setSelectedProduct(product);
       setModalOpen(true);
       if (
-        selectedMenu.includes("Ice Blended") ||
-        selectedMenu.includes("Cold Cloud")
+        selectedMenu.includes('Ice Blended') ||
+        selectedMenu.includes('Cold Cloud')
       ) {
-        setTemp("ICE");
+        setTemp('ICE');
         setTempId(2);
       } else {
-        setTemp("ICE");
+        setTemp('ICE');
         setTempId(2);
       }
       // 모달 열 때 기본값으로 기화
-      setSize("Regular");
-      setSugar("70%");
-      setIceAmount("보통");
-      setTopping(["기본"]);
+      setSize('Regular');
+      setSugar('70%');
+      setIceAmount('보통');
+      setTopping(['기본']);
     } else {
       setModalOpen(false);
-      setSize("Regular");
-      setTemp("ICE");
-      setSugar("70%");
-      setIceAmount("보통");
-      setTopping(["기본"]);
+      setSize('Regular');
+      setTemp('ICE');
+      setSugar('70%');
+      setIceAmount('보통');
+      setTopping(['기본']);
       setQuantity(0);
       setTotalPrice(0);
       setSelectedProduct(null);
@@ -209,10 +209,10 @@ function MenuPage({ isLogined }) {
 
   // temp가 변경될 때 실행될 useEffect 수정
   useEffect(() => {
-    if (temp === "HOT") {
-      setIceAmount("없음"); // HOT 선택 시 얼음 없음으로 설정
+    if (temp === 'HOT') {
+      setIceAmount('없음'); // HOT 선택 시 얼음 없음으로 설정
     } else {
-      setIceAmount("보통"); // ICE 선택 시 기본값으로 설정
+      setIceAmount('보통'); // ICE 선택 시 기본값으로 설정
     }
   }, [temp]);
 
@@ -226,40 +226,40 @@ function MenuPage({ isLogined }) {
   useEffect(() => {
     if (isModalOpen) {
       // 모달이 열릴 때 스크롤 막기
-      document.body.style.overflow = "hidden";
-      document.addEventListener("click", handleOutsideClick);
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('click', handleOutsideClick);
     } else {
       // 모달이 닫힐 때 스크롤 허용
-      document.body.style.overflow = "auto";
-      document.removeEventListener("click", handleOutsideClick);
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('click', handleOutsideClick);
     }
 
     // clean up function: 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener('click', handleOutsideClick);
     };
   }, [isModalOpen]);
 
   // 옵션 검증 함수 추가
   const validateOptions = () => {
     if (!temp) {
-      alert("온도를 선택해주세요.");
+      alert('온도를 선택해주세요.');
       return false;
     }
     if (!size) {
-      alert("사이즈를 선택해주세요.");
+      alert('사이즈를 선택해주세요.');
       return false;
     }
     if (!sugar) {
-      alert("당도를 선택해주세요.");
+      alert('당도를 선택해주세요.');
       return false;
     }
-    if (temp === "ICE" && !iceAmount) {
-      alert("얼음량을 선택해주세요.");
+    if (temp === 'ICE' && !iceAmount) {
+      alert('얼음량을 선택해주세요.');
       return false;
     }
     if (quantity === 0) {
-      alert("수량을 선택해주세요.");
+      alert('수량을 선택해주세요.');
       return false;
     }
     return true;
@@ -271,13 +271,13 @@ function MenuPage({ isLogined }) {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (token) {
       // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
       if (selectedBranchId !== previousBranchId) {
         const isConfirmed = window.confirm(
-          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+          '지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?'
         );
         if (!isConfirmed) {
           return;
@@ -290,7 +290,7 @@ function MenuPage({ isLogined }) {
         console.log(tempId);
 
         const response = await axios.post(
-          "http://spring.mirae.network:8080/api/carts",
+          'http://spring.mirae.network:8080/api/carts',
           {
             product_id: selectedProduct.id,
             quantity: quantity,
@@ -299,25 +299,25 @@ function MenuPage({ isLogined }) {
           },
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
         );
 
         if (response.status === 200) {
-          alert("장바구니에 추가되었습니다.");
+          alert('장바구니에 추가되었습니다.');
           toggleModal();
           fetchCartCount(); // 장바구니 개수 즉시 업데이트
 
           // 장바구니에 아이템을 추가한 후, 이전 브랜치와 현재 브랜치가 같도록 설정
           setPreviousBranchId(selectedBranchId);
         } else {
-          alert("장바구니 추가에 실패했습니다.");
+          alert('장바구니 추가에 실패했습니다.');
         }
       } catch (error) {
-        console.error("장바구니 추가 실패:", error);
-        alert("장바구니 추가에 실패했습니다.");
+        console.error('장바구니 추가 실패:', error);
+        alert('장바구니 추가에 실패했습니다.');
       }
     }
   };
@@ -328,7 +328,7 @@ function MenuPage({ isLogined }) {
 
   const closeMyMenuModal = () => {
     setMyMenuModel(false);
-    setMyMenuName(""); // 입력값 초기화
+    setMyMenuName(''); // 입력값 초기화
   };
 
   // 나만의 메뉴 담기
@@ -337,13 +337,13 @@ function MenuPage({ isLogined }) {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (token) {
       // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
       if (selectedBranchId !== previousBranchId) {
         const isConfirmed = window.confirm(
-          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+          '지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?'
         );
         if (!isConfirmed) {
           return;
@@ -354,7 +354,7 @@ function MenuPage({ isLogined }) {
 
       try {
         const response = await axios.post(
-          "http://spring.mirae.network:8080/api/members/personal-products",
+          'http://spring.mirae.network:8080/api/members/personal-products',
           {
             product_id: selectedProduct.id,
             option_ids: [tempId, sizeId, sugarId, iceAmountId, ...toppingId],
@@ -362,7 +362,7 @@ function MenuPage({ isLogined }) {
           },
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -371,7 +371,7 @@ function MenuPage({ isLogined }) {
         console.log(response);
 
         if (response.status === 200) {
-          alert("나만의 메뉴에 추가되었습니다.");
+          alert('나만의 메뉴에 추가되었습니다.');
           toggleModal();
           closeMyMenuModal();
           fetchCartCount(); // 장바구니 개수 즉시 업데이트
@@ -379,11 +379,11 @@ function MenuPage({ isLogined }) {
           // 장바구니에 아이템을 추가한 후, 이전 브랜치와 현재 브랜치가 같도록 설정
           setPreviousBranchId(selectedBranchId);
         } else {
-          alert("나만의 메뉴 추가에 실패했습니다.");
+          alert('나만의 메뉴 추가에 실패했습니다.');
         }
       } catch (error) {
-        console.error("나만의 메뉴 추가 실패:", error);
-        alert("나만의 메뉴 추가에 실패했습니다.");
+        console.error('나만의 메뉴 추가 실패:', error);
+        alert('나만의 메뉴 추가에 실패했습니다.');
       }
     }
   };
@@ -394,13 +394,13 @@ function MenuPage({ isLogined }) {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (token) {
       // 브랜치가 변경되었을 때만 확인 다이얼로그를 띄우고 장바구니를 비운다
       if (selectedBranchId !== previousBranchId) {
         const isConfirmed = window.confirm(
-          "지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?"
+          '지점을 변경하면 장바구니가 비워집니다. 계속 하시겠습니까?'
         );
         if (!isConfirmed) {
           return;
@@ -411,7 +411,7 @@ function MenuPage({ isLogined }) {
 
       try {
         const response = await axios.post(
-          "http://spring.mirae.network:8080/api/carts",
+          'http://spring.mirae.network:8080/api/carts',
           {
             product_id: selectedProduct.id,
             quantity: quantity,
@@ -420,20 +420,20 @@ function MenuPage({ isLogined }) {
           },
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
         );
 
         if (response.status === 200) {
-          navigate("/order");
+          navigate('/order');
         } else {
-          alert("주문에 실패했습니다.");
+          alert('주문에 실패했습니다.');
         }
       } catch (error) {
-        console.error("주문 실패:", error);
-        alert("주문에 실패했습니다.");
+        console.error('주문 실패:', error);
+        alert('주문에 실패했습니다.');
       }
     }
   };
@@ -442,21 +442,21 @@ function MenuPage({ isLogined }) {
     let optionPrice = 0;
 
     // 사이즈 옵션 가격
-    if (size === "Large") {
+    if (size === 'Large') {
       optionPrice += 1000;
-    } else if (size === "Kokee-Large") {
+    } else if (size === 'Kokee-Large') {
       optionPrice += 1500;
     }
 
     // 토핑 옵션 가격 계산 수정
-    if (!topping.includes("기본")) {
+    if (!topping.includes('기본')) {
       topping.forEach((item) => {
-        if (item === "타피오카 펄" || item === "화이트 펄") {
+        if (item === '타피오카 펄' || item === '화이트 펄') {
           optionPrice += 500;
         } else if (
-          item === "밀크폼" ||
-          item === "코코넛" ||
-          item === "알로에"
+          item === '밀크폼' ||
+          item === '코코넛' ||
+          item === '알로에'
         ) {
           optionPrice += 1000;
         }
@@ -477,17 +477,17 @@ function MenuPage({ isLogined }) {
 
   // 바로 주문
   const handleDirectOrder = async (product) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (!token) {
-      alert("로그인이 필요한 서비스입니다.");
+      alert('로그인이 필요한 서비스입니다.');
       return;
     }
 
     if (token) {
       try {
         const response = await axios.post(
-          "http://spring.mirae.network:8080/api/carts",
+          'http://spring.mirae.network:8080/api/carts',
           {
             product_id: product.id,
             quantity: 1,
@@ -496,18 +496,18 @@ function MenuPage({ isLogined }) {
           },
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
         );
       } catch (error) {
-        console.error("주문 실패:", error);
-        alert("주문에 실패했습니다.");
+        console.error('주문 실패:', error);
+        alert('주문에 실패했습니다.');
       }
     }
 
-    navigate("/order");
+    navigate('/order');
   };
 
   return (
@@ -524,41 +524,41 @@ function MenuPage({ isLogined }) {
         {/* 메뉴 버튼들 */}
         <span
           className={`${style.menu} ${
-            selectedMenu === "Cold Cloud" ? style.active : ""
+            selectedMenu === 'Cold Cloud' ? style.active : ''
           }`}
-          onClick={() => setSelectedMenu("Cold Cloud")}
+          onClick={() => setSelectedMenu('Cold Cloud')}
         >
           Cold Cloud
         </span>
         <span
           className={`${style.menu} ${
-            selectedMenu === "Fruit Tea" ? style.active : ""
+            selectedMenu === 'Fruit Tea' ? style.active : ''
           }`}
-          onClick={() => setSelectedMenu("Fruit Tea")}
+          onClick={() => setSelectedMenu('Fruit Tea')}
         >
           Fruit Tea
         </span>
         <span
           className={`${style.menu} ${
-            selectedMenu === "Ice Blended" ? style.active : ""
+            selectedMenu === 'Ice Blended' ? style.active : ''
           }`}
-          onClick={() => setSelectedMenu("Ice Blended")}
+          onClick={() => setSelectedMenu('Ice Blended')}
         >
           Ice Blended
         </span>
         <span
           className={`${style.menu} ${
-            selectedMenu === "Milk Tea" ? style.active : ""
+            selectedMenu === 'Milk Tea' ? style.active : ''
           }`}
-          onClick={() => setSelectedMenu("Milk Tea")}
+          onClick={() => setSelectedMenu('Milk Tea')}
         >
           Milk Tea
         </span>
         <span
           className={`${style.menu} ${
-            selectedMenu === "Signature" ? style.active : ""
+            selectedMenu === 'Signature' ? style.active : ''
           }`}
-          onClick={() => setSelectedMenu("Signature")}
+          onClick={() => setSelectedMenu('Signature')}
         >
           Signature
         </span>
@@ -586,29 +586,25 @@ function MenuPage({ isLogined }) {
             <div
               key={product.product.id}
               className={`${style.MenuItem} ${
-                !isLoggedIn && !isLogined ? style.disabled : ""
+                !isLoggedIn && !isLogined ? style.disabled : ''
               }`}
               data-tooltip-id={
                 !isLoggedIn && !isLogined
                   ? `login-tooltip-${product.product.id}`
-                  : ""
+                  : ''
               }
               data-tooltip-content="로그인이 필요한 서비스입니다."
               data-tooltip-place="top"
             >
               <div className={style.imageWrapper}>
-                {/* 상품 이미지 위에 x 이미지 표시 */}
+                {/* 상품 이미지 위에 "Sold Out" 표시 */}
                 {product.unavailable && (
-                  <img
-                    src="/img/kokeeX.png"
-                    alt="판매 불가"
-                    className={style.unavailableImage}
-                  />
+                  <div className={style.soldOutOverlay}>Sold Out</div>
                 )}
                 <img
                   src={product.product.image_url}
                   alt={product.product.name}
-                  className={product.unavailable ? style.disabledImage : ""}
+                  className={product.unavailable ? style.disabledImage : ''}
                 />
               </div>
               <h3>{product.product.name}</h3>
@@ -618,10 +614,10 @@ function MenuPage({ isLogined }) {
               <div className={style.nutrition_overlay}>
                 <div className={style.nutrition_info}>
                   <h4>영양정보</h4>
-                  <p>칼로리: {product.product.calories || "300"} kcal</p>
-                  <p>당류: {product.product.sugar || "30"}g</p>
-                  <p>카페인: {product.product.caffeine || "150"}mg</p>
-                  <p>나트륨: {product.product.sodium || "120"}mg</p>
+                  <p>칼로리: {product.product.calories || '300'} kcal</p>
+                  <p>당류: {product.product.sugar || '30'}g</p>
+                  <p>카페인: {product.product.caffeine || '150'}mg</p>
+                  <p>나트륨: {product.product.sodium || '120'}mg</p>
                 </div>
               </div>
             </div>
@@ -632,7 +628,7 @@ function MenuPage({ isLogined }) {
               {/* 상품이 unavailable일 때는 버튼을 비활성화 */}
               <button
                 className={`${style.menu_order_btn} ${
-                  product.unavailable ? style.disabledButton : ""
+                  product.unavailable ? style.disabledButton : ''
                 }`}
                 onClick={() => toggleModal(product.product)}
                 disabled={product.unavailable}
@@ -641,7 +637,7 @@ function MenuPage({ isLogined }) {
               </button>
               <button
                 className={`${style.menu_order_btn} ${style.direct_order_btn} ${
-                  product.unavailable ? style.disabledButton : ""
+                  product.unavailable ? style.disabledButton : ''
                 }`}
                 onClick={() => handleDirectOrder(product.product)}
                 disabled={product.unavailable}
@@ -673,13 +669,13 @@ function MenuPage({ isLogined }) {
                   원
                   <br />
                   <span className={style.option_price}>
-                    (기본 {selectedProduct.price.toLocaleString()}원 + 옵션{" "}
+                    (기본 {selectedProduct.price.toLocaleString()}원 + 옵션{' '}
                     {calculateOptionPrice().toLocaleString()}원)
                   </span>
                 </p>
                 <p className={style.product_description}>
                   {selectedProduct.pdDescription ||
-                    "신선한 재료로 만든 프리미엄 음료"}
+                    '신선한 재료로 만든 프리미엄 음료'}
                 </p>
               </div>
             </div>
@@ -688,8 +684,8 @@ function MenuPage({ isLogined }) {
                 <div className={style.option}>
                   <h3>온도</h3>
                   <div className={style.temp_option}>
-                    {!selectedMenu.includes("Ice Blended") &&
-                      !selectedMenu.includes("Cold Cloud") && (
+                    {!selectedMenu.includes('Ice Blended') &&
+                      !selectedMenu.includes('Cold Cloud') && (
                         <label
                           className={`${style.radio_style} ${style.hot_option}`}
                         >
@@ -697,9 +693,9 @@ function MenuPage({ isLogined }) {
                             type="radio"
                             name="temp"
                             value="HOT"
-                            checked={temp === "HOT"}
+                            checked={temp === 'HOT'}
                             onChange={() => {
-                              setTemp("HOT");
+                              setTemp('HOT');
                               setTempId(1);
                             }}
                           />
@@ -710,19 +706,19 @@ function MenuPage({ isLogined }) {
                       className={`${style.radio_style} ${style.ice_option}`}
                       style={{
                         width:
-                          selectedMenu.includes("Ice Blended") ||
-                          selectedMenu.includes("Cold Cloud")
-                            ? "100%"
-                            : "50%",
+                          selectedMenu.includes('Ice Blended') ||
+                          selectedMenu.includes('Cold Cloud')
+                            ? '100%'
+                            : '50%',
                       }}
                     >
                       <input
                         type="radio"
                         name="temp"
                         value="ICE"
-                        checked={temp === "ICE"}
+                        checked={temp === 'ICE'}
                         onChange={() => {
-                          setTemp("ICE");
+                          setTemp('ICE');
                           setTempId(2);
                         }}
                       />
@@ -739,9 +735,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="size"
                           value="Regular"
-                          checked={size === "Regular"}
+                          checked={size === 'Regular'}
                           onChange={() => {
-                            setSize("Regular");
+                            setSize('Regular');
                             setSizeId(3);
                           }}
                         />
@@ -752,9 +748,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="size"
                           value="Large"
-                          checked={size === "Large"}
+                          checked={size === 'Large'}
                           onChange={() => {
-                            setSize("Large");
+                            setSize('Large');
                             setSizeId(4);
                           }}
                         />
@@ -769,9 +765,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="size"
                           value="Kokee-Large"
-                          checked={size === "Kokee-Large"}
+                          checked={size === 'Kokee-Large'}
                           onChange={() => {
-                            setSize("Kokee-Large");
+                            setSize('Kokee-Large');
                             setSizeId(5);
                           }}
                         />
@@ -791,9 +787,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="sugar"
                           value="0%"
-                          checked={sugar === "0%"}
+                          checked={sugar === '0%'}
                           onChange={() => {
-                            setSugar("0%");
+                            setSugar('0%');
                             setSugarId(6);
                           }}
                         />
@@ -804,9 +800,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="sugar"
                           value="30%"
-                          checked={sugar === "30%"}
+                          checked={sugar === '30%'}
                           onChange={() => {
-                            setSugar("30%");
+                            setSugar('30%');
                             setSugarId(7);
                           }}
                         />
@@ -817,9 +813,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="sugar"
                           value="50%"
-                          checked={sugar === "50%"}
+                          checked={sugar === '50%'}
                           onChange={() => {
-                            setSugar("50%");
+                            setSugar('50%');
                             setSugarId(8);
                           }}
                         />
@@ -830,9 +826,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="sugar"
                           value="70%"
-                          checked={sugar === "70%"}
+                          checked={sugar === '70%'}
                           onChange={() => {
-                            setSugar("70%");
+                            setSugar('70%');
                             setSugarId(9);
                           }}
                         />
@@ -843,9 +839,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="sugar"
                           value="100%"
-                          checked={sugar === "100%"}
+                          checked={sugar === '100%'}
                           onChange={() => {
-                            setSugar("100%");
+                            setSugar('100%');
                             setSugarId(10);
                           }}
                         />
@@ -861,9 +857,9 @@ function MenuPage({ isLogined }) {
                           type="radio"
                           name="iceAmount"
                           value="없음"
-                          checked={iceAmount === "없음"}
+                          checked={iceAmount === '없음'}
                           onChange={() => {
-                            setIceAmount("없음");
+                            setIceAmount('없음');
                             setIceAmountId(11);
                           }}
                         />
@@ -871,55 +867,55 @@ function MenuPage({ isLogined }) {
                       </label>
                       <label
                         className={`${style.sub_radio_style} ${
-                          temp === "HOT" ? style.disabled : ""
+                          temp === 'HOT' ? style.disabled : ''
                         }`}
                       >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="적게"
-                          checked={iceAmount === "적게"}
+                          checked={iceAmount === '적게'}
                           onChange={() => {
-                            setIceAmount("적게");
+                            setIceAmount('적게');
                             setIceAmountId(12);
                           }}
-                          disabled={temp === "HOT"}
+                          disabled={temp === 'HOT'}
                         />
                         <span>적게</span>
                       </label>
                       <label
                         className={`${style.sub_radio_style} ${
-                          temp === "HOT" ? style.disabled : ""
+                          temp === 'HOT' ? style.disabled : ''
                         }`}
                       >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="보통"
-                          checked={iceAmount === "보통"}
+                          checked={iceAmount === '보통'}
                           onChange={() => {
-                            setIceAmount("보통");
+                            setIceAmount('보통');
                             setIceAmountId(13);
                           }}
-                          disabled={temp === "HOT"}
+                          disabled={temp === 'HOT'}
                         />
                         <span>보통</span>
                       </label>
                       <label
                         className={`${style.sub_radio_style} ${
-                          temp === "HOT" ? style.disabled : ""
+                          temp === 'HOT' ? style.disabled : ''
                         }`}
                       >
                         <input
                           type="radio"
                           name="iceAmount"
                           value="많이"
-                          checked={iceAmount === "많이"}
+                          checked={iceAmount === '많이'}
                           onChange={() => {
-                            setIceAmount("많이");
+                            setIceAmount('많이');
                             setIceAmountId(14);
                           }}
-                          disabled={temp === "HOT"}
+                          disabled={temp === 'HOT'}
                         />
                         <span>많이</span>
                       </label>
@@ -933,10 +929,10 @@ function MenuPage({ isLogined }) {
                           type="checkbox"
                           name="topping"
                           value="기본"
-                          checked={topping.includes("기본")}
+                          checked={topping.includes('기본')}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setTopping(["기본"]); // 추가안함 선택시 다른 모든 토핑 해제
+                              setTopping(['기본']); // 추가안함 선택시 다른 모든 토핑 해제
                               setToppingId([15]); // '추가 안 함'만 선택되도록
                             } else {
                               setToppingId([15]); // '추가 안 함' 해제시 toppingId 초기화
@@ -962,9 +958,9 @@ function MenuPage({ isLogined }) {
                           <span>
                             {name}
                             <br />
-                            {name === "타피오카 펄" || name === "화이트 펄"
-                              ? "(+500원)"
-                              : "(+1,000원)"}
+                            {name === '타피오카 펄' || name === '화이트 펄'
+                              ? '(+500원)'
+                              : '(+1,000원)'}
                           </span>
                         </label>
                       ))}
