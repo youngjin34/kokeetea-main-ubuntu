@@ -17,8 +17,6 @@ const Notice = () => {
           `http://spring.mirae.network:8080/api/notices`
         );
 
-        console.log(result.data.notices);
-
         setNoticeList(result.data.notices);
         setNotice(result.data.notices[index].title);
       } catch (error) {

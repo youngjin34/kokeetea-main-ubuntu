@@ -35,6 +35,7 @@ import FloatingButtons from "./components/FloatingButtons";
 import { CartProvider } from "./components/CartContext";
 import MyMenu from "./pages/MyMenu";
 import NoticeWrite from "./pages/NoticeWrite";
+import axios from "axios";
 
 function AppContent() {
   const location = useLocation();
@@ -71,6 +72,41 @@ function App() {
     // 로컬 스토리지에서 로그인 상태 확인
     const token = localStorage.getItem("token");
     if (token) {
+      setIsLogined(true);
+    }
+  }, []);
+
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get("code");
+  const state = url.searchParams.get("state");
+
+  const getNaverToken = async (code) => {
+    try {
+      // 서버로 코드를 보내는 POST 요청
+      const response = await axios.get(
+        `http://spring.mirae.network:8080/api/members/naver-login?code=${code}&state=${state}`
+      );
+
+      console.log(response.data);
+
+      const token = response.data.token;
+
+      localStorage.setItem("token", token);
+      if (response.status === 200) {
+        // 토큰을 로컬 스토리지에 저장
+        setIsLogined(true);
+      }
+    } catch (error) {
+      console.error("서버에 코드를 전송하는 데 실패:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (code && !token) {
+      getNaverToken(code);
+    } else if (token) {
       setIsLogined(true);
     }
   }, []);

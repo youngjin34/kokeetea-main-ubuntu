@@ -13,7 +13,7 @@ function Footer() {
         (주)KOKEE TEA 대표 : 김정준 서울특별시 구로구 디지털로 300
         지밸리비즈플라자 11층 <br />
         사업자등록번호 123-45-678901 TEL 02) 1234-5678 / FAX 02) 1234-5678
-        이메일 rugo123@cafe100.com <br />© kokee tea Coffee Company. All Rights
+        이메일 guro123@kokeetea.com <br />© kokee tea Coffee Company. All Rights
         Reserved.
       </div>
       <div className={`${style.footer_link}`}>

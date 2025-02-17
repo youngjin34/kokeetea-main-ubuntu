@@ -201,9 +201,6 @@ const KokeeStory = () => {
           </div>
         </div>
       ))}
-      <div style={{ height: `${footerHeight}px` }}>
-        <Footer />
-      </div>
     </div>
   );
 };

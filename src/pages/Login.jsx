@@ -77,6 +77,12 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
     }
   };
 
+  // 네이버 로그인
+  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
+
+  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${NAVER_REDIRECT_URI}`;
+
   return (
     <div className={style.pageContainer}>
       <div
@@ -117,10 +123,10 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
           <form className={style.form} onSubmit={handleSubmit}>
             <h2 className={style.LoginTitle}>일반 로그인</h2>
             <div className={style.socialContainer}>
-              <a href="#" className={`${style.socialLink} ${style.kakao}`}>
-                <span className={style.socialText}>Kakao</span>
-              </a>
-              <a href="#" className={`${style.socialLink} ${style.naver}`}>
+              <a
+                href={NAVER_AUTH_URL}
+                className={`${style.socialLink} ${style.naver}`}
+              >
                 <span className={style.socialText}>Naver</span>
               </a>
             </div>

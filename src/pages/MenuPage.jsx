@@ -28,7 +28,7 @@ function MenuPage({ isLogined }) {
   const [iceAmount, setIceAmount] = useState("보통");
   const [topping, setTopping] = useState(["기본"]);
 
-  const [tempId, setTempId] = useState(1);
+  const [tempId, setTempId] = useState(2);
   const [sizeId, setSizeId] = useState(3);
   const [sugarId, setSugarId] = useState(9);
   const [iceAmountId, setIceAmountId] = useState(13);
@@ -113,7 +113,7 @@ function MenuPage({ isLogined }) {
     };
 
     fetchData();
-  }, [selectedMenu]);
+  }, [selectedMenu, selectedBranchId, setSelectedBranchId]);
 
   useEffect(() => {
     const fetchBranchDate = async () => {
@@ -597,13 +597,9 @@ function MenuPage({ isLogined }) {
               data-tooltip-place="top"
             >
               <div className={style.imageWrapper}>
-                {/* 상품 이미지 위에 x 이미지 표시 */}
+                {/* 상품 이미지 위에 "Sold Out" 표시 */}
                 {product.unavailable && (
-                  <img
-                    src="/img/kokeeX.png"
-                    alt="판매 불가"
-                    className={style.unavailableImage}
-                  />
+                  <div className={style.soldOutOverlay}>Sold Out</div>
                 )}
                 <img
                   src={product.product.image_url}
