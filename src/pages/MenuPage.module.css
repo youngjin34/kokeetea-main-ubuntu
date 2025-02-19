@@ -68,11 +68,12 @@
 
 /* 드롭다운 아이콘 추가 (배경 이미지 활용) */
 .branchSelectWrapper {
-  position: relative;
+  position: absolute;
   display: inline-block;
-  float: right;
+  right: 15%;
   width: 100%;
   max-width: 150px;
+  z-index: 99;
 }
 
 .branchSelectWrapper::after {
@@ -142,6 +143,7 @@
 }
 
 .MenuItems {
+  padding-top: 50px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   row-gap: 60px;
@@ -176,6 +178,7 @@
 .disabledImage {
   opacity: 0.5;
 }
+
 /* 비활성화된 버튼 스타일 */
 .disabledButton {
   background-color: #d3d3d3;
@@ -197,6 +200,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 

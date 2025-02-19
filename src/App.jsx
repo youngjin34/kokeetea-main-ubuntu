@@ -92,6 +92,8 @@ function App() {
       const token = response.data.token;
 
       localStorage.setItem("token", token);
+      localStorage.setItem("authority", response.data.authority);
+
       if (response.status === 200) {
         // 토큰을 로컬 스토리지에 저장
         setIsLogined(true);

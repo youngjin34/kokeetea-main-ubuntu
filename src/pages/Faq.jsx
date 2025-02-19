@@ -17,7 +17,7 @@ const FAQ = ({ isLogined }) => {
 
   const categories = [
     "전체",
-    "이벤트/프로모션",
+    "이벤트 및 프로모션",
     "회원문의",
     "결제/환불",
     "매장문의",
@@ -45,6 +45,8 @@ const FAQ = ({ isLogined }) => {
           },
         }
       );
+
+      console.log(response.data);
 
       // 응답 데이터 매핑
       const mappedFaqs = response.data.faqs.map((faq) => ({

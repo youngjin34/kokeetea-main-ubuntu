@@ -23,11 +23,6 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
     onClose();
   };
 
-  const handleForgotPassword = () => {
-    navigate("/forgot-password");
-    onClose();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,7 +72,55 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
     }
   };
 
-  // 네이버 로그인
+  const handleAdminSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log(userName);
+    console.log(password);
+
+    try {
+      const result = await axios.post(
+        `http://spring.mirae.network:8082/api/branches/login`,
+        { email: userName, password: password }
+      );
+
+      if (result.status === 200) {
+        const token = result.data.token;
+        const authority = result.data.authority;
+        const branchId = result.data.branch_id;
+        const branchName = result.data.branch_name;
+
+        toast(`${result.data.user_name}님 환영합니다!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Slide,
+        });
+
+        window.location.href = `http://localhost:5174?token=${token}&authority=${authority}&branchId=${branchId}&branchName=${branchName}`;
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast("아이디와 비밀번호를 확인해주세요", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Slide,
+      });
+    }
+  };
+
   const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
   const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
 
@@ -107,20 +150,16 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className={style.link}
-            >
-              비밀번호를 잊으셨나요?
-            </button>
             <div className={style.buttonContainer}>
-              <button className={style.button}>로그인</button>
+              <button className={style.button} onClick={handleAdminSubmit}>
+                로그인
+              </button>
             </div>
           </form>
         </div>
+
         <div className={`${style.formContainer} ${style.signInContainer}`}>
-          <form className={style.form} onSubmit={handleSubmit}>
+          <form className={style.form}>
             <h2 className={style.LoginTitle}>일반 로그인</h2>
             <div className={style.socialContainer}>
               <a
@@ -147,15 +186,10 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className={style.link}
-            >
-              비밀번호를 잊으셨나요?
-            </button>
             <div className={style.buttonContainer}>
-              <button className={style.button}>로그인</button>
+              <button className={style.button} onClick={handleSubmit}>
+                로그인
+              </button>
               <button
                 type="button"
                 className={style.button}
@@ -166,6 +200,7 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
             </div>
           </form>
         </div>
+
         <div className={style.overlayContainer}>
           <div className={style.overlay}>
             <div className={`${style.overlayPanel} ${style.overlayLeft}`}>

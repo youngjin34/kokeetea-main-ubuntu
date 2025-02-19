@@ -17,7 +17,7 @@ function MenuPage({ isLogined }) {
   const [branches, setBranches] = useState([]); // 브랜치 데이터를 상태로 저장
   // 브랜치 변경시 카트 비워지게 하기 위함
   const [cartItems, setCartItems] = useState([]);
-  const [selectedBranchId, setSelectedBranchId] = useState(1); // 선택된 브랜치 ID 상태
+  const [selectedBranchId, setSelectedBranchId] = useState(2); // 선택된 브랜치 ID 상태
 
   const [previousBranchId, setPreviousBranchId] = useState(selectedBranchId);
 
