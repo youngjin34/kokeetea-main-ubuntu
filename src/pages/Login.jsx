@@ -75,9 +75,6 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(userName);
-    console.log(password);
-
     try {
       const result = await axios.post(
         `http://spring.mirae.network:8082/api/branches/login`,
@@ -102,7 +99,7 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
           transition: Slide,
         });
 
-        window.location.href = `http://localhost:5174?token=${token}&authority=${authority}&branchId=${branchId}&branchName=${branchName}`;
+        window.location.href = `http://web4.mirae.network?token=${token}&authority=${authority}&branchId=${branchId}&branchName=${branchName}`;
       }
     } catch (error) {
       console.error(error);
@@ -134,25 +131,17 @@ const Login = ({ onClose, setIsLogined, onLoginSuccess }) => {
         }`}
       >
         <div className={`${style.formContainer} ${style.signUpContainer}`}>
-          <form className={style.form} onSubmit={handleSubmit}>
-            <h2 className={style.LoginTitle}>점주 로그인</h2>
-            <input
-              className={style.input}
-              type="text"
-              placeholder="아이디"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            <input
-              className={style.input}
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <form className={style.form}>
+            <h2 className={style.LoginTitle}>관리자 페이지로 이동하기</h2>
+
             <div className={style.buttonContainer}>
-              <button className={style.button} onClick={handleAdminSubmit}>
-                로그인
+              <button
+                className={style.button}
+                onClick={() =>
+                  (window.location.href = "http://web4.mirae.network/login")
+                }
+              >
+                관리자 페이지
               </button>
             </div>
           </form>

@@ -16,9 +16,7 @@ const Notice = () => {
         const result = await axios.get(
           `http://spring.mirae.network:8080/api/notices`
         );
-
         setNoticeList(result.data.notices);
-        setNotice(result.data.notices[index].title);
       } catch (error) {
         console.log(error);
       }
@@ -26,17 +24,21 @@ const Notice = () => {
     getNotice();
   }, []);
 
+  useEffect(() => {
+    if (noticeList.length > 0) {
+      setNotice(noticeList[index].title); // index가 변경될 때마다 notice 업데이트
+    }
+  }, [index, noticeList]);
+
   function prevNotice() {
     if (index > 0) {
       setIndex(index - 1);
-      setNotice(noticeList[index - 1].title);
     }
   }
 
   function nextNotice() {
     if (index < noticeList.length - 1) {
       setIndex(index + 1);
-      setNotice(noticeList[index + 1].title);
     }
   }
 

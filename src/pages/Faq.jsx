@@ -29,7 +29,10 @@ const FAQ = ({ isLogined }) => {
     window.scrollTo(0, 0);
     const authority = localStorage.getItem("authority");
     setIsAdmin(authority === "ADMIN");
-    fetchNotices();
+  }, []);
+
+  useEffect(() => {
+    fetchNotices(); // 카테고리나 페이지가 변경될 때마다 호출
   }, [currentPage, selectedCategory]);
 
   const fetchNotices = async () => {
@@ -41,12 +44,10 @@ const FAQ = ({ isLogined }) => {
           params: {
             page: currentPage - 1,
             size: itemsPerPage,
-            category: selectedCategory === "전체" ? null : selectedCategory,
+            category: selectedCategory === "전체" ? null : selectedCategory, // 전체 카테고리일 때 null로 보내기
           },
         }
       );
-
-      console.log(response.data);
 
       // 응답 데이터 매핑
       const mappedFaqs = response.data.faqs.map((faq) => ({
@@ -59,7 +60,7 @@ const FAQ = ({ isLogined }) => {
       }));
 
       setNotices(mappedFaqs);
-      setTotalPages(response.data.total_page);
+      setTotalPages(response.data.total_pages);
     } catch (error) {
       setError(error.message);
       console.error("FAQ 조회 실패:", error);
@@ -81,35 +82,33 @@ const FAQ = ({ isLogined }) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    setExpandedNotice(null);
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // 페이지를 첫 번째 페이지로 초기화
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchNotices(); // 선택한 페이지에 맞는 데이터 가져오기
   };
 
   const getPageNumbers = () => {
-    const totalPages = Math.ceil(filteredList.length / itemsPerPage);
-    const current = currentPage;
     const pages = [];
+    const totalDisplayPages = 5;
+    const halfDisplay = Math.floor(totalDisplayPages / 2);
 
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (current <= 3) {
-        for (let i = 1; i <= 5; i++) {
-          pages.push(i);
-        }
-      } else if (current >= totalPages - 2) {
-        for (let i = totalPages - 4; i <= totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        for (let i = current - 2; i <= current + 2; i++) {
-          pages.push(i);
-        }
-      }
+    let startPage = Math.max(1, currentPage - halfDisplay);
+    let endPage = Math.min(totalPages, startPage + totalDisplayPages - 1);
+
+    if (endPage - startPage + 1 < totalDisplayPages) {
+      startPage = Math.max(1, endPage - totalDisplayPages + 1);
     }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    console.log(pages);
+    console.log(totalPages);
 
     return pages;
   };
@@ -136,7 +135,7 @@ const FAQ = ({ isLogined }) => {
                     ? style.CategoryButtonActive
                     : ""
                 }`}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => handleCategoryChange(category)} // 여기서 사용
               >
                 {category}
               </button>
@@ -157,26 +156,30 @@ const FAQ = ({ isLogined }) => {
                   <div className={style.HeaderDate}>작성일</div>
                 </div>
 
-                {currentItems.map((notice) => (
-                  <React.Fragment key={notice.id}>
-                    <div className={style.TableRow}>
-                      <div className={style.RowNo}>{notice.id}</div>
-                      <div className={style.RowCategory}>{notice.category}</div>
-                      <div
-                        className={style.RowTitle}
-                        onClick={() => handleTitleClick(notice.id)}
-                      >
-                        {notice.title}
+                {(selectedCategory === "전체" ? notices : currentItems).map(
+                  (notice) => (
+                    <React.Fragment key={notice.id}>
+                      <div className={style.TableRow}>
+                        <div className={style.RowNo}>{notice.id}</div>
+                        <div className={style.RowCategory}>
+                          {notice.category}
+                        </div>
+                        <div
+                          className={style.RowTitle}
+                          onClick={() => handleTitleClick(notice.id)}
+                        >
+                          {notice.title}
+                        </div>
+                        <div className={style.RowDate}>{notice.date}</div>
                       </div>
-                      <div className={style.RowDate}>{notice.date}</div>
-                    </div>
-                    {expandedNotice === notice.id && (
-                      <div className={style.ContentRow}>
-                        <div className={style.Content}>{notice.content}</div>
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))}
+                      {expandedNotice === notice.id && (
+                        <div className={style.ContentRow}>
+                          <div className={style.Content}>{notice.content}</div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  )
+                )}
               </>
             )}
           </div>

@@ -564,12 +564,19 @@ ul {
 
 .notification_count {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  background-color: #ff4444;
-  width: 8px;
-  height: 8px;
+  top: -5px;
+  right: -8px;
+  background-color: #ba274a;
+  color: white;
+  font-size: 10px;
+
+  min-width: 14px;
+  height: 14px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
 }
 
 @media screen and (max-width: 1024px) {
@@ -863,4 +870,16 @@ ul {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid white;
+}
+
+/* -------------- 알림 ------------- */
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content_x {
+  width: 25px;
+  margin-left: 20px;
 }

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import style from "./Navigation.module.css";
 import Login from "../pages/Login";
 import { CartContext } from "./CartContext";
+import axios from "axios";
 
 function Navigation({
   isLogined,
@@ -63,6 +64,7 @@ function Navigation({
       : "/img/yutube_black.png";
   };
 
+  const [notificationContent, setNotificationContent] = useState([]);
   // 알림 관련 state 추가
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -71,8 +73,40 @@ function Navigation({
 
   // 알림 모달 토글 함수 추가
   const toggleNotificationModal = (e) => {
-    e.preventDefault();
     setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
+  const fetchAlert = async () => {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://spring.mirae.network:8080/api/alerts",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setNotificationContent(response.data);
+    setNotificationCount(response.data.length);
+  };
+
+  const onDeleteAlert = async (id) => {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.delete(
+      `http://spring.mirae.network:8080/api/alerts/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
+
+  const resetNotificationCount = () => {
+    setNotificationCount(0); // 알림 카운트 초기화
   };
 
   // state 선언부에 isAdmin 상태 추가
@@ -580,7 +614,11 @@ function Navigation({
                   </li>
                   <li>
                     <div
-                      onClick={toggleNotificationModal}
+                      onClick={() => {
+                        toggleNotificationModal();
+                        fetchAlert();
+                        resetNotificationCount();
+                      }}
                       style={{ color: fontColor, cursor: "pointer" }}
                       className={style.notification_icon}
                       ref={notificationRef}
@@ -606,7 +644,24 @@ function Navigation({
                       )}
                       {isNotificationModalOpen && (
                         <div className={style.notification_dropdown}>
-                          <div>새로운 알림이 없습니다.</div>
+                          {notificationContent.length > 0 ? (
+                            <div>
+                              {notificationContent.map((content) => (
+                                <div key={content.id} className={style.alert}>
+                                  {content.content}
+                                  <img
+                                    src="/img/content_x.png"
+                                    className={style.content_x}
+                                    onClick={() => {
+                                      onDeleteAlert(content.id);
+                                    }}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div>새로운 알림이 없습니다.</div>
+                          )}
                         </div>
                       )}
                     </div>
